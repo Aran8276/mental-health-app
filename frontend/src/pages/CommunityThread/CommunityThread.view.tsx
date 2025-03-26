@@ -3,10 +3,10 @@ import { CommunityThreadProps } from "./CommunityThread.type";
 import ThreadCard from "@/components/ThreadCard/ThreadCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ActiveUserCard from "@/components/ActiveUserCard/ActiveUserCard";
 import CommentCard from "@/components/CommentCard";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import SmThreadCard from "@/components/SmSmThreadCard/SmThreadCard";
 
 const CommunityThreadView: FC<CommunityThreadProps> = ({
   createCommentOpen,
@@ -86,16 +86,14 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
             </Card>
             <Card className="h-[440px] overflow-scroll">
               <CardContent className="flex flex-col space-y-6">
-                <h3 className="font-semibold text-xl">Pengguna Paling Aktif</h3>
+                <h3 className="font-semibold text-xl">Forum Terbaru</h3>
                 <div className="flex flex-col space-y-4">
-                  <ActiveUserCard />
-                  <ActiveUserCard />
-                  <ActiveUserCard />
-                  <ActiveUserCard />
-                  <ActiveUserCard />
-                  <ActiveUserCard />
-                  <ActiveUserCard />
-                  <ActiveUserCard />
+                  <SmThreadCard />
+                  <SmThreadCard />
+                  <SmThreadCard />
+                  <SmThreadCard />
+                  <SmThreadCard />
+                  <SmThreadCard />
                 </div>
               </CardContent>
             </Card>
