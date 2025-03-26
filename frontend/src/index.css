@@ -118,3 +118,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+}
+
+body {
+  @apply font-inter;
+}

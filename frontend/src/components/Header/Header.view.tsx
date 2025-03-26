@@ -66,12 +66,14 @@ const HeaderView: FC<HeaderProps> = ({ publicRoutes }) => {
                 ))}
               </div>
               <div className="flex items-center mt-4 lg:mt-0">
-                <Button variant={"ghost"} className="bg-inherit" aria-label="show notifications">
+                <Button
+                  variant={"ghost"}
+                  className="bg-inherit"
+                  aria-label="show notifications"
+                >
                   <Bell className="w-6 h-6" />
                 </Button>
-
                 <ModeToggle />
-
                 <button
                   type="button"
                   className="flex items-center focus:outline-none"

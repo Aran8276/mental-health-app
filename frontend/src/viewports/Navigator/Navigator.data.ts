@@ -12,4 +12,9 @@ export const publicRoutes: RouteItem[] = [
     path: "/about",
     element: createElement(lazy(async () => await import("@/pages/About"))),
   },
+  {
+    label: "Komunitas",
+    path: "/community",
+    element: createElement(lazy(async () => await import("@/pages/Community"))),
+  },
 ];

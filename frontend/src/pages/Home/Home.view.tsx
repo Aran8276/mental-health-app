@@ -1,5 +1,3 @@
-import { FC } from "react";
-import { HomeProps } from "./Home.type";
 import { Button } from "@/components/ui/button";
 import {
   Heart,
@@ -10,10 +8,10 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const HomeView: FC<HomeProps> = () => {
+const HomeView = () => {
   return (
     <>
-      <section className="w-full py-12 md:py-24">
+      <section className="w-full py-12">
         <div className="container px-4 md:px-6">
           <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
             <div className="flex flex-col justify-center space-y-4">
