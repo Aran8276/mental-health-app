@@ -15,8 +15,8 @@ export const publicRoutes: RouteItem[] = [
   },
   {
     label: "AI Chatbot",
-    path: "/about",
-    element: createElement(lazy(async () => await import("@/pages/About"))),
+    path: "/ai-chatbot",
+    element: createElement(lazy(async () => await import("@/pages/AIChatbot"))),
   },
   {
     label: "Komunitas",
