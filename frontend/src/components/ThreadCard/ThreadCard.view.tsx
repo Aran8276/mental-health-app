@@ -21,7 +21,11 @@ const ThreadCardView: FC<ThreadCardProps> = ({ isFull }) => {
           <div className="flex flex-col space-y-3">
             <h5 className="font-semibold tracking-tight">User Name</h5>
             <h3 className="text-2xl font-bold">Content Name</h3>
-            <p className={`text-gray-700 ${isFull || "line-clamp-3"}`}>
+            <p
+              className={`text-gray-700 dark:text-gray-400 ${
+                isFull || "line-clamp-3"
+              }`}
+            >
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
               soluta veritatis, vero fuga eum rerum aliquam, quisquam suscipit
               praesentium, ex quia iure aut cupiditate qui! Suscipit

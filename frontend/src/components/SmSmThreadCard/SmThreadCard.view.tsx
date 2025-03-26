@@ -20,7 +20,7 @@ const SmThreadCardView: FC = () => {
           <div className="flex flex-col space-y-2">
             <h5 className="font-semibold text-sm tracking-tight">User Name</h5>
             <h3 className="text-lg font-bold">Content Name</h3>
-            <p className="text-sm text-gray-700 line-clamp-2">
+            <p className="text-sm text-gray-700 dark:text-gray-200 line-clamp-2">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
               soluta veritatis, vero fuga eum rerum aliquam, quisquam suscipit
               praesentium, ex quia iure aut cupiditate qui! Suscipit

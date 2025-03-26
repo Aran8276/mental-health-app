@@ -27,7 +27,7 @@ const CommentCardView: FC<CommentCardProps> = ({
         </div>
         <div className="flex flex-col space-y-3">
           <h5 className="font-semibold tracking-tight">User Name</h5>
-          <p className="text-gray-700">
+          <p className="text-gray-700 dark:text-gray-200">
             komentar komentar komentar komentar komentar komentar komentar
             komentar komentar komentar komentar komentar komentar komentar
             komentar komentar

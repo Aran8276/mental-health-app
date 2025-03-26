@@ -7,6 +7,7 @@ import CommentCard from "@/components/CommentCard";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SmThreadCard from "@/components/SmSmThreadCard/SmThreadCard";
+import { Link } from "react-router-dom";
 
 const CommunityThreadView: FC<CommunityThreadProps> = ({
   createCommentOpen,
@@ -16,7 +17,14 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
   return (
     <>
       <section className="flex flex-col space-y-12 w-full">
-        <h1 className="text-4xl font-bold tracking-tighter">Forum Komunitas</h1>
+        <h1 className="text-4xl font-bold tracking-tighter">
+          Percakapan Forum
+        </h1>
+        <div>
+          <Link to="/community">
+            <Button className="cursor-pointer">Kembali ke Komunitas</Button>
+          </Link>
+        </div>
         <section className="grid grid-cols-3 mx-8 gap-8">
           <div className="flex flex-col col-span-2 space-y-12">
             <ThreadCard isFull />
@@ -79,9 +87,11 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
                 <h3 className="text-2xl font-semibold">
                   Bagaimana Perasaan Anda?
                 </h3>
-                <Button className="bg-indigo-500 hover:bg-indigo-400 cursor-pointer">
-                  Mulai Percakapan Baru
-                </Button>
+                <Link to="/create-thread">
+                  <Button className="bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer">
+                    Mulai Percakapan Baru
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
             <Card className="h-[440px] overflow-scroll">

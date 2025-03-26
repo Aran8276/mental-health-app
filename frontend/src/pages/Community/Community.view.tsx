@@ -4,6 +4,7 @@ import ThreadCard from "@/components/ThreadCard/ThreadCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ActiveUserCard from "@/components/ActiveUserCard/ActiveUserCard";
+import { Link } from "react-router-dom";
 
 const CommunityView: FC<CommunityProps> = () => {
   return (
@@ -26,9 +27,11 @@ const CommunityView: FC<CommunityProps> = () => {
                 <h3 className="text-2xl font-semibold">
                   Bagaimana Perasaan Anda?
                 </h3>
-                <Button className="bg-indigo-500 hover:bg-indigo-400 cursor-pointer">
-                  Mulai Percakapan Baru
-                </Button>
+                <Link to="/create-thread">
+                  <Button className="bg-indigo-500 hover:bg-indigo-400 text-white cursor-pointer">
+                    Mulai Percakapan Baru
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
             <Card className="h-[440px] overflow-scroll">
