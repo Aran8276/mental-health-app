@@ -5,8 +5,16 @@ import { Link } from "react-router-dom";
 import { Bell } from "lucide-react";
 import { ModeToggle } from "../ui/mode-toggle";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const HeaderView: FC<HeaderProps> = ({ publicRoutes }) => {
+const HeaderView: FC<HeaderProps> = ({ publicRoutes, loggedIn }) => {
   return (
     <header>
       <nav className="relative bg-white shadow dark:bg-gray-800">
@@ -66,30 +74,54 @@ const HeaderView: FC<HeaderProps> = ({ publicRoutes }) => {
                 ))}
               </div>
               <div className="flex items-center mt-4 lg:mt-0">
-                <Button
-                  variant={"ghost"}
-                  className="bg-inherit"
-                  aria-label="show notifications"
-                >
-                  <Bell className="w-6 h-6" />
-                </Button>
+                {loggedIn && (
+                  <Button
+                    variant={"ghost"}
+                    className="bg-inherit"
+                    aria-label="show notifications"
+                  >
+                    <Bell className="w-6 h-6" />
+                  </Button>
+                )}
+
                 <ModeToggle />
-                <button
-                  type="button"
-                  className="flex items-center focus:outline-none"
-                  aria-label="toggle profile dropdown"
-                >
-                  <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
-                    <img
-                      src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
-                      className="object-cover w-full h-full"
-                      alt="avatar"
-                    />
-                  </div>
-                  <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">
-                    Khatab wedaa
-                  </h3>
-                </button>
+
+                {loggedIn ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        className="flex items-center cursor-pointer focus:outline-none"
+                        aria-label="toggle profile dropdown"
+                      >
+                        <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
+                          <img
+                            src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80"
+                            className="object-cover w-full h-full"
+                            alt="avatar"
+                          />
+                        </div>
+                        <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">
+                          Khatab wedaa
+                        </h3>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuLabel>Hai username 👋</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Profil</DropdownMenuItem>
+                      <DropdownMenuItem>Konten Saya</DropdownMenuItem>
+                      <DropdownMenuItem>GitHub Repo</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-500">
+                        Keluar
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Link to="/login">
+                    <Button className="cursor-pointer">Masuk</Button>
+                  </Link>
+                )}
               </div>
             </div>
           </div>

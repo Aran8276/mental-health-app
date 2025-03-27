@@ -8,7 +8,6 @@ export default function AIChatbot() {
     setText("hello world");
   }, []);
 
-
-  document.title = "Forum Komunitas - Mental Health App"
+  document.title = "AI Chatbot - Mental Health App";
   return <AIChatbotView text={text} />;
 }
