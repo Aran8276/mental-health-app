@@ -8,10 +8,10 @@ import { Link } from "react-router-dom";
 
 const RegisterView: FC<RegisterProps> = () => {
   return (
-    <div className="flex justify-center h-screen">
+    <div className="flex px-8 md:px-0 justify-center h-screen">
       <div className="mx-auto max-w-sm space-y-8">
         <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Selamat Datang</h1>
+          <h1 className="text-3xl font-bold">Hai 👋</h1>
           <p className="text-gray-500 dark:text-gray-400">
             Masukan username dan password anda untuk masuk ke akun anda
           </p>

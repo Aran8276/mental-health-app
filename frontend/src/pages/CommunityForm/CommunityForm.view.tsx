@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 const CommunityFormView: FC<CommunityFormProps> = () => {
   return (
     <>
-      <section className="flex flex-col space-y-12 w-full">
+      <section className="flex items-center md:items-start flex-col space-y-12 w-full">
         <h1 className="text-4xl font-bold tracking-tighter">
           Buat Percakapan Baru
         </h1>
@@ -25,7 +25,7 @@ const CommunityFormView: FC<CommunityFormProps> = () => {
             <Button className="cursor-pointer">Kembali ke Komunitas</Button>
           </Link>
         </div>
-        <Card className="mb-8 bg-amber-50 dark:bg-slate-900 dark:border-inherit border-amber-200">
+        <Card className="mb-8 w-full bg-amber-50 dark:bg-slate-900 dark:border-inherit border-amber-200">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <AlertCircle className="h-5 w-5 text-amber-600" />
@@ -58,7 +58,7 @@ const CommunityFormView: FC<CommunityFormProps> = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="w-full">
           <form>
             <CardContent className="space-y-4">
               <div className="flex flex-col space-y-2">

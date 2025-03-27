@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const LoginView: FC<LoginProps> = () => {
   return (
-    <div className="flex py-16 justify-center h-screen">
+    <div className="flex px-8 md:px-0 py-16 justify-center h-screen">
       <div className="mx-auto max-w-sm space-y-8">
         <div className="space-y-2 text-center">
           <h1 className="text-3xl font-bold">Selamat Datang</h1>

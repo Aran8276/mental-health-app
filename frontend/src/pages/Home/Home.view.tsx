@@ -38,13 +38,13 @@ const HomeView = () => {
                   asChild
                   className="px-8 bg-indigo-500 hover:bg-indigo-400 text-white"
                 >
-                  <Link to="/" className="inline-flex items-center">
+                  <Link to="/register" className="inline-flex items-center">
                     Daftar Sekarang
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
-                  <Link to="#learn-more">Lihat Komunitas</Link>
+                  <Link to="/community">Lihat Komunitas</Link>
                 </Button>
               </div>
               <div className="flex items-center space-x-4 text-sm">
@@ -66,8 +66,8 @@ const HomeView = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-center justify-center">
-              <div className="relative h-[450px] w-[350px] rounded-2xl bg-gradient-to-b from-primary/20 to-primary/10 p-1 shadow-xl">
+            <div className="flex items-center row-start-1 md:row-start-auto justify-center">
+              <div className="relative w-auto h-auto md:h-[450px] md:w-[350px] rounded-2xl bg-gradient-to-b from-primary/20 to-primary/10 p-1 shadow-xl">
                 <div className="absolute inset-0 rounded-2xl bg-background/90 backdrop-blur-sm" />
                 <div className="relative h-full w-full overflow-hidden rounded-xl bg-background">
                   <img
@@ -208,8 +208,12 @@ const HomeView = () => {
             </div>
           </div>
           <div className="flex justify-center">
-            <Button size="lg" asChild className="px-8">
-              <Link to="/signup">
+            <Button
+              size="lg"
+              asChild
+              className="px-8 bg-indigo-500 hover:bg-indigo-400 text-white"
+            >
+              <Link to="/register">
                 Daftar Sekarang
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

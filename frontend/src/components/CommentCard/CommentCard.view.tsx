@@ -25,7 +25,7 @@ const CommentCardView: FC<CommentCardProps> = ({
             />
           </div>
         </div>
-        <div className="flex flex-col space-y-3">
+        <div className="flex flex-col space-y-3 w-full">
           <h5 className="font-semibold tracking-tight">User Name</h5>
           <p className="text-gray-700 dark:text-gray-200">
             komentar komentar komentar komentar komentar komentar komentar
@@ -53,7 +53,7 @@ const CommentCardView: FC<CommentCardProps> = ({
             </p>
           </section>
 
-          <div className="py-4 pl-4 w-[400px]">
+          <div className="py-4 pl-4 w-auto md:w-[400px]">
             {replyOpen && (
               <div className="flex flex-col space-y-4">
                 <Input ref={replyInputRef} placeholder="Tambahkan balasan" />

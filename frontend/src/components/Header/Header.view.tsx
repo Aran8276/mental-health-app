@@ -13,55 +13,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import MobileMenuTrigger from "../MobileMenuTrigger/MobileMenuTrigger";
 
-const HeaderView: FC<HeaderProps> = ({ publicRoutes, loggedIn }) => {
+const HeaderView: FC<HeaderProps> = ({
+  publicRoutes,
+  loggedIn,
+  mobileOpen,
+  mobileSetOpen,
+  profileDropdownItems,
+}) => {
   return (
-    <header>
+    <header className="sticky top-0 z-50">
       <nav className="relative bg-white shadow dark:bg-gray-800">
         <div className="container px-6 py-4 mx-auto">
           <div className="lg:flex lg:items-center lg:justify-between">
             <div className="flex items-center justify-between">
               <ApplicationLogo />
-              {/* Mobile menu button */}
-              <div className="flex lg:hidden">
-                <button
-                  type="button"
-                  className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
-                  aria-label="toggle menu"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 8h16M4 16h16"
-                    />
-                  </svg>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
+              <MobileMenuTrigger setOpen={mobileSetOpen} open={mobileOpen} />
             </div>
-            {/* Mobile Menu open: "block", Menu closed: "hidden" */}
-            <div className="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
+            <div
+              className={`${
+                mobileOpen ? "block" : "hidden"
+              } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
+            >
               <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
                 {publicRoutes.map((item, index) => (
                   <Link
@@ -102,17 +76,21 @@ const HeaderView: FC<HeaderProps> = ({ publicRoutes, loggedIn }) => {
                           />
                         </div>
                         <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">
-                          Khatab wedaa
+                          User name
                         </h3>
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                       <DropdownMenuLabel>Hai username 👋</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem>Profil</DropdownMenuItem>
-                      <DropdownMenuItem>Konten Saya</DropdownMenuItem>
-                      <DropdownMenuItem>GitHub Repo</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-500">
+                      {profileDropdownItems.map((item, index) => (
+                        <Link to={item.to} key={index}>
+                          <DropdownMenuItem className="cursor-pointer">
+                            {item.label}
+                          </DropdownMenuItem>
+                        </Link>
+                      ))}
+                      <DropdownMenuItem className="cursor-pointer text-red-500">
                         Keluar
                       </DropdownMenuItem>
                     </DropdownMenuContent>

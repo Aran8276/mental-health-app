@@ -414,7 +414,7 @@ const AboutView: FC<AboutProps> = () => {
                 </div>
                 <div className="pt-4">
                   <Button asChild className="w-full">
-                    <Link to="/contact">
+                    <Link to="https://youtu.be/dQw4w9WgXcQ">
                       Hubungi kami
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>

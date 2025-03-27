@@ -16,7 +16,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
 }) => {
   return (
     <>
-      <section className="flex flex-col space-y-12 w-full">
+      <section className="flex items-center md:items-start flex-col space-y-12 w-full">
         <h1 className="text-4xl font-bold tracking-tighter">
           Percakapan Forum
         </h1>
@@ -25,7 +25,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
             <Button className="cursor-pointer">Kembali ke Komunitas</Button>
           </Link>
         </div>
-        <section className="grid grid-cols-3 mx-8 gap-8">
+        <section className="grid grid-cols-1 md:grid-cols-3 mx-8 gap-8">
           <div className="flex flex-col col-span-2 space-y-12">
             <ThreadCard isFull />
             <section className="flex flex-col space-y-8">
