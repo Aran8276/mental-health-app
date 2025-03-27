@@ -1,8 +1,7 @@
-import { FC, Suspense } from "react";
+import { createElement, FC, lazy, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "./Navigator.data";
 import Layout from "@/layouts/layout";
-import NotFound from "@/pages/NotFound/NotFound";
 
 const Navigator: FC = () => (
   <Suspense fallback={"Loading..."}>
@@ -17,7 +16,12 @@ const Navigator: FC = () => (
             <Route key={route.path} path={route.path} element={route.element} />
           ))}
 
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="*"
+            element={createElement(
+              lazy(async () => await import("@/pages/NotFound"))
+            )}
+          />
         </Routes>
       </Layout>
     </BrowserRouter>
