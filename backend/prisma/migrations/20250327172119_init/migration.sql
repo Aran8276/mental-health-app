@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `aichat` ADD COLUMN `role` ENUM('AI', 'USER') NOT NULL DEFAULT 'USER';
+
+-- AlterTable
+ALTER TABLE `user` ADD COLUMN `role` ENUM('ADMIN', 'USER') NOT NULL DEFAULT 'USER';

@@ -1,7 +1,12 @@
 import { server } from "./src/config/expressClient";
-import postsRouter from "@/routes/posts.routes";
+import threadRouter from "@/routes/thread.routes";
+import authRouter from "@/routes/auth.routes";
+import * as env from "dotenv";
 
-server.use("/post", postsRouter);
+env.config();
+
+server.use("/thread", threadRouter);
+server.use("/auth", authRouter);
 
 server.get("/", async (req, res) => {
     res.status(200).json({

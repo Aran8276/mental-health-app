@@ -11,27 +11,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id Int @id @default(autoincrement())
-  title String
-  body String
-  owner String
+enum ThreadRole {
+  AI
+  USER
 }
 
-// model User {
-//   id    Int     @id @default(autoincrement())
-//   name  String
-//   username String @unique
-//   email String  @unique
-//   password String
-//   posts Post[]
-// }
+enum AiChatRole {
+  AI
+  USER
+}
 
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User    @relation(fields: [authorId], references: [id])
-//   authorId  Int
-// }
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id                     Int                  @id @default(autoincrement())
+  name                   String
+  email                  String
+  username               String
+  password               String
+  role                   UserRole             @default(USER)
+  ai_conversations       AiConversation[]
+  threads                Thread[]
+  thread_comments        ThreadComment[]
+  thread_comment_replies ThreadCommentReply[]
+}
+
+model AiConversation {
+  id       Int      @id @default(autoincrement())
+  owner    User     @relation(fields: [owner_id], references: [id])
+  owner_id Int
+  ai_chat  AiChat[]
+}
+
+model AiChat {
+  id                 Int            @id @default(autoincrement())
+  role               AiChatRole     @default(USER)
+  ai_conversation    AiConversation @relation(fields: [ai_conversation_id], references: [id])
+  ai_conversation_id Int
+}
+
+model Thread {
+  id              Int             @id @default(autoincrement())
+  owner           User            @relation(fields: [owner_id], references: [id])
+  owner_id        Int
+  title           String
+  body            String
+  thread_comments ThreadComment[]
+}
+
+model ThreadComment {
+  id                     Int                  @id @default(autoincrement())
+  owner                  User                 @relation(fields: [owner_id], references: [id])
+  owner_id               Int
+  thread                 Thread               @relation(fields: [thread_id], references: [id])
+  thread_id              Int
+  body                   String
+  role                   ThreadRole           @default(USER)
+  thread_comment_replies ThreadCommentReply[]
+}
+
+model ThreadCommentReply {
+  id         Int           @id @default(autoincrement())
+  owner      User          @relation(fields: [owner_id], references: [id])
+  owner_id   Int
+  comment    ThreadComment @relation(fields: [comment_id], references: [id])
+  comment_id Int
+  body       String
+}
