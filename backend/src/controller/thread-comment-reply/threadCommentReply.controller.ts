@@ -2,7 +2,10 @@ import { make } from "simple-body-validator";
 import { msgTemplate } from "@/config/msgTemplate";
 import { prisma } from "@/config/prismaClient";
 import { Request, Response } from "express";
-import { threadValidation } from "./thread.validation";
+import {
+    threadCommentReplyUpdateValidation,
+    threadCommentReplyValidation,
+} from "./threadCommentReply.validation";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
 
 interface User {
@@ -15,10 +18,10 @@ interface User {
     iat: number;
 }
 
-const threadUseCase = {
-    createThread: async (req: RequestWithUser, res: Response) => {
+const threadCommentReplyUseCase = {
+    createThreadCommentReply: async (req: RequestWithUser, res: Response) => {
         const data = req.body;
-        const validator = make(data, threadValidation);
+        const validator = make(data, threadCommentReplyValidation);
         const user = req.user as User;
 
         if (!validator.validate()) {
@@ -32,11 +35,14 @@ const threadUseCase = {
         }
 
         try {
-            const thread = await prisma.thread.create({
+            const threadCommentReply = await prisma.threadCommentReply.create({
+                omit: {
+                    id: true,
+                },
                 data: { ...data, owner_id: user.id },
             });
 
-            res.json(msgTemplate("Data berhasil ditambahkan", thread));
+            res.json(msgTemplate("Data berhasil ditambahkan", threadCommentReply));
         } catch (error) {
             if (error instanceof Error) {
                 res.status(400).json(
@@ -48,47 +54,39 @@ const threadUseCase = {
         }
     },
 
-    readThread: async (req: Request, res: Response) => {
-        const thread = await prisma.thread.findMany({
+    readThreadCommentReply: async (req: Request, res: Response) => {
+        const threadCommentReply = await prisma.threadCommentReply.findMany({
             include: {
                 owner: true,
-                thread_comments: {
-                    include: {
-                        owner: true,
-                    },
-                },
+                comment: true
             },
         });
 
-        res.json(msgTemplate("Data berhasil diambil", thread));
+        res.json(msgTemplate("Data berhasil diambil", threadCommentReply));
     },
 
-    readThreadById: async (req: Request, res: Response) => {
-        const thread = await prisma.thread.findUnique({
+    readThreadCommentReplyById: async (req: Request, res: Response) => {
+        const threadCommentReply = await prisma.threadCommentReply.findUnique({
             where: {
                 id: parseInt(req.params.id),
             },
             include: {
                 owner: true,
-                thread_comments: {
-                    include: {
-                        owner: true,
-                    },
-                },
+                comment: true
             },
         });
 
-        if (!thread) {
+        if (!threadCommentReply) {
             res.status(404).json(msgTemplate("Data tidak ditemukan"));
             return;
         }
 
-        res.json(msgTemplate("Data berhasil diambil", thread));
+        res.json(msgTemplate("Data berhasil diambil", threadCommentReply));
     },
 
-    updateThread: async (req: RequestWithUser, res: Response) => {
+    updateThreadCommentReply: async (req: RequestWithUser, res: Response) => {
         const data = req.body;
-        const validator = make(data, threadValidation);
+        const validator = make(data, threadCommentReplyUpdateValidation);
         const user = req.user as User;
 
         if (!validator.validate()) {
@@ -101,7 +99,7 @@ const threadUseCase = {
             return;
         }
 
-        const isOwnedAndFound = await prisma.thread.findFirst({
+        const isOwnedAndFound = await prisma.threadCommentReply.findFirst({
             where: { id: parseInt(req.params.id), owner_id: user.id },
         });
 
@@ -110,43 +108,44 @@ const threadUseCase = {
             return;
         }
 
-        const { id, ...updateData } = data;
+        const { id, thread_id, ...updateData } = data;
         void id;
-        const thread = await prisma.thread.update({
+        void thread_id;
+        const threadCommentReply = await prisma.threadCommentReply.update({
             where: {
                 id: parseInt(req.params.id),
             },
             data: updateData,
         });
 
-        res.json(msgTemplate("Data berhasil diupdate", thread));
+        res.json(msgTemplate("Data berhasil diupdate", threadCommentReply));
     },
 
-    deleteThread: async (req: RequestWithUser, res: Response) => {
+    deleteThreadCommentReply: async (req: RequestWithUser, res: Response) => {
         const user = req.user as User;
 
-        const threadExists = await prisma.thread.findFirst({
+        const threadCommentReplyExists = await prisma.threadCommentReply.findFirst({
             where: { id: parseInt(req.params.id), owner_id: user.id },
         });
 
-        if (!threadExists) {
+        if (!threadCommentReplyExists) {
             res.status(404).json(msgTemplate("Data tidak ditemukan"));
             return;
         }
 
-        const thread = await prisma.thread.delete({
+        const threadCommentReply = await prisma.threadCommentReply.delete({
             where: {
                 id: parseInt(req.params.id),
             },
         });
 
-        if (!thread) {
+        if (!threadCommentReply) {
             res.status(404).json(msgTemplate("Data tidak ditemukan"));
             return;
         }
 
-        res.json(msgTemplate("Data berhasil dihapus", thread));
+        res.json(msgTemplate("Data berhasil dihapus", threadCommentReply));
     },
 };
 
-export default threadUseCase;
+export default threadCommentReplyUseCase;

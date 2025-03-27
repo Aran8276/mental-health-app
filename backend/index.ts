@@ -1,11 +1,15 @@
 import { server } from "./src/config/expressClient";
 import threadRouter from "@/routes/thread.routes";
+import threadCommentRouter from "@/routes/thread-comment.routes";
+import threadCommentReplyRouter from "@/routes/thread-comment-reply.routes";
 import authRouter from "@/routes/auth.routes";
 import * as env from "dotenv";
 
 env.config();
 
 server.use("/thread", threadRouter);
+server.use("/thread-comment", threadCommentRouter);
+server.use("/thread-comment-reply", threadCommentReplyRouter);
 server.use("/auth", authRouter);
 
 server.get("/", async (req, res) => {

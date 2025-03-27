@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.ts",
     "scripts": {
-        "dev": "npx tsx .",
+        "dev": "npx tsx watch .",
         "reset": "npx prisma migrate reset",
         "migrate": "npx prisma migrate dev --name init",
         "lint": "npx eslint .",
