@@ -55,6 +55,11 @@ const threadUseCase = {
                 thread_comments: {
                     include: {
                         owner: true,
+                        thread_comment_replies: {
+                            include: {
+                                owner: true,
+                            },
+                        },
                     },
                 },
             },
@@ -73,6 +78,11 @@ const threadUseCase = {
                 thread_comments: {
                     include: {
                         owner: true,
+                        thread_comment_replies: {
+                            include: {
+                                owner: true,
+                            },
+                        },
                     },
                 },
             },

@@ -1,12 +1,10 @@
+import { ThreadComment } from "@/pages/Community/Community.type";
+import { ThreadCommentReply } from "@/pages/CommunityThread/CommunityThread.type";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
-export interface Replies {
-  user: string;
-  body: string;
-}
-
 export interface CommentCardProps {
-  replies?: Replies[];
+  data: ThreadComment;
+  replies?: ThreadCommentReply[];
   commentsOpen: boolean;
   setCommentsOpen: Dispatch<SetStateAction<boolean>>;
   replyOpen: boolean;

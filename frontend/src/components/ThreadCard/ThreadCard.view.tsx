@@ -4,9 +4,9 @@ import { MessageCircle } from "lucide-react";
 import { FC } from "react";
 import { ThreadCardProps } from "./ThreadCard.type";
 
-const ThreadCardView: FC<ThreadCardProps> = ({ isFull }) => {
+const ThreadCardView: FC<ThreadCardProps> = ({ isFull, data }) => {
   return (
-    <Link to="/community/test">
+    <Link to={`/community/${data.id}`}>
       <Card>
         <CardContent className="flex space-x-6">
           <div className="">
@@ -19,20 +19,14 @@ const ThreadCardView: FC<ThreadCardProps> = ({ isFull }) => {
             </div>
           </div>
           <div className="flex flex-col space-y-3">
-            <h5 className="font-semibold tracking-tight">User Name</h5>
-            <h3 className="text-2xl font-bold">Content Name</h3>
+            <h5 className="font-semibold tracking-tight">{data.owner.name}</h5>
+            <h3 className="text-2xl font-bold">{data.title}</h3>
             <p
               className={`text-gray-700 dark:text-gray-400 ${
                 isFull || "line-clamp-3"
               }`}
             >
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
-              soluta veritatis, vero fuga eum rerum aliquam, quisquam suscipit
-              praesentium, ex quia iure aut cupiditate qui! Suscipit
-              voluptatibus dicta fugit ex? Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Expedita, cupiditate vero nemo
-              labore iusto hic quia inventore beatae fugit quo maiores sit eius,
-              sequi impedit minus amet repellat, nobis debitis!
+              {data.body}
             </p>
             {isFull || (
               <section className="pt-3">

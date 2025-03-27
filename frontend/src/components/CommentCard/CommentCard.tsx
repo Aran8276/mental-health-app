@@ -1,8 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Replies } from "./CommentCard.type";
 import CommentCardView from "./CommentCard.view";
+import { ThreadComment } from "@/pages/Community/Community.type";
+import { ThreadCommentReply } from "@/pages/CommunityThread/CommunityThread.type";
 
-export default function CommentCard({ replies }: { replies?: Replies[] }) {
+export default function CommentCard({
+  replies,
+  data,
+}: {
+  replies?: ThreadCommentReply[];
+  data: ThreadComment;
+}) {
   const replyInputRef = useRef<HTMLInputElement | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [replyOpen, setReplyOpen] = useState(false);
@@ -21,6 +28,7 @@ export default function CommentCard({ replies }: { replies?: Replies[] }) {
 
   return (
     <CommentCardView
+      data={data}
       replyInputRef={replyInputRef}
       setCommentsOpen={setCommentsOpen}
       commentsOpen={commentsOpen}

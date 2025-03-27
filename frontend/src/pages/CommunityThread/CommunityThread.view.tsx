@@ -13,6 +13,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
   createCommentOpen,
   setTextareaStatus,
   textareaRef,
+  thread,
 }) => {
   return (
     <>
@@ -27,7 +28,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
         </div>
         <section className="grid grid-cols-1 md:grid-cols-3 mx-8 gap-8">
           <div className="flex flex-col col-span-2 space-y-12">
-            <ThreadCard isFull />
+            {thread && <ThreadCard data={thread} isFull />}
             <section className="flex flex-col space-y-8">
               <h3 className="text-2xl font-semibold">Komentar</h3>
               <div className="flex flex-col space-y-8">
@@ -61,22 +62,13 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
                     </CardContent>
                   </Card>
                 )}
-
-                <CommentCard
-                  replies={[
-                    { user: "Aran", body: "hello" },
-                    { user: "N", body: "hello" },
-                    { user: "Aan", body: "hello" },
-                    { user: "Arftan", body: "hello" },
-                    { user: "Arftan", body: "hello" },
-                    { user: "Arftan", body: "hello" },
-                  ]}
-                />
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
+                {thread?.thread_comments.map((item, index) => (
+                  <CommentCard
+                    key={index}
+                    data={item}
+                    replies={item.thread_comment_replies}
+                  />
+                ))}
               </div>
             </section>
           </div>

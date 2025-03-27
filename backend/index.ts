@@ -3,10 +3,12 @@ import threadRouter from "@/routes/thread.routes";
 import threadCommentRouter from "@/routes/thread-comment.routes";
 import threadCommentReplyRouter from "@/routes/thread-comment-reply.routes";
 import authRouter from "@/routes/auth.routes";
+import cors from "cors";
 import * as env from "dotenv";
 
 env.config();
 
+server.use(cors());
 server.use("/thread", threadRouter);
 server.use("/thread-comment", threadCommentRouter);
 server.use("/thread-comment-reply", threadCommentReplyRouter);

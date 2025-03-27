@@ -1,5 +1,5 @@
-import { Replies } from "../CommentCard/CommentCard.type";
+import { ThreadCommentReply } from "@/pages/CommunityThread/CommunityThread.type";
 
 export interface ReplySectionProps {
-  data: Replies;
+  data: ThreadCommentReply;
 }
