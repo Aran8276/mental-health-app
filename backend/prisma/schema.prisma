@@ -29,14 +29,23 @@ enum UserRole {
 model User {
   id                     Int                  @id @default(autoincrement())
   name                   String
-  email                  String
-  username               String
+  email                  String               @unique
+  email_verified_at      DateTime?
+  username               String               @unique
   password               String
   role                   UserRole             @default(USER)
   ai_conversations       AiConversation[]
   threads                Thread[]
   thread_comments        ThreadComment[]
   thread_comment_replies ThreadCommentReply[]
+  verification_tokens    VerificationToken[]
+}
+
+model VerificationToken {
+  id      Int    @id @default(autoincrement())
+  token   String @unique
+  user_id Int
+  user    User   @relation(fields: [user_id], references: [id])
 }
 
 model AiConversation {

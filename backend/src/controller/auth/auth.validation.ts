@@ -9,3 +9,7 @@ export const registerValidation = {
     username: "required|string",
     password: "required|string",
 };
+
+export const verificationValidation = {
+    token: "required|string"
+}
