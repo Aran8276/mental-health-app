@@ -15,7 +15,7 @@ const ProfileView = () => {
         <div className="bg-gray-200 w-full h-60 rounded-4xl relative overflow-hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="absolute bg-white rounded-full p-2 right-5 top-5">
+              <div className="absolute bg-background rounded-full p-2 right-5 top-5">
                 <EllipsisVertical className="w-7 h-7" />
               </div>
             </DropdownMenuTrigger>
@@ -29,11 +29,11 @@ const ProfileView = () => {
         <div className="w-50 h-50 absolute bottom-0 left-10">
           <img
             src="public/pict.jpg"
-            className="rounded-full w-50 h-50 border-9 border-white"
+            className="rounded-full w-50 h-50 border-9 border-background"
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="bg-white rounded-full p-4 border-1 absolute right-0 bottom-0">
+              <div className="bg-background rounded-full p-4 border-1 absolute right-0 bottom-0">
                 <PenLine className="w-5.5 h-5.5" />
               </div>
             </DropdownMenuTrigger>
