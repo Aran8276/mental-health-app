@@ -69,6 +69,11 @@ const threadUseCase = {
     },
 
     readThreadById: async (req: Request, res: Response) => {
+        if (isNaN(parseInt(req.params.id))) {
+            res.status(404).json(msgTemplate("Data tidak ditemukan"));
+            return;
+        }
+
         const thread = await prisma.thread.findUnique({
             where: {
                 id: parseInt(req.params.id),

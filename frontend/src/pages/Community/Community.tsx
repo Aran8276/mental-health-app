@@ -10,7 +10,7 @@ export default function Community() {
 
   const fetchThreads = async () => {
     try {
-      const data: FetchThreadResponse = (await client.get("/thread")).data;
+      const data: FetchThreadResponse = (await client().get("/thread")).data;
       setThreads(data.payload);
     } catch (error) {
       if (error instanceof AxiosError) {

@@ -16,11 +16,12 @@ import {
 import MobileMenuTrigger from "../MobileMenuTrigger/MobileMenuTrigger";
 
 const HeaderView: FC<HeaderProps> = ({
+  user,
   publicRoutes,
-  loggedIn,
   mobileOpen,
   mobileSetOpen,
   profileDropdownItems,
+  handleLogout,
 }) => {
   return (
     <header className="sticky top-0 z-50">
@@ -48,7 +49,7 @@ const HeaderView: FC<HeaderProps> = ({
                 ))}
               </div>
               <div className="flex items-center mt-4 lg:mt-0">
-                {loggedIn && (
+                {user && (
                   <Button
                     variant={"ghost"}
                     className="bg-inherit"
@@ -60,7 +61,7 @@ const HeaderView: FC<HeaderProps> = ({
 
                 <ModeToggle />
 
-                {loggedIn ? (
+                {user ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button
@@ -81,7 +82,9 @@ const HeaderView: FC<HeaderProps> = ({
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuLabel>Hai username 👋</DropdownMenuLabel>
+                      <DropdownMenuLabel>
+                        Hai {user.username} 👋
+                      </DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       {profileDropdownItems.map((item, index) => (
                         <Link to={item.to} key={index}>
@@ -90,7 +93,10 @@ const HeaderView: FC<HeaderProps> = ({
                           </DropdownMenuItem>
                         </Link>
                       ))}
-                      <DropdownMenuItem className="cursor-pointer text-red-500">
+                      <DropdownMenuItem
+                        onClick={() => handleLogout()}
+                        className="cursor-pointer text-red-500"
+                      >
                         Keluar
                       </DropdownMenuItem>
                     </DropdownMenuContent>

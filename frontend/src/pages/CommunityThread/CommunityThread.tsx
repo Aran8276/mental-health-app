@@ -15,7 +15,7 @@ export default function CommunityThread() {
   const fetchThread = useCallback(async () => {
     try {
       const data: FetchThreadDetailResponse = (
-        await client.get(`/thread/${params.id}`)
+        await client().get(`/thread/${params.id}`)
       ).data;
       setThread(data.payload);
     } catch (error) {

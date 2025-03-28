@@ -1,12 +1,21 @@
 import { FC } from "react";
 import { LoginProps } from "./Login.type";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import LoadableButton from "@/components/LoadableButton/LoadableButton";
 
-const LoginView: FC<LoginProps> = () => {
+const LoginView: FC<LoginProps> = ({ form, onSubmit, error, loading }) => {
   return (
     <div className="flex px-8 md:px-0 py-16 justify-center h-screen">
       <div className="mx-auto max-w-sm space-y-8">
@@ -16,43 +25,75 @@ const LoginView: FC<LoginProps> = () => {
             Masukan username dan password anda untuk masuk ke akun anda
           </p>
         </div>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="ToyotaCorolla123"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Kata Sandi</Label>
-              <Link to="#" className="ml-auto inline-block text-sm underline">
-                Lupa kata sandi?
-              </Link>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="space-y-2">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="username">Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="username"
+                        type="text"
+                        placeholder="ToyotaCorolla123"
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
-            <Input id="password" type="password" required />
-          </div>
-          <Button className="w-full">Masuk</Button>
-          <Link to="/register">
-            <Button variant="outline" className="w-full">
-              Daftar
-            </Button>
-          </Link>
-        </div>
+
+            <div className="space-y-2">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor="password">Kata Sandi</FormLabel>
+                    <FormControl>
+                      <Input
+                        id="password"
+                        type="password"
+                        required
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      <Link
+                        to="#"
+                        className="ml-auto inline-block text-sm underline"
+                      >
+                        Lupa kata sandi?
+                      </Link>
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            <LoadableButton
+              isLoading={loading}
+              type="submit"
+              className="w-full"
+            >
+              Masuk
+            </LoadableButton>
+            <Link to="/register">
+              <Button variant="outline" className="w-full">
+                Daftar
+              </Button>
+            </Link>
+          </form>
+        </Form>
         <Separator />
-        {/* <div className="space-y-4">
-          <div className="space-y-2">
-            <p className="text-sm leading-none">
-              Don't have an account?
-              <Link to="#" className="underline">
-                Sign up
-              </Link>
-            </p>
-          </div>
-        </div> */}
       </div>
     </div>
   );
