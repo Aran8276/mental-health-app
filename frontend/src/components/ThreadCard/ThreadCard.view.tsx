@@ -27,7 +27,10 @@ const ThreadCardView: FC<ThreadCardProps> = ({ isFull, data }) => {
               <section className="pt-3">
                 <div className="flex space-x-3">
                   <MessageCircle />
-                  <span>20</span>
+                  <span>
+                    {data.thread_comments.length > 0 &&
+                      data.thread_comments.length}
+                  </span>
                 </div>
               </section>
             )}

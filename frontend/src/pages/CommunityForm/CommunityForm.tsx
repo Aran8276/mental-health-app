@@ -26,34 +26,22 @@ export default function CommunityForm() {
     setLoading(true);
     setError("");
     try {
-      try {
-        const data: CreatePostResponse = (
-          await client().post("/thread", values)
-        ).data;
+      const data: CreatePostResponse = (await client().post("/thread", values))
+        .data;
 
-        toast(data.msg);
-        navigate("/community");
-      } catch (error) {
-        setLoading(false);
-        if (error instanceof AxiosError) {
-          if (error.status == 401) {
-            setError(error.response?.data?.msg || "Terjadi kesalahan.");
-            return;
-          }
-
-          console.log(error.message);
-          toast(error.message);
-        }
-      }
+      toast(data.msg);
+      navigate("/community");
     } catch (error) {
       setLoading(false);
-      console.error("Form submission error", error);
-      toast.error("Gagal mengirim form. Silakan cek console browser");
-      toast.error(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(error, null, 2)}</code>
-        </pre>
-      );
+      if (error instanceof AxiosError) {
+        if (error.status == 401) {
+          setError(error.response?.data?.msg || "Terjadi kesalahan.");
+          return;
+        }
+
+        console.log(error.message);
+        toast(error.message);
+      }
     }
   };
 

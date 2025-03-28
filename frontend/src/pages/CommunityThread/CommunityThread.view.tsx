@@ -8,12 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import SmThreadCard from "@/components/SmSmThreadCard/SmThreadCard";
 import { Link } from "react-router-dom";
+import LoadableButton from "@/components/LoadableButton/LoadableButton";
 
 const CommunityThreadView: FC<CommunityThreadProps> = ({
+  error,
+  loading,
+  submitThread,
   createCommentOpen,
   setTextareaStatus,
   textareaRef,
   thread,
+  threadsList,
 }) => {
   return (
     <>
@@ -40,6 +45,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
                         className="h-[130px]"
                         placeholder="Tambahkan komentar"
                       />
+                      {error && <p className="text-red-500 text-sm">{error}</p>}
                       <div className="flex space-x-4 self-end">
                         <Button
                           onClick={() => setTextareaStatus(false)}
@@ -48,7 +54,13 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
                         >
                           Batal
                         </Button>
-                        <Button className="cursor-pointer">Tambahkan</Button>
+                        <LoadableButton
+                          isLoading={loading}
+                          onClick={() => submitThread()}
+                          className="cursor-pointer"
+                        >
+                          Tambahkan
+                        </LoadableButton>
                       </div>
                     </CardContent>
                   </Card>
@@ -90,12 +102,9 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
               <CardContent className="flex flex-col space-y-6">
                 <h3 className="font-semibold text-xl">Forum Terbaru</h3>
                 <div className="flex flex-col space-y-4">
-                  <SmThreadCard />
-                  <SmThreadCard />
-                  <SmThreadCard />
-                  <SmThreadCard />
-                  <SmThreadCard />
-                  <SmThreadCard />
+                  {threadsList.map((item, index) => (
+                    <SmThreadCard data={item} key={index} />
+                  ))}
                 </div>
               </CardContent>
             </Card>
