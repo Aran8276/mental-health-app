@@ -1,6 +1,6 @@
 import { PenLine, EllipsisVertical } from "lucide-react";
 import Address from "@/components/AddressCard/address.view";
-import PersonalInfo from "@/components/PersonalInformationCard/PersonalInfoCard.view";
+import PersonalInfo from "@/components/PersonalInformationCard/personalInfoCard.view";
 import {
   DropdownMenu,
   DropdownMenuContent,
