@@ -4,8 +4,12 @@ import { CommentCardProps } from "./CommentCard.type";
 import ReplySection from "../ReplySection/ReplySection";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import LoadableButton from "../LoadableButton/LoadableButton";
 
 const CommentCardView: FC<CommentCardProps> = ({
+  error,
+  loading,
+  submitReply,
   data,
   replies,
   commentsOpen,
@@ -54,6 +58,7 @@ const CommentCardView: FC<CommentCardProps> = ({
             {replyOpen && (
               <div className="flex flex-col space-y-4">
                 <Input ref={replyInputRef} placeholder="Tambahkan balasan" />
+                {error && <p className="text-red-500 text-sm">{error}</p>}
                 <div className="flex space-x-4 self-end">
                   <Button
                     onClick={() => setReplyOpen(false)}
@@ -62,7 +67,13 @@ const CommentCardView: FC<CommentCardProps> = ({
                   >
                     Batal
                   </Button>
-                  <Button className="cursor-pointer">Tambahkan</Button>
+                  <LoadableButton
+                    isLoading={loading}
+                    onClick={() => submitReply()}
+                    className="cursor-pointer"
+                  >
+                    Tambahkan
+                  </LoadableButton>
                 </div>
               </div>
             )}

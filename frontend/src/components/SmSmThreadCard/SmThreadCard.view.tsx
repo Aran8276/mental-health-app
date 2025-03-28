@@ -6,7 +6,7 @@ import { SmThreadProps } from "./SmThreadCard.type";
 
 const SmThreadCardView: FC<SmThreadProps> = ({ data }) => {
   return (
-    <Link to="/community/test">
+    <Link to={`/community/${data.id}`}>
       <Card>
         <CardContent className="flex space-x-6">
           <div className="">

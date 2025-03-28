@@ -7,7 +7,10 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 
 const ThreadCardView: FC<ThreadCardProps> = ({ isFull, data }) => {
   return (
-    <Link to={`/community/${data.id}`}>
+    <Link
+      className={`${isFull && "cursor-default"}`}
+      to={`/community/${data.id}`}
+    >
       <Card>
         <CardContent className="flex space-x-6">
           <div className="">

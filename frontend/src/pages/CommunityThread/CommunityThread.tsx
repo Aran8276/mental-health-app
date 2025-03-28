@@ -11,6 +11,7 @@ import {
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { FetchThreadContext } from "./CommunityThread.context";
 
 export default function CommunityThread() {
   const [error, setError] = useState("");
@@ -99,15 +100,17 @@ export default function CommunityThread() {
   }, [createCommentOpen]);
 
   return (
-    <CommunityThreadView
-      error={error}
-      loading={loading}
-      submitThread={submitThread}
-      threadsList={threadsList}
-      thread={thread}
-      textareaRef={textarea}
-      createCommentOpen={createCommentOpen}
-      setTextareaStatus={setTextareaStatus}
-    />
+    <FetchThreadContext.Provider value={fetchThread}>
+      <CommunityThreadView
+        error={error}
+        loading={loading}
+        submitThread={submitThread}
+        threadsList={threadsList}
+        thread={thread}
+        textareaRef={textarea}
+        createCommentOpen={createCommentOpen}
+        setTextareaStatus={setTextareaStatus}
+      />
+    </FetchThreadContext.Provider>
   );
 }
