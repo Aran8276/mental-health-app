@@ -5,21 +5,9 @@ import threadCommentReplyRouter from "@/routes/thread-comment-reply.routes";
 import authRouter from "@/routes/auth.routes";
 import cors from "cors";
 import * as env from "dotenv";
-import { transporter } from "@/config/nodemailerClient";
 
 env.config();
 
-server.get("/email-test", async (req, res) => {
-    const info = await transporter.sendMail({
-        from: "aran8276@gmail.com", // sender address
-        to: "aran8276@gmail.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
-    });
-
-    res.json({ msg: "Message sent: %s", payload: info.messageId });
-});
 server.use(cors());
 server.use("/thread", threadRouter);
 server.use("/thread-comment", threadCommentRouter);

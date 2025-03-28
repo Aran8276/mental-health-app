@@ -7,7 +7,6 @@ import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { nanoid } from "nanoid";
 import { z } from "zod";
 
 export default function Register() {
@@ -38,19 +37,29 @@ export default function Register() {
         toast(
           <div className="flex flex-col space-y-3">
             <p>Register Berhasil</p>
-            <p>Selamat datang {data.payload.name} 👋</p>
+            <p>
+              Silakan anda lakukan verifikasi email yang sudah dikirimkan ke{" "}
+              {data.payload.email} 👍
+            </p>
           </div>
         );
-        navigate("/", {
-          state: nanoid(),
-        });
+
+        navigate("/email-verify");
       } catch (error) {
         setLoading(false);
         if (error instanceof AxiosError) {
           if (error.status == 401) {
-            setError("Email atau password salah.");
+            setError(error.response?.data?.msg || "Email atau password salah.");
             return;
           }
+
+          if (error.status == 409) {
+            setError(
+              error.response?.data?.msg || "Email atau username sudah diambil."
+            );
+            return;
+          }
+
           console.log(error.message);
           toast(error.message);
         }

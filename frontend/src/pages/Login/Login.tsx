@@ -45,7 +45,7 @@ export default function Login() {
         setLoading(false);
         if (error instanceof AxiosError) {
           if (error.status == 401) {
-            setError("Email atau password salah.");
+            setError(error.response?.data?.msg || "Email atau password salah.");
             return;
           }
           console.log(error.message);
