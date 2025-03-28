@@ -2,7 +2,7 @@ import { FC } from "react";
 import ApplicationLogo from "../ApplicationLogo/ApplicationLogo";
 import { HeaderProps } from "./Header.type";
 import { Link } from "react-router-dom";
-import { Bell, User } from "lucide-react";
+import { Bell } from "lucide-react";
 import { ModeToggle } from "../ui/mode-toggle";
 import { Button } from "../ui/button";
 import {
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import MobileMenuTrigger from "../MobileMenuTrigger/MobileMenuTrigger";
+import UserAvatar from "../UserAvatar/UserAvatar";
 
 const HeaderView: FC<HeaderProps> = ({
   user,
@@ -69,9 +70,7 @@ const HeaderView: FC<HeaderProps> = ({
                         className="flex items-center cursor-pointer focus:outline-none"
                         aria-label="toggle profile dropdown"
                       >
-                        <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
-                          <User className="p-[6px] w-full h-full" />
-                        </div>
+                        <UserAvatar />
                         <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">
                           User name
                         </h3>
