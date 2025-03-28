@@ -2,7 +2,7 @@ import { RequestWithUser } from "@/middleware/authMiddleware.type";
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { make } from "simple-body-validator";
-import { loginValidation, registerValidation } from "./auth.validation";
+import { loginValidation, registerValidation, verificationValidation } from "./auth.validation";
 import { msgTemplate } from "@/config/msgTemplate";
 import { prisma } from "@/config/prismaClient";
 import * as bcrypt from "bcrypt";
@@ -30,6 +30,11 @@ const authUseCase = {
 
         if (!user) {
             res.status(401).json(msgTemplate("Username atau password salah"));
+            return;
+        }
+
+        if (!user.email_verified_at) {
+            res.status(401).json(msgTemplate("Email anda belum diverifikasi."));
             return;
         }
 
@@ -114,6 +119,24 @@ const authUseCase = {
         });
         return;
     },
+
+    verify: async (req: Request, res: Response) => {
+        const data = req.body;
+        const validator = make(data, verificationValidation);
+
+        if (!validator.validate()) {
+            res.status(422).json(
+                msgTemplate(
+                    "Semua input harus diisi",
+                    validator.errors().all(),
+                ),
+            );
+            return;
+        }
+
+        
+
+    }
 };
 
 export default authUseCase;

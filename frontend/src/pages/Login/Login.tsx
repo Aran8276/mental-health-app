@@ -27,7 +27,6 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      console.log(values);
       try {
         const data: LoginResponse = (await client().post("/auth/login", values))
           .data;
@@ -36,7 +35,7 @@ export default function Login() {
         toast(
           <div className="flex flex-col space-y-3">
             <p>Login Berhasil</p>
-            <p>Selamat datang {data.payload.name} 👋</p>
+            <p>Selamat datang kembali {data.payload.name} 👋</p>
           </div>
         );
         navigate("/", {
