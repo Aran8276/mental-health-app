@@ -31,27 +31,77 @@ enum UserGender {
   FEMALE
 }
 
+enum UserMood {
+  HAPPY
+  OK
+  SAD
+  WORRIED
+  ANGRY
+}
+
+enum MindfulSessionType {
+  BREATHE
+  FOCUS
+  RELAXING
+  SLEEPING
+}
+
 model User {
-  id                     Int                  @id @default(autoincrement())
-  name                   String
-  email                  String               @unique
-  email_verified_at      DateTime?
-  username               String               @unique
-  password               String
+  // data wajib
+  id                Int       @id @default(autoincrement())
+  name              String
+  email             String    @unique
+  email_verified_at DateTime?
+  username          String    @unique
+  password          String
+
+  // data sampingan general
+  phone_number String?
+  bio          String?     @db.LongText
+  gender       UserGender?
+
+  // data sampingan alamat
+  street   String?
+  province String?
+  postal   String?
+  country  String?
+
+  // data relasi
   role                   UserRole             @default(USER)
   ai_conversations       AiConversation[]
   threads                Thread[]
   thread_comments        ThreadComment[]
   thread_comment_replies ThreadCommentReply[]
   verification_tokens    VerificationToken[]
+  todos                  Todos[]
   created_at             DateTime             @default(now())
+  MoodSubmission         MoodSubmission[]
+  MindfulSessions        MindfulSessions[]
 }
 
-model UserData {
-  id          Int         @id @default(autoincrement())
-  phoneNumber String
-  bio         String      @db.LongText
-  gender      UserGender?
+model MoodSubmission {
+  id         Int      @id @default(autoincrement())
+  owner      User     @relation(fields: [owner_id], references: [id])
+  owner_id   Int
+  mood       UserMood
+  created_at DateTime @default(now())
+}
+
+model Todos {
+  id           Int      @id @default(autoincrement())
+  owner        User     @relation(fields: [owner_id], references: [id])
+  owner_id     Int
+  title        String
+  is_completed Boolean  @default(false)
+  created_at   DateTime @default(now())
+}
+
+model MindfulSessions {
+  id         Int                @id @default(autoincrement())
+  owner      User               @relation(fields: [owner_id], references: [id])
+  owner_id   Int
+  type       MindfulSessionType
+  created_at DateTime           @default(now())
 }
 
 model VerificationToken {

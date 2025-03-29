@@ -42,6 +42,8 @@ import {
   PlusCircle,
   Trash2,
   Sun,
+  Sunrise,
+  Sunset,
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,7 +51,6 @@ import { cn } from "@/lib/utils";
 import {
   pageVariants,
   itemFadeUp,
-  userData,
   containerStagger,
   moodButtonVariant,
   goalItemVariant,
@@ -73,13 +74,14 @@ const DashboardView: FC<DashboardProps> = ({
   setNewGoalText,
   completedGoals,
   goals,
+  user,
 }) => {
   return (
     <motion.div
       variants={pageVariants}
       initial="hidden"
       animate="visible"
-      className="flex flex-col px-4 sm:px-6 lg:px-8 py-8 gap-8 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] bg-gradient-to-br from-cyan-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-teal-950 overflow-y-auto"
+      className="flex flex-col px-4 sm:px-6 py-12 lg:px-16 md:py-16 gap-8 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] bg-gradient-to-br from-cyan-50 via-emerald-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-teal-950 overflow-y-auto"
     >
       <motion.div variants={itemFadeUp}>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
@@ -88,9 +90,19 @@ const DashboardView: FC<DashboardProps> = ({
             animate={{ rotate: 0, scale: 1 }}
             transition={{ type: "spring", delay: 0.3 }}
           >
-            {greetingIcon && <Sun className="w-7 h-7 text-amber-500" />}
+            <>
+              {greetingIcon == "sun" ? (
+                <Sun className="w-7 h-7 text-amber-500" />
+              ) : greetingIcon == "sunrise" ? (
+                <Sunrise className="w-7 h-7 text-amber-500" />
+              ) : greetingIcon == "sunset" ? (
+                <Sunset className="w-7 h-7 text-amber-500" />
+              ) : (
+                <Sun className="w-7 h-7 text-amber-500" />
+              )}
+            </>
           </motion.div>
-          {greeting}, {userData.name}!
+          {greeting}, {user?.name}!
         </h1>
         <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
           Semoga harimu penuh ketenangan dan kebahagiaan.

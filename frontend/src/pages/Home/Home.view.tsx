@@ -260,7 +260,7 @@ const HomeView = () => {
               },
               {
                 icon: ClipboardPenLine,
-                title: "Jurnal Terpandu",
+                title: "Jurnal Terpadu",
                 text: "Prompts bermakna untuk refleksi & pemrosesan emosi.",
                 color: vibrantHighlight,
                 lightBg: vibrantHighlightBgLight,

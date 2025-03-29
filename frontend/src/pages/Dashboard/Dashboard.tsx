@@ -1,12 +1,18 @@
-import { Sun, Sunrise, Sunset } from "lucide-react";
 import { useState, useEffect } from "react";
 import { initialGoals } from "./Dashboard.data";
 import { Goal } from "./Dashboard.type";
 import DashboardView from "./Dashboard.view";
+import { CheckUserResponse, User } from "@/components/Header/Header.type";
+import { AxiosError } from "axios";
+import { client } from "@/config/axiosClient";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const [greeting, setGreeting] = useState("Selamat Datang");
-  const [greetingIcon, setGreetingIcon] = useState<React.ElementType>(Sun);
+  const [user, setUser] = useState<User | null>(null);
+  const [greetingIcon, setGreetingIcon] = useState<
+    "sunrise" | "sun" | "sunset"
+  >("sun");
   const [goals, setGoals] = useState<Goal[]>(initialGoals);
   const [completedGoals, setCompletedGoals] = useState(
     goals.filter((g) => g.completed).length
@@ -21,13 +27,13 @@ export default function Dashboard() {
     const hour = new Date().getHours();
     if (hour < 12) {
       setGreeting("Selamat Pagi");
-      setGreetingIcon(Sunrise);
+      setGreetingIcon("sunrise");
     } else if (hour < 18) {
       setGreeting("Selamat Siang");
-      setGreetingIcon(Sun);
+      setGreetingIcon("sun");
     } else {
       setGreeting("Selamat Malam");
-      setGreetingIcon(Sunset);
+      setGreetingIcon("sunset");
     }
   }, []);
 
@@ -55,11 +61,31 @@ export default function Dashboard() {
     setShowAddGoalDialog(false);
   };
 
+  const fetchUser = async () => {
+    try {
+      const data: CheckUserResponse = (await client().get("/auth/check")).data;
+      setUser(data.user);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.status == 401 || error.status == 403) {
+          setUser(null);
+          return;
+        }
+        console.log(error.message);
+        toast(error.message);
+      }
+    }
+  };
+
   const handleDeleteGoal = (id: number) => {
     const updatedGoals = goals.filter((goal) => goal.id !== id);
     setGoals(updatedGoals);
     setCompletedGoals(updatedGoals.filter((g) => g.completed).length);
   };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   document.title = "Dashboard - Mental Health App";
 
@@ -78,6 +104,7 @@ export default function Dashboard() {
       setNewGoalText={setNewGoalText}
       completedGoals={completedGoals}
       goals={goals}
+      user={user}
     />
   );
 }

@@ -1,8 +1,9 @@
-import { Dispatch, ElementType, SetStateAction } from "react";
+import { User } from "@/components/Header/Header.type";
+import { Dispatch, SetStateAction } from "react";
 
 export interface DashboardProps {
   greeting: string;
-  greetingIcon: ElementType<keyof React.JSX.IntrinsicElements> | string;
+  greetingIcon: "sunrise" | "sun" | "sunset";
   showAddGoalDialog: boolean;
   goalProgress: number;
   handleMoodSelect: (mood: string) => void;
@@ -14,7 +15,7 @@ export interface DashboardProps {
   setNewGoalText: Dispatch<SetStateAction<string>>;
   completedGoals: number;
   goals: Goal[];
-  
+  user: User | null;
 }
 
 export interface MindfulnessSession {
