@@ -2,10 +2,11 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "../ui/card";
 import { MessageCircle } from "lucide-react";
 import { FC } from "react";
+import { SmThreadProps } from "./SmThreadCard.type";
 
-const SmThreadCardView: FC = () => {
+const SmThreadCardView: FC<SmThreadProps> = ({ data }) => {
   return (
-    <Link to="/community/test">
+    <Link to={`/community/${data.id}`}>
       <Card>
         <CardContent className="flex space-x-6">
           <div className="">
@@ -18,21 +19,20 @@ const SmThreadCardView: FC = () => {
             </div>
           </div>
           <div className="flex flex-col space-y-2">
-            <h5 className="font-semibold text-sm tracking-tight">User Name</h5>
-            <h3 className="text-lg font-bold">Content Name</h3>
+            <h5 className="font-semibold text-sm tracking-tight">
+              {data.owner.name}
+            </h5>
+            <h3 className="text-lg font-bold">{data.title}</h3>
             <p className="text-sm text-gray-700 dark:text-gray-200 line-clamp-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi
-              soluta veritatis, vero fuga eum rerum aliquam, quisquam suscipit
-              praesentium, ex quia iure aut cupiditate qui! Suscipit
-              voluptatibus dicta fugit ex? Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Expedita, cupiditate vero nemo
-              labore iusto hic quia inventore beatae fugit quo maiores sit eius,
-              sequi impedit minus amet repellat, nobis debitis!
+              {data.body}
             </p>
             <section className="pt-2">
               <div className="flex space-x-3">
                 <MessageCircle />
-                <span>20</span>
+                <span>
+                  {data.thread_comments.length > 0 &&
+                    data.thread_comments.length}
+                </span>
               </div>
             </section>
           </div>

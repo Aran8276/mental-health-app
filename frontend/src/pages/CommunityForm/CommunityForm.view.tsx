@@ -7,13 +7,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
+import LoadableButton from "@/components/LoadableButton/LoadableButton";
 
-const CommunityFormView: FC<CommunityFormProps> = () => {
+const CommunityFormView: FC<CommunityFormProps> = ({
+  form,
+  onSubmit,
+  error,
+  loading,
+}) => {
   return (
     <>
       <section className="flex items-center md:items-start flex-col space-y-12 w-full">
@@ -59,39 +73,70 @@ const CommunityFormView: FC<CommunityFormProps> = () => {
         </Card>
 
         <Card className="w-full">
-          <form>
-            <CardContent className="space-y-4">
-              <div className="flex flex-col space-y-2">
-                <label htmlFor="title" className="text-sm font-medium">
-                  Judul
-                </label>
-                <Input
-                  id="title"
-                  placeholder="Ringkas pertanyaan atau situasi Anda"
-                  required
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col space-y-2">
+                      <FormLabel
+                        htmlFor="title"
+                        className="text-sm font-medium"
+                      >
+                        Judul
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          id="title"
+                          placeholder="Ringkas pertanyaan atau situasi Anda"
+                          required
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <label htmlFor="body" className="text-sm font-medium">
-                  Konten
-                </label>
-                <Textarea
-                  id="body"
-                  placeholder="Jelaskan situasi, perasaan, atau pertanyaan Anda secara detail..."
-                  className="min-h-[200px] resize-y"
-                  required
+                <FormField
+                  control={form.control}
+                  name="body"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col space-y-2">
+                      <FormLabel htmlFor="body" className="text-sm font-medium">
+                        Konten
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          id="body"
+                          placeholder="Jelaskan situasi, perasaan, atau pertanyaan Anda secara detail..."
+                          className="min-h-[200px] resize-y"
+                          required
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </CardContent>
-            <CardFooter className="py-8">
-              <Button type="submit" className="w-full sm:w-auto ml-auto">
-                <span className="flex items-center gap-2">
-                  <Send className="h-4 w-4" />
-                  Kirim
-                </span>
-              </Button>
-            </CardFooter>
-          </form>
+              </CardContent>
+              <CardFooter className="py-8">
+                {error && <p className="text-sm text-red-500">{error}</p>}
+
+                <LoadableButton
+                  isLoading={loading}
+                  type="submit"
+                  className="w-full sm:w-auto ml-auto"
+                >
+                  <span className="flex items-center gap-2">
+                    <Send className="h-4 w-4" />
+                    Kirim
+                  </span>
+                </LoadableButton>
+              </CardFooter>
+            </form>
+          </Form>
         </Card>
       </section>
     </>
