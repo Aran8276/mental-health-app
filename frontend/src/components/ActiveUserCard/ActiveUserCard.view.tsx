@@ -5,7 +5,7 @@ const ActiveUserCardView = () => {
   return (
     <Link to="/">
       <div className="flex space-x-3">
-        <section className="">
+        <section>
           <UserAvatar />
         </section>
 

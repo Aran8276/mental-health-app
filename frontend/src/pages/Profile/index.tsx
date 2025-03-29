@@ -1,4 +1,4 @@
 import { memo } from "react";
-import Profile from "./profile";
+import Profile from "./Profile";
 
 export default memo(Profile);

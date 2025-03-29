@@ -2,7 +2,7 @@ import { FC } from "react";
 import { UserAvatarProps } from "./UserAvatar.type";
 
 const UserAvatarView: FC<UserAvatarProps> = ({
-  src,
+  // src,
   name,
   size = "md",
   sizeClasses,
@@ -10,11 +10,11 @@ const UserAvatarView: FC<UserAvatarProps> = ({
   return (
     <img
       src={
-        src ||
+        // src ||
         `https://ui-avatars.com/api/?name=${encodeURIComponent(
           name
         )}&background=random`
-      } // Placeholder/fallback
+      }
       alt={name}
       className={`${sizeClasses[size]} rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-sm`}
     />

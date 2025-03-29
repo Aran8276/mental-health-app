@@ -19,7 +19,7 @@ import {
   List,
   MessageSquarePlus,
 } from "lucide-react";
-import SmThreadCard from "@/components/SmSmThreadCard/SmThreadCard";
+import SmThreadCard from "@/components/SmThreadCard/SmThreadCard";
 import {
   pageVariants,
   containerStaggerVariants,

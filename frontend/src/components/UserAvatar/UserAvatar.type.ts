@@ -5,7 +5,7 @@ export interface SizeClasses {
 }
 
 export interface UserAvatarProps {
-  src: string;
+  src: string | undefined;
   name: string;
   size: "sm" | "md" | "lg";
   sizeClasses: SizeClasses;
