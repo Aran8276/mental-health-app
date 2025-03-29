@@ -7,6 +7,7 @@ import {
   Payload,
   PostThreadCommentResponse,
   Thread,
+  ThreadComment,
 } from "./CommunityThread.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
@@ -20,6 +21,9 @@ export default function CommunityThread() {
   const [threadsList, setThreadsList] = useState<Payload[]>([]);
   const [createCommentOpen, setCreateCommentOpen] = useState(false);
   const textarea = useRef<HTMLTextAreaElement | null>(null);
+  const safeThread = thread || ({} as Partial<Thread>);
+  const comments = safeThread.thread_comments || ([] as ThreadComment[]);
+  const safeThreadsList = threadsList || ([] as Thread[]);
   const params = useParams();
 
   const fetchThread = useCallback(async () => {
@@ -87,7 +91,9 @@ export default function CommunityThread() {
     fetchAllThreads();
   }, []);
 
-  document.title = "Forum Komunitas - Mental Health App";
+  document.title = `${
+    thread ? thread.title : "Forum Komunitas"
+  } - Mental Health App`;
 
   const setTextareaStatus = (value: boolean) => {
     setCreateCommentOpen(value);
@@ -110,6 +116,9 @@ export default function CommunityThread() {
         textareaRef={textarea}
         createCommentOpen={createCommentOpen}
         setTextareaStatus={setTextareaStatus}
+        safeThread={safeThread}
+        comments={comments}
+        safeThreadsList={safeThreadsList}
       />
     </FetchThreadContext.Provider>
   );

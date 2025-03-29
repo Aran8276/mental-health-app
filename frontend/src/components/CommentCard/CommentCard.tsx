@@ -51,6 +51,9 @@ export default function CommentCard({
   useEffect(() => {
     if (replyOpen) {
       replyInputRef.current?.focus();
+      if (!commentsOpen) {
+        setCommentsOpen(true);
+      }
     }
   }, [replyOpen]);
 

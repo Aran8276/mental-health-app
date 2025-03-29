@@ -1,5 +1,19 @@
 import { RefObject } from "react";
 
+export interface CommunityThreadProps {
+  error: string;
+  loading: boolean;
+  submitThread: () => void;
+  textareaRef: RefObject<HTMLTextAreaElement | null>;
+  createCommentOpen: boolean;
+  setTextareaStatus: (value: boolean) => void;
+  thread: Thread | null;
+  threadsList: Payload[];
+  safeThread: Partial<Thread>;
+  comments: ThreadComment[];
+  safeThreadsList: Payload[];
+}
+
 export interface PostThreadCommentResponse {
   msg: string;
   payload: Payload;
@@ -93,15 +107,4 @@ export interface ThreadCommentReply {
   comment_id: number;
   body: string;
   owner: Owner;
-}
-
-export interface CommunityThreadProps {
-  error: string;
-  loading: boolean;
-  submitThread: () => void;
-  textareaRef: RefObject<HTMLTextAreaElement | null>;
-  createCommentOpen: boolean;
-  setTextareaStatus: (value: boolean) => void;
-  thread: Thread | null;
-  threadsList: Payload[];
 }

@@ -14,7 +14,7 @@ const ReplySectionView: FC<ReplySectionProps> = ({ data }) => {
         </div>
       </div>
       <div className="flex flex-col space-y-1">
-        <p className="font-semibold">{data.owner.name}</p>
+        <p className="text-sm font-semibold">{data.owner.name}</p>
         <p className="text-sm">{data.body}</p>
       </div>
     </div>

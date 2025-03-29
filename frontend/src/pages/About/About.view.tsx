@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { AboutProps } from "./About.type";
 import { Button } from "@/components/ui/button";
 import {
   Heart,
@@ -9,32 +8,67 @@ import {
   Mail,
   MapPin,
   Phone,
+  Users,
+  CalendarCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  fadeUp,
+  sectionVariants,
+  gridContainerVariants,
+  cardHover,
+  iconHover,
+  teamMemberHover,
+  fadeLeft,
+  timelineItemHover,
+  timelineDotHover,
+  fadeRight,
+  buttonHoverTap,
+  purpleBgLight,
+  purpleColor,
+  vibrantAccent,
+  vibrantAccentBg,
+  vibrantAccentBgLight,
+  vibrantPrimary,
+  vibrantPrimaryBg,
+  vibrantPrimaryBgLight,
+} from "./About.data";
+import SectionHeader from "@/components/SectionHeader";
 
-const AboutView: FC<AboutProps> = () => {
+const AboutView: FC = () => {
   return (
-    <>
-      <section className="w-full py-12">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="overflow-x-hidden"
+    >
+      <motion.section
+        variants={sectionVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex justify-center w-full py-16 md:py-24 lg:py-32 bg-gradient-to-br from-teal-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/30"
+      >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
-                <Heart className="mr-1 h-4 w-4 text-primary" />
-                <span>Cerita Kami</span>
-              </div>
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl">
-                Tentang Mental Health App
-              </h1>
-              <p className="max-w-[700px] text-muted-foreground md:text-xl">
-                Kami berkomitmen untuk membuat kesejahteraan mental dapat
-                diakses oleh semua orang, di mana saja.
-              </p>
-            </div>
-          </div>
-          <div className="text-justify mx-auto max-w-3xl py-12">
-            <div className="prose prose-gray space-y-8 dark:prose-invert max-w-none">
-              <p className="lead">
+          <motion.div variants={fadeUp}>
+            {" "}
+            <SectionHeader
+              icon={Heart}
+              badgeText="Cerita Kami"
+              title="Tentang Mental Health App"
+              subtitle="Kami berkomitmen untuk membuat kesejahteraan mental dapat diakses oleh semua orang, di mana saja."
+              iconColorClass={vibrantPrimary}
+              badgeBgClass={vibrantPrimaryBgLight}
+            />
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            className="text-justify mx-auto max-w-3xl py-12"
+          >
+            <div className="prose px-6 md:px-0 prose-lg prose-gray dark:prose-invert max-w-none space-y-6 leading-relaxed text-gray-700 dark:text-gray-300">
+              <p className="lead font-semibold text-xl text-gray-800 dark:text-gray-100">
                 Aplikasi Kesehatan Mental didirikan pada tahun 2020 dengan visi
                 yang sederhana namun kuat: menciptakan dunia di mana setiap
                 orang memiliki alat dan dukungan yang mereka butuhkan untuk
@@ -56,11 +90,17 @@ const AboutView: FC<AboutProps> = () => {
                 dukungan komunitas. Kami percaya bahwa layanan kesehatan mental
                 harus dapat diakses, dipersonalisasi, dan bebas dari stigma.
               </p>
-              <blockquote>
+              <motion.blockquote
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.5 }}
+                className="border-l-4 border-teal-500 dark:border-teal-400 pl-4 italic text-gray-600 dark:text-gray-400"
+              >
                 "Kesehatan mental bukanlah tujuan akhir, melainkan sebuah
                 proses. Ini tentang bagaimana Anda menjalani perjalanan, bukan
                 ke mana Anda akan pergi."
-              </blockquote>
+              </motion.blockquote>
               <p>
                 Aplikasi kami dirancang dengan masukan dari terapis
                 bersertifikat, psikolog, dan peneliti kesehatan mental untuk
@@ -70,385 +110,384 @@ const AboutView: FC<AboutProps> = () => {
                 dalam bidang kesehatan mental.
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-900 rounded-xl">
+      </motion.section>
+
+      <motion.section
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+        className="flex justify-center w-full py-16 md:py-24 lg:py-32 bg-slate-50 dark:bg-slate-950 -mt-10 z-10 relative"
+      >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="space-y-2">
-              <div className="inline-flex items-center rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
-                <Brain className="mr-1 h-4 w-4" />
-                <span>Nilai-Nilai Kami</span>
-              </div>
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                Apa yang Kami Percayai
-              </h2>
-              <p className="max-w-[700px] text-muted-foreground md:text-xl">
-                Nilai-nilai inti kami membimbing segala hal yang kami lakukan di
-                Aplikasi Kesehatan Mental.
-              </p>
-            </div>
-          </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 py-12 md:grid-cols-3">
-            <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-6 shadow-sm">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Heart className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">Kasih Sayang</h3>
-              <p className="text-center text-muted-foreground">
-                Kami mendekati kesehatan mental dengan empati, pemahaman, dan
-                tanpa penghakiman.
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-6 shadow-sm">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Sparkles className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">Aksesibilitas</h3>
-              <p className="text-center text-muted-foreground">
-                Kami percaya bahwa alat kesehatan mental harus tersedia untuk
-                semua orang, tanpa memandang latar belakang atau sumber daya
-                mereka.
-              </p>
-            </div>
-            <div className="flex flex-col items-center space-y-4 rounded-lg border bg-background p-6 shadow-sm">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Brain className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">Berdasarkan Bukti</h3>
-              <p className="text-center text-muted-foreground">
-                Pendekatan kami didasarkan pada penelitian ilmiah dan teknik
-                terapi yang telah terbukti.
-              </p>
-            </div>
-          </div>
+          <motion.div variants={fadeUp}>
+            {" "}
+            <SectionHeader
+              icon={Brain}
+              badgeText="Nilai-Nilai Kami"
+              title="Apa yang Kami Percayai"
+              subtitle="Nilai-nilai inti kami membimbing segala hal yang kami lakukan di Aplikasi Kesehatan Mental."
+              iconColorClass={vibrantAccent}
+              badgeBgClass={vibrantAccentBgLight}
+            />
+          </motion.div>
+
+          <motion.div
+            variants={gridContainerVariants}
+            className="mx-auto grid max-w-5xl grid-cols-1 gap-8 py-12 md:grid-cols-3"
+          >
+            {[
+              {
+                icon: Heart,
+                title: "Kasih Sayang",
+                text: "Kami mendekati kesehatan mental dengan empati, pemahaman, dan tanpa penghakiman.",
+                colorClass: vibrantPrimary,
+                lightBg: vibrantPrimaryBgLight,
+              },
+              {
+                icon: Sparkles,
+                title: "Aksesibilitas",
+                text: "Kami percaya bahwa alat kesehatan mental harus tersedia untuk semua orang, tanpa memandang latar belakang atau sumber daya mereka.",
+                colorClass: vibrantAccent,
+                lightBg: vibrantAccentBgLight,
+              },
+              {
+                icon: Brain,
+                title: "Berdasarkan Bukti",
+                text: "Pendekatan kami didasarkan pada penelitian ilmiah dan teknik terapi yang telah terbukti.",
+                colorClass: purpleColor,
+                lightBg: purpleBgLight,
+              },
+            ].map((value) => (
+              <motion.div
+                key={value.title}
+                variants={fadeUp}
+                whileHover="hover"
+                custom={cardHover}
+                className="group flex flex-col items-center space-y-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-8 shadow-sm transition-all duration-300 ease-in-out"
+              >
+                <motion.div
+                  whileHover={iconHover.hover}
+                  className={`rounded-full ${value.lightBg} p-4 transition-transform duration-300`}
+                >
+                  <value.icon
+                    className={`h-8 w-8 ${value.colorClass} transition-colors duration-300`}
+                  />
+                </motion.div>
+                <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
+                  {value.title}
+                </h3>
+                <p className="text-center text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {value.text}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </section>
-      <section className="w-full py-12 md:py-24 lg:py-32">
+      </motion.section>
+
+      <motion.section
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        className="flex justify-center w-full py-16 md:py-24 lg:py-32 bg-gradient-to-br from-purple-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-teal-900/30"
+      >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="flex flex-col items-center justify-center space-y-2">
-              <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-1 h-4 w-4 text-primary"
-                >
-                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                <span>Tim Kami</span>
-              </div>
-              <h2 className="text-center text-3xl font-bold tracking-tighter md:text-4xl">
-                Mengenal Orang-orang di Balik Aplikasi Kesehatan Mental
-              </h2>
-              <p className="text-center max-w-[700px] text-muted-foreground md:text-xl">
-                Tim ahli kami yang beragam sangat bersemangat untuk
-                mentransformasi layanan kesehatan mental.
-              </p>
-            </div>
-          </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 py-12 md:grid-cols-2 lg:grid-cols-3">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full">
-                <img
-                  src="/placeholder.svg?height=160&width=160"
-                  alt="Sarah Chen"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">Sarah Chen</h3>
-                <p className="text-sm text-muted-foreground">Pendiri & CEO</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Mantan terapis dengan lebih dari 10 tahun pengalaman dalam
-                  layanan kesehatan mental.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full">
-                <img
-                  src="/placeholder.svg?height=160&width=160"
-                  alt="Dr. Michael Rodriguez"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">Dr. Michael Rodriguez</h3>
-                <p className="text-sm text-muted-foreground">
-                  Chief Clinical Officer
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Psikolog klinis yang mengkhususkan diri dalam terapi perilaku
-                  kognitif dan mindfulness.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full">
-                <img
-                  src="/placeholder.svg?height=160&width=160"
-                  alt="Aisha Patel"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">Aisha Patel</h3>
-                <p className="text-sm text-muted-foreground">Kepala Produk</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Spesialis UX dengan latar belakang dalam teknologi kesehatan
-                  dan aksesibilitas.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full">
-                <img
-                  src="/placeholder.svg?height=160&width=160"
-                  alt="James Wilson"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">James Wilson</h3>
-                <p className="text-sm text-muted-foreground">CTO</p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Software engineer with expertise in secure, scalable health
-                  applications.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full">
-                <img
-                  src="/placeholder.svg?height=160&width=160"
-                  alt="Dr. Elena Kim"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">Dr. Elena Kim</h3>
-                <p className="text-sm text-muted-foreground">
-                  Research Director
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Neuroscientist focused on the intersection of technology and
-                  mental health outcomes.
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="relative h-40 w-40 overflow-hidden rounded-full">
-                <img
-                  src="/placeholder.svg?height=160&width=160"
-                  alt="David Okafor"
-                  className="object-cover"
-                />
-              </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold">David Okafor</h3>
-                <p className="text-sm text-muted-foreground">
-                  Community Manager
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Mental health advocate with experience in building supportive
-                  online communities.
-                </p>
-              </div>
-            </div>
-          </div>
+          <motion.div variants={fadeUp}>
+            <SectionHeader
+              icon={Users}
+              badgeText="Tim Kami"
+              title="Mengenal Tim Kami"
+              subtitle="Tim ahli kami yang beragam sangat bersemangat untuk mentransformasi layanan kesehatan mental."
+              iconColorClass={purpleColor}
+              badgeBgClass={purpleBgLight}
+            />
+          </motion.div>
+
+          <motion.div
+            variants={gridContainerVariants}
+            className="mx-auto grid max-w-6xl grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {[
+              {
+                name: "Zahran Zaidan Nasution",
+                title: "Frontend Backend",
+                desc: "Web developer yang suka dengan mobil & otomotif.",
+                img: "/placeholder-user-1.jpg",
+              },
+              {
+                name: "Dr. Michael Rodriguez",
+                title: "Chief Clinical Officer",
+                desc: "Psikolog klinis, ahli CBT & mindfulness.",
+                img: "/placeholder-user-2.jpg",
+              },
+              {
+                name: "Aisha Patel",
+                title: "Kepala Produk",
+                desc: "Spesialis UX dengan latar belakang health tech.",
+                img: "/placeholder-user-3.jpg",
+              },
+              {
+                name: "James Wilson",
+                title: "CTO",
+                desc: "Software engineer ahli aplikasi kesehatan.",
+                img: "/placeholder-user-4.jpg",
+              },
+              {
+                name: "Dr. Elena Kim",
+                title: "Research Director",
+                desc: "Neuroscientist fokus pada teknologi & mental health.",
+                img: "/placeholder-user-5.jpg",
+              },
+              {
+                name: "David Okafor",
+                title: "Community Manager",
+                desc: "Advokat kesehatan mental & pembangun komunitas.",
+                img: "/placeholder-user-6.jpg",
+              },
+            ].map((member) => (
+              <motion.div
+                key={member.name}
+                variants={fadeUp}
+                whileHover="hover"
+                custom={teamMemberHover}
+                className="group flex flex-col items-center space-y-4 text-center p-6 rounded-lg transition-all duration-300 ease-in-out hover:bg-white/60 dark:hover:bg-gray-800/60 hover:shadow-md"
+              >
+                <div className="relative h-40 w-40 overflow-hidden rounded-full shadow-lg border-4 border-white dark:border-gray-700 group-hover:border-teal-300 dark:group-hover:border-teal-500 transition-colors duration-300">
+                  <img
+                    src={
+                      member.img ||
+                      `https://source.unsplash.com/160x160/?portrait,person&random=${member.name}`
+                    }
+                    alt={member.name}
+                    className="object-cover w-full h-full transition-transform duration-500 ease-in-out group-hover:scale-110"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="pt-2">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                    {member.name}
+                  </h3>
+                  <p className={`text-sm font-medium ${vibrantPrimary}`}>
+                    {member.title}
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400 px-2">
+                    {member.desc}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </section>
-      <section className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-900 rounded-xl">
-        <div className="container px-4 md:px-16">
-          <div className="grid gap-10 md:grid-cols-2">
-            <div className="space-y-4">
-              <div className="inline-flex items-center rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-1 h-4 w-4"
-                >
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                  <line x1="16" x2="16" y1="2" y2="6" />
-                  <line x1="8" x2="8" y1="2" y2="6" />
-                  <line x1="3" x2="21" y1="10" y2="10" />
-                  <path d="m9 16 2 2 4-4" />
-                </svg>
-                <span>Our Journey</span>
+      </motion.section>
+
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        className="flex justify-center w-full py-16 md:py-24 lg:py-32 bg-slate-100 dark:bg-gray-800 rounded-t-3xl -mt-10 z-10 relative"
+      >
+        <div className="container px-8 md:px-16">
+          <div className="grid gap-16 md:grid-cols-2">
+            <motion.div variants={fadeLeft} className="space-y-6">
+              <div className="inline-flex items-center rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                <CalendarCheck className="mr-2 h-4 w-4" />{" "}
+                <span>Perjalanan Kami</span>
               </div>
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                Perjalanan Mental Health App
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
+                Melangkah Bersama Anda
               </h2>
-              <p className="text-muted-foreground md:text-xl">
+              <p className="text-gray-600 dark:text-gray-300 md:text-lg">
                 Dari startup kecil hingga platform kesejahteraan mental global.
               </p>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-bold">1</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <h3 className="font-semibold">2020: Pendirian</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Mental Health App didirikan oleh Sarah Chen setelah
-                      perjuangannya secara pribadi dalam mengakses sumber daya
-                      kesehatan mental.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-bold">2</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <h3 className="font-semibold">2021: Peluncuran Beta</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Versi pertama aplikasi dirilis kepada 500 pengguna beta,
-                      dengan fokus pada pelacakan suasana hati dan meditasi
-                      terpandu.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-bold">3</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <h3 className="font-semibold">2022: Peluncuran Publik</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Mental Health App resmi diluncurkan untuk umum dengan
-                      fitur yang diperluas dan dukungan komunitas.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-bold">4</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <h3 className="font-semibold">
-                      2023: Kemitraan Penelitian
+
+              <motion.div
+                variants={gridContainerVariants}
+                className="space-y-6 border-l-2 border-teal-500/50 dark:border-teal-400/50 pl-6"
+              >
+                {[
+                  {
+                    year: "2020",
+                    title: "Pendirian",
+                    desc: "Didirikan oleh Sarah Chen setelah perjuangan pribadinya.",
+                  },
+                  {
+                    year: "2021",
+                    title: "Peluncuran Beta",
+                    desc: "Rilis awal ke 500 pengguna, fokus pada mood tracking & meditasi.",
+                  },
+                  {
+                    year: "2022",
+                    title: "Peluncuran Publik",
+                    desc: "Peluncuran resmi dengan fitur diperluas & dukungan komunitas.",
+                  },
+                  {
+                    year: "2023",
+                    title: "Kemitraan Penelitian",
+                    desc: "Bermitra dengan universitas untuk studi efektivitas.",
+                  },
+                  {
+                    year: "2024",
+                    title: "Ekspansi Global",
+                    desc: "Mencapai 10.000+ pengguna di 30+ negara, dukungan multi-bahasa.",
+                  },
+                ].map((item) => (
+                  <motion.div
+                    key={item.year}
+                    variants={fadeUp}
+                    whileHover="hover"
+                    custom={timelineItemHover}
+                    className="relative group pl-4 transition-all duration-300 hover:bg-teal-50 dark:hover:bg-teal-900/30 rounded-md py-2"
+                  >
+                    <motion.div
+                      whileHover="hover"
+                      custom={timelineDotHover}
+                      className={`absolute -left-[34px] top-3 h-4 w-4 rounded-full ${vibrantPrimaryBg} border-4 border-slate-100 dark:border-gray-800 transition-transform duration-300`}
+                    ></motion.div>
+                    <h3 className="font-semibold text-lg text-gray-800 dark:text-gray-100">
+                      <span className={`font-bold ${vibrantPrimary}`}>
+                        {item.year}:
+                      </span>{" "}
+                      {item.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Bermitra dengan universitas ternama untuk mempelajari
-                      efektivitas intervensi kesehatan mental digital.
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {item.desc}
                     </p>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.div variants={fadeRight} className="space-y-8">
+              <div className="space-y-4">
+                <motion.div variants={fadeUp} className="space-y-4">
+                  <div className="inline-flex items-center rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                    <Mail className="mr-2 h-4 w-4" />{" "}
+                    <span>Tetap Terhubung</span>
                   </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-bold">5</span>
-                  </div>
-                  <div className="space-y-1.5">
-                    <h3 className="font-semibold">2024: Ekspansi Global</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Mencapai lebih dari 10.000 pengguna di 30 negara dan
-                      meluncurkan versi lokal dalam beberapa bahasa.
-                    </p>
-                  </div>
-                </div>
+                  <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
+                    Hubungi Kami
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300 md:text-lg">
+                    Punya pertanyaan atau saran? Kami siap mendengarkan.
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  variants={fadeUp}
+                  className="space-y-5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-6 shadow-sm"
+                >
+                  {[
+                    {
+                      icon: Mail,
+                      label: "Email",
+                      value: "support@mentalhealthapp.com",
+                      href: "mailto:support@mentalhealthapp.com",
+                    },
+                    {
+                      icon: Phone,
+                      label: "Telepon",
+                      value: "+1 (555) 123-4567",
+                      href: "tel:+15551234567",
+                    },
+                    {
+                      icon: MapPin,
+                      label: "Kantor",
+                      value: "123 Wellness St, San Francisco, CA",
+                    },
+                  ].map((contact) => (
+                    <motion.div
+                      key={contact.label}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, amount: 0.5 }}
+                      transition={{ duration: 0.4 }}
+                      className="flex items-start gap-4 group"
+                    >
+                      <motion.div whileHover={iconHover.hover}>
+                        <contact.icon
+                          className={`h-5 w-5 mt-1 flex-shrink-0 ${vibrantPrimary} transition-transform duration-300`}
+                        />
+                      </motion.div>
+                      <div>
+                        <h3 className="font-semibold text-gray-800 dark:text-gray-100">
+                          {contact.label}
+                        </h3>
+                        {contact.href ? (
+                          <a
+                            href={contact.href}
+                            className={`text-sm text-gray-600 dark:text-gray-300 hover:underline ${vibrantPrimary}`}
+                          >
+                            {contact.value}
+                          </a>
+                        ) : (
+                          <p className="text-sm text-gray-600 dark:text-gray-300">
+                            {contact.value}
+                          </p>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                  <motion.div className="pt-4" variants={fadeUp}>
+                    {" "}
+                    <Button
+                      asChild
+                      className={`w-full ${vibrantPrimaryBg} hover:opacity-90 text-white font-semibold transition-all duration-300 ease-in-out`}
+                    >
+                      <Link to="/contact">
+                        {" "}
+                        Kirim Pesan Sekarang
+                        <ArrowRight className="ml-2 h-4 w-4 animate-bounce-horizontal" />
+                      </Link>
+                    </Button>
+                  </motion.div>
+                </motion.div>
               </div>
-            </div>
-            <div className="space-y-4">
-              <div className="inline-flex items-center rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
-                <Mail className="mr-1 h-4 w-4" />
-                <span>Get in Touch</span>
-              </div>
-              <h2 className="text-3xl font-bold tracking-tighter md:text-4xl">
-                Hubungi Kami
-              </h2>
-              <p className="text-muted-foreground md:text-xl">
-                Punya pertanyaan atau saran? Kami sangat senang mendengar dari
-                Anda.
-              </p>
-              <div className="space-y-4 rounded-lg border bg-background p-6">
-                <div className="flex items-start gap-4">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <div>
-                    <h3 className="font-semibold">Email</h3>
-                    <p className="text-sm text-muted-foreground">
-                      support@mentalhealthapp.com
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Phone className="h-5 w-5 text-primary" />
-                  <div>
-                    <h3 className="font-semibold">Telepon</h3>
-                    <p className="text-sm text-muted-foreground">
-                      +1 (555) 123-4567
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <div>
-                    <h3 className="font-semibold">Kantor</h3>
-                    <p className="text-sm text-muted-foreground">
-                      123 Wellness Street
-                      <br />
-                      San Francisco, CA 94103
-                      <br />
-                      United States
-                    </p>
-                  </div>
-                </div>
-                <div className="pt-4">
-                  <Button asChild className="w-full">
-                    <Link to="https://youtu.be/dQw4w9WgXcQ">
-                      Hubungi kami
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="rounded-lg border bg-background p-6">
-                <h3 className="mb-4 font-semibold">Langganan Buletin Kami</h3>
-                <p className="mb-4 text-sm text-muted-foreground">
-                  Dapatkan update dengan tips kesejahteraan mental terbaru,
-                  penelitian, dan fitur-fitur aplikasi.
+
+              <motion.div
+                variants={fadeUp}
+                className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-6 shadow-sm"
+              >
+                <h3 className="mb-3 font-semibold text-lg text-gray-800 dark:text-gray-100">
+                  Langganan Buletin Kami
+                </h3>
+                <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                  Dapatkan tips kesejahteraan mental terbaru, riset, dan fitur
+                  aplikasi langsung ke inbox Anda.
                 </p>
-                <form className="space-y-2">
-                  <div className="grid gap-2">
-                    <label htmlFor="email" className="sr-only">
-                      Email
-                    </label>
-                    <input
-                      id="email"
-                      placeholder="Masukan email anda"
-                      type="email"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Subscribe
-                  </Button>
+                <form className="flex flex-col sm:flex-row gap-2">
+                  <label htmlFor="newsletter-email" className="sr-only">
+                    Email
+                  </label>
+                  <input
+                    id="newsletter-email"
+                    placeholder="Masukan email anda"
+                    type="email"
+                    required
+                    className="flex-grow h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 dark:focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-shadow duration-200 focus:shadow-outline-teal"
+                  />
+                  <motion.div
+                    whileHover={buttonHoverTap.hover}
+                    whileTap={buttonHoverTap.tap}
+                    className="flex-shrink-0"
+                  >
+                    <Button
+                      type="submit"
+                      className={`${vibrantAccentBg} hover:opacity-90 text-white font-medium transition-opacity duration-200 px-5`}
+                    >
+                      Subscribe
+                    </Button>
+                  </motion.div>
                 </form>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
-      </section>
-    </>
+      </motion.section>
+    </motion.div>
   );
 };
 

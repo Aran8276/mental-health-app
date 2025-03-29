@@ -52,18 +52,18 @@ export const privateRoutes: RouteItem[] = [
     element: createElement(lazy(async () => await import("@/pages/Register"))),
   },
   {
- dev
     label: "Profile",
     path: "/profile",
     element: createElement(lazy(async () => await import("@/pages/Profile"))),
-
+  },
+  {
     label: "Verifikasi",
     path: "/email-verify",
     element: createElement(
       lazy(async () => await import("@/pages/EmailVerification"))
     ),
- dev
   },
 ];
 
 // TODO: middleware protected routes disini (protectedRoutes)
+
