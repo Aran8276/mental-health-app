@@ -41,7 +41,6 @@ export default function Header() {
   };
 
   useEffect(() => {
-    console.log(state);
     fetchUser();
   }, [state]);
 

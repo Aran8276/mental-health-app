@@ -1,5 +1,6 @@
 import { server } from "./src/config/expressClient";
 import threadRouter from "@/routes/thread.routes";
+import userRouter from "@/routes/user.routes";
 import threadCommentRouter from "@/routes/thread-comment.routes";
 import threadCommentReplyRouter from "@/routes/thread-comment-reply.routes";
 import authRouter from "@/routes/auth.routes";
@@ -9,6 +10,7 @@ import * as env from "dotenv";
 env.config();
 
 server.use(cors());
+server.use("/user", userRouter);
 server.use("/thread", threadRouter);
 server.use("/thread-comment", threadCommentRouter);
 server.use("/thread-comment-reply", threadCommentReplyRouter);

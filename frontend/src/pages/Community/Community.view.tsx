@@ -12,10 +12,9 @@ import {
   itemVariants,
   cardHoverEffect,
   buttonHoverEffect,
-  exampleActiveUsers,
 } from "./Community.data";
 
-const CommunityView: FC<CommunityProps> = ({ threads }) => {
+const CommunityView: FC<CommunityProps> = ({ threads, users }) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -143,21 +142,31 @@ const CommunityView: FC<CommunityProps> = ({ threads }) => {
                   transition={{ duration: 0.5 }}
                   className="flex flex-col space-y-3"
                 >
-                  {exampleActiveUsers.map((user) => (
-                    <motion.div
-                      key={user.id}
-                      whileHover={{ backgroundColor: "rgba(0,0,0,0.03)", x: 2 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 10,
-                      }}
-                      className="rounded-md"
-                    >
-                      <ActiveUserCard />{" "}
-                    </motion.div>
+                  {users.map((user) => (
+                    <>
+                      {user._count.thread_comments > 5 && (
+                        <motion.div
+                          key={user.id}
+                          whileHover={{
+                            backgroundColor: "rgba(0,0,0,0.03)",
+                            x: 2,
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 10,
+                          }}
+                          className="rounded-md"
+                        >
+                          <ActiveUserCard user={user} />
+                        </motion.div>
+                      )}
+                    </>
                   ))}
                 </motion.div>
+                <p className="text-sm text-center pt-8">
+                  Pengguna teratas dengan 5+ respon akan tampil disini.
+                </p>
               </CardContent>
             </Card>
           </motion.div>

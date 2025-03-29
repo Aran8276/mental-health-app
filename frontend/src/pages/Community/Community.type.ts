@@ -1,5 +1,6 @@
 export interface CommunityProps {
   threads: Thread[];
+  users: OmittedUser[];
 }
 
 export interface FetchThreadResponse {
@@ -32,4 +33,21 @@ export interface ThreadComment {
   body: string;
   role: string;
   owner: Owner;
+}
+
+export interface GetAllUserResponse {
+  msg: string;
+  payload: OmittedUser[];
+}
+
+export interface OmittedUser {
+  id: number;
+  name: string;
+  email: string;
+  username: string;
+  _count: Count;
+}
+
+export interface Count {
+  thread_comments: number;
 }

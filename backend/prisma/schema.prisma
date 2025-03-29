@@ -26,6 +26,11 @@ enum UserRole {
   USER
 }
 
+enum UserGender {
+  MALE
+  FEMALE
+}
+
 model User {
   id                     Int                  @id @default(autoincrement())
   name                   String
@@ -39,27 +44,40 @@ model User {
   thread_comments        ThreadComment[]
   thread_comment_replies ThreadCommentReply[]
   verification_tokens    VerificationToken[]
+  created_at             DateTime             @default(now())
+}
+
+model UserData {
+  id          Int         @id @default(autoincrement())
+  phoneNumber String
+  bio         String      @db.LongText
+  gender      UserGender?
 }
 
 model VerificationToken {
-  id      Int    @id @default(autoincrement())
-  token   String @unique
-  user_id Int
-  user    User   @relation(fields: [user_id], references: [id])
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id])
+  created_at DateTime @default(now())
 }
 
 model AiConversation {
-  id       Int      @id @default(autoincrement())
-  owner    User     @relation(fields: [owner_id], references: [id])
-  owner_id Int
-  ai_chat  AiChat[]
+  id         Int      @id @default(autoincrement())
+  title      String
+  owner      User     @relation(fields: [owner_id], references: [id])
+  owner_id   Int
+  ai_chat    AiChat[]
+  created_at DateTime @default(now())
 }
 
 model AiChat {
   id                 Int            @id @default(autoincrement())
   role               AiChatRole     @default(USER)
+  body               String         @db.LongText
   ai_conversation    AiConversation @relation(fields: [ai_conversation_id], references: [id])
   ai_conversation_id Int
+  created_at         DateTime       @default(now())
 }
 
 model Thread {
@@ -67,8 +85,9 @@ model Thread {
   owner           User            @relation(fields: [owner_id], references: [id])
   owner_id        Int
   title           String
-  body            String
+  body            String          @db.LongText
   thread_comments ThreadComment[]
+  created_at      DateTime        @default(now())
 }
 
 model ThreadComment {
@@ -77,9 +96,10 @@ model ThreadComment {
   owner_id               Int
   thread                 Thread               @relation(fields: [thread_id], references: [id])
   thread_id              Int
-  body                   String
+  body                   String               @db.Text
   role                   ThreadRole           @default(USER)
   thread_comment_replies ThreadCommentReply[]
+  created_at             DateTime             @default(now())
 }
 
 model ThreadCommentReply {
@@ -88,5 +108,6 @@ model ThreadCommentReply {
   owner_id   Int
   comment    ThreadComment @relation(fields: [comment_id], references: [id])
   comment_id Int
-  body       String
+  body       String        @db.Text
+  created_at DateTime      @default(now())
 }

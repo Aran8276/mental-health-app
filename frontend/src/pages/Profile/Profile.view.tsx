@@ -9,22 +9,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"; // Use Shadcn Avatar
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"; // Use Shadcn Avatar
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import {
   pageVariants,
   headerVariants,
-  userData,
   buttonHoverTap,
   avatarVariants,
   headerTextVariants,
   sectionContainerStagger,
   addressData,
 } from "./Profile.data";
+import { FC } from "react";
+import { ProfileProps } from "./Profile.type";
 
-const ProfileView = () => {
+const ProfileView: FC<ProfileProps> = ({ user }) => {
   // const primaryColor = "text-teal-600 dark:text-teal-400";
   // const primaryBgLight = "bg-teal-100/70 dark:bg-teal-900/30";
 
@@ -37,16 +38,15 @@ const ProfileView = () => {
     >
       <motion.div variants={headerVariants} className="relative">
         <div className="relative w-full h-48 md:h-64 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-r from-teal-200 to-cyan-300 dark:from-teal-700 dark:to-cyan-800">
-          {userData.bannerUrl ? (
+          {/* {user.bannerUrl ? (
             <img
-              src={userData.bannerUrl}
+              src={user.bannerUrl}
               alt="Profile Banner"
               className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
             />
-          ) : (
-            // Placeholder Gradient/Pattern
-            <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 via-cyan-500/5 to-purple-500/10 animate-pulse"></div>
-          )}
+          ) : ( */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 via-cyan-500/5 to-purple-500/10 animate-pulse"></div>
+          {/* )} */}
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -70,9 +70,8 @@ const ProfileView = () => {
         <div className="absolute -bottom-16 md:-bottom-12 left-4 md:left-10 flex items-end space-x-4">
           <motion.div variants={avatarVariants} className="relative">
             <Avatar className="h-28 w-28 md:h-36 md:w-36 border-4 border-background dark:border-gray-800 shadow-lg">
-              <AvatarImage src={userData.avatarUrl} alt={userData.name} />
               <AvatarFallback className="bg-gradient-to-br from-teal-400 to-purple-400 text-white text-3xl font-semibold">
-                {userData.name?.charAt(0).toUpperCase()}{" "}
+                {user?.name?.charAt(0).toUpperCase()}{" "}
               </AvatarFallback>
             </Avatar>
 
@@ -124,13 +123,13 @@ const ProfileView = () => {
         className="pt-16 md:pt-12 pl-4 md:pl-10 pr-4" // Adjust padding top
       >
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-          {userData.name}
+          {user?.name}
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          @{userData.username}
+          @{user?.username}
         </p>
         <p className="text-base text-gray-700 dark:text-gray-300 mt-3 max-w-xl">
-          {userData.bio || "Belum ada bio."}
+          {"Belum ada bio."}
         </p>
       </motion.div>
 
@@ -142,7 +141,7 @@ const ProfileView = () => {
       >
         <div className="lg:col-span-2">
           {" "}
-          <PersonalInfoCard userData={userData} />
+          <PersonalInfoCard userData={user} />
         </div>
 
         <div className="flex flex-col gap-8">

@@ -1,10 +1,5 @@
+import { User } from "../Header/Header.type";
+
 export interface PersonalInfoCardProps {
-  userData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    bio: string;
-    gender: string;
-  };
+  userData: User | null;
 }

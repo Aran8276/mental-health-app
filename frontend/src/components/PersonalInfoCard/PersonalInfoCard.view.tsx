@@ -18,16 +18,15 @@ import { PersonalInfoCardProps } from "./PersonalInfoCard.type";
 
 const PersonalInfoCardView: FC<PersonalInfoCardProps> = ({ userData }) => {
   const infoItems = [
-    { label: "Nama Depan", value: userData.firstName },
-    { label: "Nama Belakang", value: userData.lastName },
-    { label: "Email", value: userData.email },
-    { label: "Nomor Handphone", value: userData.phone || "-" },
+    { label: "Nama Lengkap", value: userData?.name },
+    { label: "Email", value: userData?.email },
+    { label: "Nomor Handphone", value: "-" },
     {
       label: "Bio Singkat",
-      value: userData.bio || "...",
+      value: "...",
       colSpan: "sm:col-span-2",
     },
-    { label: "Gender", value: userData.gender || "-" },
+    { label: "Gender", value: "-" },
   ];
 
   return (
