@@ -3,4 +3,5 @@ export const layoutExcludedPath: string[] = [
   "/login",
   "/register",
   "/email-verify",
+  "/forgot-password",
 ];

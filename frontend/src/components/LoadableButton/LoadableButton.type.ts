@@ -5,4 +5,6 @@ export interface LoadableButtonProps {
   isLoading?: boolean;
   children: ReactNode;
   props?: ButtonProps;
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 }
+ 

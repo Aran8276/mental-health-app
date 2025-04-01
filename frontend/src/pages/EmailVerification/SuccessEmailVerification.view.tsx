@@ -108,7 +108,7 @@ const SuccessEmailVerificationView: FC = () => {
             <Button
               asChild
               className={cn(
-                "w-full h-11 rounded-lg px-8",
+                "w-[200px] h-11 rounded-lg px-8",
                 primaryButtonGradient,
                 "text-white font-semibold shadow-lg hover:shadow-md transition-shadow"
               )}

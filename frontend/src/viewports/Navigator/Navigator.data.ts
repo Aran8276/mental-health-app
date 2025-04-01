@@ -87,4 +87,11 @@ export const privateRoutes: RouteItem[] = [
       lazy(async () => await import("@/pages/EmailVerification"))
     ),
   },
+  {
+    label: "Lupa Password",
+    path: "/forgot-password",
+    element: createElement(
+      lazy(async () => await import("@/pages/ForgotPassword"))
+    ),
+  },
 ];

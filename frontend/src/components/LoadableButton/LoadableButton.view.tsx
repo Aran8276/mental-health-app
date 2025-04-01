@@ -6,16 +6,19 @@ import { Loader } from "lucide-react";
 const LoadableButtonView: FC<LoadableButtonProps> = ({
   isLoading,
   children,
+  variant,
   ...props
 }) => {
   return (
     <>
       {isLoading ? (
-        <Button disabled {...props}>
+        <Button variant={variant || "default"} disabled {...props}>
           <Loader className="animate-spin" />
         </Button>
       ) : (
-        <Button {...props}>{children}</Button>
+        <Button variant={variant || "default"} {...props}>
+          {children}
+        </Button>
       )}
     </>
   );

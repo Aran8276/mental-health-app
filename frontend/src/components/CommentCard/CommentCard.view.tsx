@@ -20,6 +20,7 @@ import {
   repliesListVariants,
   replyItemVariants,
 } from "./CommentCard.data";
+import { Link } from "react-router-dom";
 
 const CommentCardView: FC<CommentCardProps> = ({
   error,
@@ -46,17 +47,20 @@ const CommentCardView: FC<CommentCardProps> = ({
       exit={{ opacity: 0 }}
       className="flex space-x-3 py-4 border-b border-gray-100 dark:border-slate-700/50"
     >
-      <div className="flex-shrink-0 pt-1">
+      <Link to={`/profile/${data.owner.id}`} className="flex-shrink-0 pt-1">
         <UserAvatar src={ownerAvatar} name={ownerName} size="sm" />{" "}
-      </div>
+      </Link>
 
       <div className="flex flex-col w-full min-w-0">
         {" "}
         <div className="flex flex-col">
           <div className="flex items-center space-x-2">
-            <span className="font-semibold tracking-tight text-sm text-gray-800 dark:text-gray-100">
+            <Link
+              to={`/profile/${data.owner.id}`}
+              className="font-semibold tracking-tight text-sm text-gray-800 dark:text-gray-100"
+            >
               {ownerName}
-            </span>
+            </Link>
             {createdAt && (
               <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
                 <Clock className="w-3 h-3 mr-1" />
@@ -105,7 +109,7 @@ const CommentCardView: FC<CommentCardProps> = ({
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="w-[500px] px-3 pt-3"
+              className="w-auto md:w-[500px] px-3 pt-3"
             >
               <div className="flex flex-col space-y-3">
                 <Input

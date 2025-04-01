@@ -177,7 +177,7 @@ const LoginView: FC<LoginProps> = ({ form, onSubmit, error, loading }) => {
 
                         <div className="flex justify-end pt-1">
                           <Link
-                            to="#"
+                            to="/forgot-password"
                             className={`text-sm underline ${linkColor} transition-colors`}
                           >
                             Lupa kata sandi?

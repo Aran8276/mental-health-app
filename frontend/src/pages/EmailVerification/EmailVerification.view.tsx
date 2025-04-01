@@ -88,7 +88,7 @@ const EmailVerificationView: FC = () => {
             <Button
               asChild
               className={cn(
-                "w-full h-11 rounded-lg px-6",
+                "w-full md:w-[220px] h-11 rounded-lg px-6",
                 primaryButtonGradient,
                 "text-white font-semibold shadow-lg hover:shadow-md transition-shadow"
               )}

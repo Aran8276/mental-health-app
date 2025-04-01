@@ -5,6 +5,8 @@ import { make } from "simple-body-validator";
 import {
     loginValidation,
     registerValidation,
+    resetPasswordValidation,
+    validateResetPasswordVerification,
     verificationValidation,
 } from "./auth.validation";
 import { msgTemplate } from "@/config/msgTemplate";
@@ -14,6 +16,7 @@ import { nanoid } from "nanoid";
 import { transporter } from "@/config/nodemailerClient";
 import * as env from "dotenv";
 import { Prisma } from "@prisma/client";
+import { getEmail } from "@/config/emailTemplate";
 
 env.config();
 
@@ -32,9 +35,12 @@ const authUseCase = {
             return;
         }
 
-        const user = await prisma.user.findFirst({
+        const user = await prisma.user.findUnique({
             where: {
                 username: data.username,
+            },
+            include: {
+                verification_tokens: true,
             },
         });
 
@@ -44,7 +50,30 @@ const authUseCase = {
         }
 
         if (!user.email_verified_at) {
-            res.status(401).json(msgTemplate("Email anda belum diverifikasi."));
+            const emailTemplate = {
+                header: " Langkah Terakhir: Verifikasi Email Anda!",
+                body: `
+                    Hai ${user.name},
+                    Senang Anda bergabung dengan Mental Health App!<br/>
+                    Untuk mengaktifkan akun Anda dan memulai perjalanan menuju ketenangan, mohon verifikasi alamat email<br/>
+                    Anda dengan menekan tombol di bawah ini.
+                `,
+                buttonHref: `/email-verify?token=${user.verification_tokens[0].token}`,
+                buttonText: "Verifikasi",
+            };
+
+            await transporter.sendMail({
+                from: process.env.NODEMAILER_EMAIL_FROM,
+                to: user.email,
+                subject: "Verifikasi Email - Mental Health App",
+                html: getEmail(emailTemplate),
+            });
+
+            res.status(401).json(
+                msgTemplate(
+                    "Email anda belum diverifikasi. Verifikasi email sudah dikirim ulang 👍",
+                ),
+            );
             return;
         }
 
@@ -72,6 +101,8 @@ const authUseCase = {
                     }),
                 );
                 return;
+            } else {
+                res.status(500).json(msgTemplate("JWT Secret belum dibuat."));
             }
         });
     },
@@ -120,44 +151,23 @@ const authUseCase = {
                     },
                 });
 
-                const htmlBody = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-            </head>
-            <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f5f5f5;">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; margin: 0 auto;">
-                    <tr>
-                        <td align="center" style="padding: 40px 20px;">
-                            <table style="width: 100%; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                <tr>
-                                    <td align="center" style="padding: 30px;">
-                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 64px; height: 64px; stroke: #2196f3; stroke-width: 2;">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2zm1-7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                                        </svg>
-                                        <h1 style="color: #1a237e; font-size: 24px; margin: 20px 0;">Verifikasi Email Anda</h1>
-                                        <p style="color: #546e7a; font-size: 16px; line-height: 1.5;">Terima kasih telah mendaftar dengan Mental Health App! Silakan klik tombol di bawah ini untuk memverifikasi alamat email Anda dan menyelesaikan pendaftaran Anda.</p>
-                                        <a href="${process.env.FRONTEND_BASE_URL}/email-verify?token=${verifyToken}" style="display: inline-block; margin: 25px 0; padding: 12px 30px; background-color: #2196f3; color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">Verifikasi Email</a>
-                                        <p style="color: #546e7a; font-size: 14px;">Jika Anda tidak membuat akun dengan Mental Health App, harap abaikan email ini.</p>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div style="text-align: center; color: #999; font-size: 12px; margin-top: 20px;">
-                                &copy; 2025 Mental Health App. Seluruh hak cipta dilindungi.<br>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </body>
-            </html>     
-            `;
+                const emailTemplate = {
+                    header: " Langkah Terakhir: Verifikasi Email Anda!",
+                    body: `
+                        Hai ${user.name},
+                        Senang Anda bergabung dengan Mental Health App!<br/>
+                        Untuk mengaktifkan akun Anda dan memulai perjalanan menuju ketenangan, mohon verifikasi alamat email<br/>
+                        Anda dengan menekan tombol di bawah ini.
+                    `,
+                    buttonHref: `/email-verify?token=${verifyToken}`,
+                    buttonText: "Verifikasi",
+                };
 
                 await transporter.sendMail({
-                    from: "aran8276@gmail.com",
+                    from: process.env.NODEMAILER_EMAIL_FROM,
                     to: data.email,
                     subject: "Verifikasi Email - Mental Health App",
-                    html: htmlBody,
+                    html: getEmail(emailTemplate),
                 });
 
                 res.json(
@@ -186,7 +196,7 @@ const authUseCase = {
 
     check: async (req: RequestWithUser, res: Response) => {
         res.json({
-            msg: "middleware success",
+            msg: "Data berhasil diambil!",
             user: req.user,
         });
         return;
@@ -207,7 +217,7 @@ const authUseCase = {
         }
 
         const user = (
-            await prisma.verificationToken.findFirst({
+            await prisma.verificationToken.findUnique({
                 where: {
                     token: data.token,
                 },
@@ -246,6 +256,116 @@ const authUseCase = {
         });
 
         res.json(msgTemplate("Email berhasil diverifikasi", user));
+    },
+
+    verifyResetPasswordToken: async (req: Request, res: Response) => {
+        const data = req.body;
+        const validator = make(data, validateResetPasswordVerification);
+
+        if (!validator.validate()) {
+            res.status(422).json(
+                msgTemplate(
+                    "Semua input harus diisi",
+                    validator.errors().all(),
+                ),
+            );
+            return;
+        }
+
+        const user = (
+            await prisma.resetPasswordToken.findUnique({
+                where: {
+                    token: data.token,
+                },
+                include: {
+                    user: true,
+                },
+            })
+        )?.user;
+
+        if (!user) {
+            res.status(400).json(msgTemplate("Token tidak valid."));
+            return;
+        }
+
+        if (process.env.JWT_SECRET) {
+            await prisma.resetPasswordToken.delete({
+                where: {
+                    token: data.token,
+                },
+            });
+            const accessToken = jwt.sign(user, process.env.JWT_SECRET);
+            res.json(
+                msgTemplate("Login berhasil", {
+                    ...user,
+                    accessToken: accessToken,
+                }),
+            );
+        } else {
+            res.status(500).json(msgTemplate("JWT Secret belum dibuat."));
+        }
+    },
+
+    resetPassword: async (req: Request, res: Response) => {
+        const data = req.body;
+        const validator = make(data, resetPasswordValidation);
+
+        if (!validator.validate()) {
+            res.status(422).json(
+                msgTemplate(
+                    "Semua input harus diisi",
+                    validator.errors().all(),
+                ),
+            );
+            return;
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: data.email,
+            },
+            omit: {
+                email_verified_at: true,
+                password: true,
+            },
+        });
+
+        if (!user) {
+            // biarkan saja walaupun email salah agar tdk menjadi celah
+            // utk pengecekan email valid atau tidak
+            res.json(msgTemplate("Email reset password berhasil dikirim."));
+            return;
+        }
+
+        const resetPwToken = nanoid(64);
+
+        await prisma.resetPasswordToken.create({
+            data: {
+                user_id: user.id,
+                token: resetPwToken,
+            },
+        });
+
+        const emailTemplate = {
+            header: "Atur Ulang Kata Sandi Anda",
+            body: `
+                Hai ${user.name},<br/><br/>
+                Kami menerima permintaan untuk mengatur ulang kata sandi akun Mental Health App Anda.<br/>
+                Klik tombol di bawah ini untuk membuat kata sandi baru.<br/><br/>
+                Tautan ini hanya berlaku selama <strong>1 jam</strong>. Jika Anda tidak meminta perubahan ini, Anda bisa mengabaikan email ini dengan aman.
+            `,
+            buttonText: "Atur Ulang Kata Sandi",
+            buttonHref: `/forgot-password?token=${resetPwToken}`,
+        };
+
+        await transporter.sendMail({
+            from: process.env.NODEMAILER_EMAIL_FROM,
+            to: data.email,
+            subject: "Atur Ulang Kata Sandi Anda - Mental Health App",
+            html: getEmail(emailTemplate),
+        });
+
+        res.json(msgTemplate("Email reset password berhasil dikirim."));
     },
 };
 
