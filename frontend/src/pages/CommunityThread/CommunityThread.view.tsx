@@ -41,6 +41,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
   safeThread,
   comments,
   safeThreadsList,
+  loggedIn,
 }) => {
   return (
     <motion.section
@@ -98,70 +99,81 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
 
             <div className="mt-4">
               <AnimatePresence initial={false}>
-                {!createCommentOpen && (
-                  <motion.div
-                    key="input"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
+                {loggedIn ? (
+                  <>
+                    {!createCommentOpen && (
+                      <motion.div
+                        key="input"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Input
+                          onClick={() => setTextareaStatus(true)}
+                          placeholder="✨ Tulis komentarmu di sini..."
+                          className="bg-gray-50 dark:bg-slate-700 border-gray-200 dark:border-slate-600 focus:ring-teal-500 focus:border-teal-500 transition-shadow duration-200"
+                        />
+                      </motion.div>
+                    )}
+                    {createCommentOpen && (
+                      <motion.div
+                        key="textarea"
+                        variants={commentBoxVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                      >
+                        <div className="flex flex-col space-y-4">
+                          <Textarea
+                            ref={textareaRef as RefObject<HTMLTextAreaElement>}
+                            className="h-[120px] focus:ring-2 focus:ring-teal-400 focus:border-transparent border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 transition-shadow duration-200"
+                            placeholder="Bagikan pemikiranmu secara positif dan suportif..."
+                          />
+                          {error && (
+                            <p className="text-red-500 text-sm font-medium px-1">
+                              {error}
+                            </p>
+                          )}
+                          <div className="flex items-center space-x-3 self-end">
+                            <motion.div
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <Button
+                                onClick={() => setTextareaStatus(false)}
+                                className="cursor-pointer text-gray-700 dark:text-gray-300"
+                                variant="ghost"
+                                size="sm"
+                              >
+                                <X className="w-4 h-4 mr-1" /> Batal
+                              </Button>
+                            </motion.div>
+                            <motion.button
+                              whileHover={buttonHoverEffect}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              <LoadableButton
+                                isLoading={loading}
+                                onClick={submitThread}
+                                className="cursor-pointer bg-teal-600 hover:bg-teal-500 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+                              >
+                                <Send className="w-4 h-4 ml-4 mr-2" />
+                                <p className="pr-6">Kirim</p>
+                              </LoadableButton>
+                            </motion.button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    className="text-sm text-gray-600 transition-colors duration-300 dark:text-gray-300 dark:hover:text-blue-400 hover:underline hover:text-blue-500"
+                    to="/login"
                   >
-                    <Input
-                      onClick={() => setTextareaStatus(true)}
-                      placeholder="✨ Tulis komentarmu di sini..."
-                      className="bg-gray-50 dark:bg-slate-700 border-gray-200 dark:border-slate-600 focus:ring-teal-500 focus:border-teal-500 transition-shadow duration-200"
-                    />
-                  </motion.div>
-                )}
-                {createCommentOpen && (
-                  <motion.div
-                    key="textarea"
-                    variants={commentBoxVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                  >
-                    <div className="flex flex-col space-y-4">
-                      <Textarea
-                        ref={textareaRef as RefObject<HTMLTextAreaElement>}
-                        className="h-[120px] focus:ring-2 focus:ring-teal-400 focus:border-transparent border-gray-300 dark:bg-slate-700 dark:border-slate-600 dark:text-gray-100 transition-shadow duration-200"
-                        placeholder="Bagikan pemikiranmu secara positif dan suportif..."
-                      />
-                      {error && (
-                        <p className="text-red-500 text-sm font-medium px-1">
-                          {error}
-                        </p>
-                      )}
-                      <div className="flex items-center space-x-3 self-end">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button
-                            onClick={() => setTextareaStatus(false)}
-                            className="cursor-pointer text-gray-700 dark:text-gray-300"
-                            variant="ghost"
-                            size="sm"
-                          >
-                            <X className="w-4 h-4 mr-1" /> Batal
-                          </Button>
-                        </motion.div>
-                        <motion.button
-                          whileHover={buttonHoverEffect}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <LoadableButton
-                            isLoading={loading}
-                            onClick={submitThread}
-                            className="cursor-pointer bg-teal-600 hover:bg-teal-500 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-300"
-                          >
-                            <Send className="w-4 h-4 ml-4 mr-2" />
-                            <p className="pr-6">Kirim</p>
-                          </LoadableButton>
-                        </motion.button>
-                      </div>
-                    </div>
-                  </motion.div>
+                    Masuk untuk menambahkan komentar
+                  </Link>
                 )}
               </AnimatePresence>
             </div>
@@ -174,6 +186,7 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
                 comments.map((item) => (
                   <motion.div key={item.id} variants={itemFadeUpVariants}>
                     <CommentCard
+                      loggedIn={loggedIn}
                       data={item}
                       replies={item.thread_comment_replies || []}
                     />
@@ -212,19 +225,36 @@ const CommunityThreadView: FC<CommunityThreadProps> = ({
                 <p className="text-sm text-gray-700 dark:text-gray-400 mb-3">
                   Mulai percakapan baru kapan saja Anda membutuhkannya.
                 </p>
-                <Link to="/create-thread">
-                  <motion.div
-                    whileHover={buttonHoverEffect}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      size="default"
-                      className="bg-teal-600 hover:bg-teal-500 text-white cursor-pointer rounded-full px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+
+                {loggedIn ? (
+                  <Link to="/create-thread">
+                    <motion.div
+                      whileHover={buttonHoverEffect}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      Mulai Diskusi Baru
-                    </Button>
-                  </motion.div>
-                </Link>
+                      <Button
+                        size="default"
+                        className="bg-teal-600 hover:bg-teal-500 text-white cursor-pointer rounded-full px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                      >
+                        Mulai Diskusi Baru
+                      </Button>
+                    </motion.div>
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <motion.div
+                      whileHover={buttonHoverEffect}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        size="default"
+                        className="bg-teal-600 hover:bg-teal-500 text-white cursor-pointer rounded-full px-6 py-2.5 font-semibold shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                      >
+                        Masuk Untuk Mulai Diskusi
+                      </Button>
+                    </motion.div>
+                  </Link>
+                )}
               </CardContent>
             </Card>
           </motion.div>

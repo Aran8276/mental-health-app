@@ -1,8 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import AIChatbotView from "./AIChatbot.view";
-import { Message } from "./AIChatbot.type";
+import { GeminiChatResponse, Message } from "./AIChatbot.type";
+import { client } from "@/config/axiosClient";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export default function AIChatbot() {
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
   const [selectedModel, setSelectedModel] = useState("Llama 3.1");
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -20,7 +24,7 @@ export default function AIChatbot() {
 
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
     const newUserMessage: Message = {
       id: Date.now(),
@@ -35,13 +39,16 @@ export default function AIChatbot() {
     setInputValue("");
     setIsBotTyping(true);
 
-    setTimeout(() => {
+    try {
+      const res: GeminiChatResponse = (
+        await client().post("/gemini-ai/chat", {
+          body: inputValue,
+        })
+      ).data;
+
       const botResponse: Message = {
         id: Date.now() + 1,
-        text: `Terima kasih telah berbagi. Mengingat Anda menyebutkan "${inputValue.substring(
-          0,
-          20
-        )}...", mari kita bahas lebih lanjut. Bagaimana perasaanmu tentang itu? (Model: ${selectedModel})`,
+        text: `${res.payload.response}`,
         sender: "bot",
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
@@ -50,7 +57,12 @@ export default function AIChatbot() {
       };
       setIsBotTyping(false);
       setMessages((prev) => [...prev, botResponse]);
-    }, 1500 + Math.random() * 1000);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast(error?.message);
+        console.log(error);
+      }
+    }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -66,6 +78,10 @@ export default function AIChatbot() {
     }
   }, [messages, isBotTyping]);
 
+  useEffect(() => {
+    chatContainerRef?.current?.scrollIntoView(false);
+  }, [messages]);
+
   return (
     <AIChatbotView
       setSelectedModel={setSelectedModel}
@@ -76,6 +92,7 @@ export default function AIChatbot() {
       messages={messages}
       selectedModel={selectedModel}
       setInputValue={setInputValue}
+      chatContainerRef={chatContainerRef}
     />
   );
 }

@@ -1,6 +1,7 @@
 export interface CommunityProps {
   threads: Thread[];
   users: OmittedUser[];
+  loggedIn: boolean;
 }
 
 export interface FetchThreadResponse {

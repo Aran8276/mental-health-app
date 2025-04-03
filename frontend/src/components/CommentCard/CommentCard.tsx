@@ -11,9 +11,11 @@ import { FetchThreadContext } from "@/pages/CommunityThread/CommunityThread.cont
 export default function CommentCard({
   replies,
   data,
+  loggedIn,
 }: {
   replies?: ThreadCommentReply[];
   data: ThreadComment;
+  loggedIn: boolean;
 }) {
   const replyInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState("");
@@ -75,6 +77,7 @@ export default function CommentCard({
       replies={replies}
       replyOpen={replyOpen}
       setReplyOpen={setReplyOpen}
+      loggedIn={loggedIn}
     />
   );
 }

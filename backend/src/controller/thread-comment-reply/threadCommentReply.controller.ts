@@ -1,4 +1,3 @@
-import { make } from "simple-body-validator";
 import { msgTemplate } from "@/config/msgTemplate";
 import { prisma } from "@/config/prismaClient";
 import { Request, Response } from "express";
@@ -7,145 +6,237 @@ import {
     threadCommentReplyValidation,
 } from "./threadCommentReply.validation";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
+import {
+    validateRequestBody,
+    handleControllerError,
+    parseNumericId,
+} from "@/utils/crud.utils";
+import { Prisma } from "@prisma/client";
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-    role: string;
-    iat: number;
-}
+const commonThreadCommentReplyInclude =
+    Prisma.validator<Prisma.ThreadCommentReplyInclude>()({
+        owner: { select: { id: true, username: true, name: true } },
+        comment: { select: { id: true, thread_id: true } },
+    });
 
-const threadCommentReplyUseCase = {
+/**
+ * Checks if a thread comment reply exists and is owned by the specified user.
+ * Sends a 404 response if tidak ditemukan or not owned.
+ * Returns the reply if found and owned, null otherwise.
+ */
+const findReplyAndVerifyOwnership = async (
+    res: Response,
+    replyId: number,
+    userId: number,
+) => {
+    const reply = await prisma.threadCommentReply.findFirst({
+        where: { id: replyId, owner_id: userId },
+    });
+
+    if (!reply) {
+        res.status(404).json(
+            msgTemplate(
+                "Reply tidak ditemukan or you don't have permission to modify it.",
+            ),
+        );
+        return null;
+    }
+    return reply;
+};
+
+const threadCommentReplyController = {
+    /**
+     * @description Create a new thread comment reply
+     * @route POST /api/comments/:commentId/replies (Example route)
+     */
     createThreadCommentReply: async (req: RequestWithUser, res: Response) => {
-        const data = req.body;
-        const validator = make(data, threadCommentReplyValidation);
-        const user = req.user as User;
+        if (!validateRequestBody(req, res, threadCommentReplyValidation)) {
+            return;
+        }
 
-        if (!validator.validate()) {
-            res.status(422).json(
-                msgTemplate(
-                    "Semua input harus diisi",
-                    validator.errors().all(),
-                ),
+        const userId = req.user!.id;
+        const data = req.body;
+
+        if (!data.comment_id) {
+            res.status(400).json(
+                msgTemplate("Missing required field: comment_id"),
             );
             return;
         }
 
         try {
-            const threadCommentReply = await prisma.threadCommentReply.create({
-                omit: {
-                    id: true,
-                },
-                data: { ...data, owner_id: user.id },
+            const commentExists = await prisma.threadComment.findUnique({
+                where: { id: data.comment_id },
+            });
+            if (!commentExists) {
+                res.status(404).json(
+                    msgTemplate("Parent comment tidak ditemukan."),
+                );
+                return;
+            }
+
+            const reply = await prisma.threadCommentReply.create({
+                data: { ...data, owner_id: userId },
+                include: commonThreadCommentReplyInclude,
             });
 
-            res.json(msgTemplate("Data berhasil ditambahkan", threadCommentReply));
+            res.status(201).json(msgTemplate("Reply berhasil dibuat.", reply));
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(400).json(
-                    msgTemplate("Terjadi kesalahan", {
-                        error: error.message.replace("\n", ""),
-                    }),
-                );
-            }
+            handleControllerError(res, error, "Gagal membuat reply.");
         }
     },
 
+    /**
+     * @description Read replies for a specific comment (or all replies)
+     * @route GET /api/comments/:commentId/replies (Example route) or /api/replies
+     */
     readThreadCommentReply: async (req: Request, res: Response) => {
-        const threadCommentReply = await prisma.threadCommentReply.findMany({
-            include: {
-                owner: true,
-                comment: true
-            },
-        });
+        const page = parseInt(req.query.page as string, 10) || 1;
+        const limit = parseInt(req.query.limit as string, 10) || 10;
+        const skip = (page - 1) * limit;
 
-        res.json(msgTemplate("Data berhasil diambil", threadCommentReply));
-    },
+        const commentIdParam = req.params.commentId || req.query.commentId;
+        const commentId = commentIdParam
+            ? parseInt(commentIdParam as string, 10)
+            : undefined;
 
-    readThreadCommentReplyById: async (req: Request, res: Response) => {
-        const threadCommentReply = await prisma.threadCommentReply.findUnique({
-            where: {
-                id: parseInt(req.params.id),
-            },
-            include: {
-                owner: true,
-                comment: true
-            },
-        });
-
-        if (!threadCommentReply) {
-            res.status(404).json(msgTemplate("Data tidak ditemukan"));
-            return;
-        }
-
-        res.json(msgTemplate("Data berhasil diambil", threadCommentReply));
-    },
-
-    updateThreadCommentReply: async (req: RequestWithUser, res: Response) => {
-        const data = req.body;
-        const validator = make(data, threadCommentReplyUpdateValidation);
-        const user = req.user as User;
-
-        if (!validator.validate()) {
-            res.status(422).json(
-                msgTemplate(
-                    "Semua input harus diisi",
-                    validator.errors().all(),
-                ),
+        const whereClause: Prisma.ThreadCommentReplyWhereInput = {};
+        if (commentId !== undefined && !isNaN(commentId)) {
+            whereClause.comment_id = commentId;
+        } else if (commentIdParam) {
+            res.status(400).json(
+                msgTemplate("Invalid Comment ID provided for filtering."),
             );
             return;
         }
 
-        const isOwnedAndFound = await prisma.threadCommentReply.findFirst({
-            where: { id: parseInt(req.params.id), owner_id: user.id },
-        });
+        try {
+            const replies = await prisma.threadCommentReply.findMany({
+                where: whereClause,
+                skip: skip,
+                take: limit,
+                orderBy: { created_at: "asc" },
+                include: commonThreadCommentReplyInclude,
+            });
 
-        if (!isOwnedAndFound) {
-            res.status(404).json(msgTemplate("Data tidak ditemukan"));
-            return;
+            const totalReplies = await prisma.threadCommentReply.count({
+                where: whereClause,
+            });
+
+            res.json(
+                msgTemplate("Replies berhasil diambil.", {
+                    replies,
+                    pagination: {
+                        currentPage: page,
+                        totalPages: Math.ceil(totalReplies / limit),
+                        totalReplies,
+                        limit,
+                    },
+                }),
+            );
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengambil replies.");
         }
-
-        const { id, thread_id, ...updateData } = data;
-        void id;
-        void thread_id;
-        const threadCommentReply = await prisma.threadCommentReply.update({
-            where: {
-                id: parseInt(req.params.id),
-            },
-            data: updateData,
-        });
-
-        res.json(msgTemplate("Data berhasil diupdate", threadCommentReply));
     },
 
+    /**
+     * @description Read a single thread comment reply by its ID
+     * @route GET /api/replies/:id
+     */
+    readThreadCommentReplyById: async (req: Request, res: Response) => {
+        const replyId = parseNumericId(req, res);
+        if (replyId === null) return;
+
+        try {
+            const reply = await prisma.threadCommentReply.findUnique({
+                where: { id: replyId },
+                include: commonThreadCommentReplyInclude,
+            });
+
+            if (!reply) {
+                res.status(404).json(msgTemplate("Reply tidak ditemukan."));
+                return;
+            }
+
+            res.json(msgTemplate("Reply berhasil diambil.", reply));
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengambil reply.");
+        }
+    },
+
+    /**
+     * @description Update an existing thread comment reply owned by the user
+     * @route PUT /api/replies/:id (or PATCH)
+     */
+    updateThreadCommentReply: async (req: RequestWithUser, res: Response) => {
+        const replyId = parseNumericId(req, res);
+        if (replyId === null) return;
+
+        if (
+            !validateRequestBody(req, res, threadCommentReplyUpdateValidation)
+        ) {
+            return;
+        }
+
+        const userId = req.user!.id;
+        const dataToUpdate = { ...req.body };
+
+        delete dataToUpdate.id;
+        delete dataToUpdate.owner_id;
+        delete dataToUpdate.comment_id;
+        delete dataToUpdate.thread_id;
+
+        try {
+            const ownedReply = await findReplyAndVerifyOwnership(
+                res,
+                replyId,
+                userId,
+            );
+            if (!ownedReply) return;
+
+            const updatedReply = await prisma.threadCommentReply.update({
+                where: {
+                    id: replyId,
+                },
+                data: dataToUpdate,
+                include: commonThreadCommentReplyInclude,
+            });
+
+            res.json(msgTemplate("Reply berhasil diupdate.", updatedReply));
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengupdate reply.");
+        }
+    },
+
+    /**
+     * @description Delete a thread comment reply owned by the user
+     * @route DELETE /api/replies/:id
+     */
     deleteThreadCommentReply: async (req: RequestWithUser, res: Response) => {
-        const user = req.user as User;
+        const replyId = parseNumericId(req, res);
+        if (replyId === null) return;
 
-        const threadCommentReplyExists = await prisma.threadCommentReply.findFirst({
-            where: { id: parseInt(req.params.id), owner_id: user.id },
-        });
+        const userId = req.user!.id;
 
-        if (!threadCommentReplyExists) {
-            res.status(404).json(msgTemplate("Data tidak ditemukan"));
-            return;
+        try {
+            const ownedReply = await findReplyAndVerifyOwnership(
+                res,
+                replyId,
+                userId,
+            );
+            if (!ownedReply) return;
+
+            await prisma.threadCommentReply.delete({
+                where: {
+                    id: replyId,
+                },
+            });
+
+            res.json(msgTemplate("Reply berhasil dihapus.", { id: replyId }));
+        } catch (error) {
+            handleControllerError(res, error, "Gagal menghapus reply.");
         }
-
-        const threadCommentReply = await prisma.threadCommentReply.delete({
-            where: {
-                id: parseInt(req.params.id),
-            },
-        });
-
-        if (!threadCommentReply) {
-            res.status(404).json(msgTemplate("Data tidak ditemukan"));
-            return;
-        }
-
-        res.json(msgTemplate("Data berhasil dihapus", threadCommentReply));
     },
 };
 
-export default threadCommentReplyUseCase;
+export default threadCommentReplyController;

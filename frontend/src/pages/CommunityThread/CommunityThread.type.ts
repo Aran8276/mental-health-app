@@ -12,6 +12,7 @@ export interface CommunityThreadProps {
   safeThread: Partial<Thread>;
   comments: ThreadComment[];
   safeThreadsList: Payload[];
+  loggedIn: boolean;
 }
 
 export interface PostThreadCommentResponse {

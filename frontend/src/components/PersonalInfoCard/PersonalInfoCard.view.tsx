@@ -1,16 +1,12 @@
-import { PenLine, UserCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { UserCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { FC } from "react";
 import { cn } from "@/lib/utils";
 import {
   cardVariants,
-  buttonHoverTap,
   gridContainerVariants,
   itemVariants,
-  editButtonColor,
   labelColor,
   valueColor,
 } from "./PersonalInfoCard.data";
@@ -44,26 +40,6 @@ const PersonalInfoCardView: FC<PersonalInfoCardProps> = ({ userData }) => {
               Informasi Pribadi
             </CardTitle>
           </div>
-          <Link to="/profile/edit-personal-info">
-            {" "}
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonHoverTap}
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className={cn(
-                  "rounded-full text-xs px-4 py-1 h-auto",
-                  editButtonColor
-                )}
-              >
-                <PenLine className="w-3.5 h-3.5 mr-1.5" />
-                Edit
-              </Button>
-            </motion.div>
-          </Link>
         </CardHeader>
         <CardContent className="p-6">
           <motion.div

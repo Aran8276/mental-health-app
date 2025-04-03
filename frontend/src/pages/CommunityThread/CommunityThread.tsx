@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { FetchThreadContext } from "./CommunityThread.context";
 
 export default function CommunityThread() {
+  const loggedIn = false;
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [thread, setThread] = useState<Thread | null>(null);
@@ -119,6 +120,7 @@ export default function CommunityThread() {
         safeThread={safeThread}
         comments={comments}
         safeThreadsList={safeThreadsList}
+        loggedIn={loggedIn}
       />
     </FetchThreadContext.Provider>
   );

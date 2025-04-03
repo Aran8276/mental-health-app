@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 export default function Community() {
+  const loggedIn = false;
   const [users, setUser] = useState<OmittedUser[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
 
@@ -44,5 +45,5 @@ export default function Community() {
   }, []);
 
   document.title = "Forum Komunitas - Mental Health App";
-  return <CommunityView users={users} threads={threads} />;
+  return <CommunityView loggedIn={loggedIn} users={users} threads={threads} />;
 }

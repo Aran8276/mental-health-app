@@ -35,7 +35,7 @@ const HeaderView: FC<HeaderProps> = ({
             </div>
             <div
               className={`${
-                mobileOpen ? "block" : "hidden"
+                mobileOpen ? "block" : "hidden" 
               } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
             >
               <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">

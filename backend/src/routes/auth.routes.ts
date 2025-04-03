@@ -9,6 +9,7 @@ const {
     register,
     check,
     verify,
+    refresh,
     resetPassword,
     verifyResetPasswordToken,
 } = authUseCase;
@@ -17,6 +18,7 @@ router.post("/login", login);
 router.post("/register", register);
 router.post("/verify", verify);
 router.post("/reset-password", resetPassword);
+router.post("/refresh", refresh);
 router.post("/verify-reset-password", verifyResetPasswordToken);
 router.get("/check", authenticateToken, check);
 

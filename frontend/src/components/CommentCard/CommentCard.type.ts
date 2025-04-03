@@ -24,4 +24,5 @@ export interface CommentCardProps {
   replyOpen: boolean;
   setReplyOpen: Dispatch<SetStateAction<boolean>>;
   replyInputRef: RefObject<HTMLInputElement | null>;
+  loggedIn: boolean;
 }

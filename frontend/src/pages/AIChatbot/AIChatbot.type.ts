@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, Ref, SetStateAction } from "react";
 
 export interface AIChatbotProps {
   setSelectedModel: Dispatch<SetStateAction<string>>;
@@ -9,6 +9,16 @@ export interface AIChatbotProps {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   messages: Message[];
+  chatContainerRef: Ref<HTMLDivElement | null>;
+}
+
+export interface GeminiChatResponse {
+  msg: string;
+  payload: Payload;
+}
+
+export interface Payload {
+  response: string;
 }
 
 export interface Message {

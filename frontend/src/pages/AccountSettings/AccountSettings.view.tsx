@@ -18,8 +18,8 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
-  userData,
-  addressData,
+  // userData,
+  // addressData,
   pageVariants,
   iconColor,
   sectionStagger,
@@ -32,28 +32,29 @@ import {
   valueColor,
   accentColor,
 } from "./AccountSettings.data";
+import { AccountSettingsProps } from "./AccountSettings.type";
 
-const AccountSettingsView: FC = () => {
+const AccountSettingsView: FC<AccountSettingsProps> = ({ user }) => {
   const personalInfoItems = [
-    { label: "Nama Lengkap", value: userData.name },
-    { label: "Email", value: userData.email },
-    { label: "Nomor Handphone", value: userData.phone || "-" },
-    { label: "Gender", value: userData.gender || "-" },
+    { label: "Nama Lengkap", value: user?.name },
+    { label: "Email", value: user?.email },
+    { label: "Nomor Handphone", value: user?.phone_number || "-" },
+    { label: "Gender", value: user?.gender || "-" },
     {
       label: "Bio Singkat",
-      value: userData.bio || "...",
+      value: user?.bio || "...",
       colSpan: "sm:col-span-2",
     },
   ];
 
   const addressInfoItems = [
-    { label: "Jalan", value: addressData.street, colSpan: "sm:col-span-2" },
+    { label: "Jalan", value: user?.street, colSpan: "sm:col-span-2" },
     {
       label: "Kota/Provinsi",
-      value: `${addressData.city}, ${addressData.province}`,
+      value: `${user?.province}`,
     },
-    { label: "Kode Pos", value: addressData.zipCode },
-    { label: "Negara", value: addressData.country },
+    { label: "Kode Pos", value: user?.postal },
+    { label: "Negara", value: user?.country },
   ];
 
   return (
@@ -94,24 +95,29 @@ const AccountSettingsView: FC = () => {
                 </CardTitle>
               </div>
 
-              <motion.div
-                className="rounded-xl"
-                whileHover="hover"
-                whileTap="tap"
-                variants={buttonHoverTap}
+              <Link
+                to="/account-settings/change-personal-info"
+                className="flex-shrink-0"
               >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "rounded-full text-xs px-4 py-1 h-auto",
-                    editButtonColor
-                  )}
+                <motion.div
+                  className="rounded-xl"
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={buttonHoverTap}
                 >
-                  <PenLine className="w-3.5 h-3.5 mr-1.5" />
-                  Ubah
-                </Button>
-              </motion.div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      "rounded-full text-xs px-4 py-1 h-auto",
+                      editButtonColor
+                    )}
+                  >
+                    <PenLine className="w-3.5 h-3.5 mr-1.5" />
+                    Ubah
+                  </Button>
+                </motion.div>
+              </Link>
             </CardHeader>
             <CardContent className="p-6">
               <motion.dl
@@ -148,24 +154,28 @@ const AccountSettingsView: FC = () => {
                 <MapPin className={`w-6 h-6 ${accentColor}`} />
                 <CardTitle className="text-xl font-semibold">Alamat</CardTitle>
               </div>
-
-              <motion.div
-                className="rounded-xl"
-                whileHover="hover"
-                whileTap="tap"
-                variants={buttonHoverTap}
+              <Link
+                to="/account-settings/change-address-info"
+                className="flex-shrink-0"
               >
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "rounded-full text-xs px-4 py-1 h-auto border-purple-300 text-purple-700 hover:bg-purple-100/50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/30 dark:hover:border-purple-600"
-                  )}
+                <motion.div
+                  className="rounded-xl"
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={buttonHoverTap}
                 >
-                  <PenLine className="w-3.5 h-3.5 mr-1.5" />
-                  Ubah
-                </Button>
-              </motion.div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={cn(
+                      "rounded-full text-xs px-4 py-1 h-auto border-purple-300 text-purple-700 hover:bg-purple-100/50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/30 dark:hover:border-purple-600"
+                    )}
+                  >
+                    <PenLine className="w-3.5 h-3.5 mr-1.5" />
+                    Ubah
+                  </Button>
+                </motion.div>
+              </Link>
             </CardHeader>
             <CardContent className="p-6">
               <motion.dl

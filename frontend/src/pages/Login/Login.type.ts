@@ -40,11 +40,14 @@ export interface LoginResponse {
 }
 
 export interface Payload {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
+export interface User {
   id: number;
   name: string;
   email: string;
   username: string;
-  password: string;
-  role: string;
-  accessToken: string;
 }

@@ -81,6 +81,20 @@ export const privateRoutes: RouteItem[] = [
     ),
   },
   {
+    label: "Ubah Data Pribadi",
+    path: "/account-settings/change-personal-info",
+    element: createElement(
+      lazy(async () => await import("@/pages/PersonalInfoChange"))
+    ),
+  },
+  {
+    label: "Ubah Data Alamat",
+    path: "/account-settings/change-address-info",
+    element: createElement(
+      lazy(async () => await import("@/pages/AddressInfoChange"))
+    ),
+  },
+  {
     label: "Verifikasi",
     path: "/email-verify",
     element: createElement(

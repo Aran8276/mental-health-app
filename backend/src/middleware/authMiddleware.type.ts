@@ -1,6 +1,6 @@
+import { User } from "@prisma/client";
 import { Request } from "express";
-import { JwtPayload } from "jsonwebtoken";
 
 export interface RequestWithUser extends Request {
-    user?: JwtPayload | string | undefined;
+    user?: User;
 }

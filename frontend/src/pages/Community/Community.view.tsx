@@ -14,7 +14,7 @@ import {
   buttonHoverEffect,
 } from "./Community.data";
 
-const CommunityView: FC<CommunityProps> = ({ threads, users }) => {
+const CommunityView: FC<CommunityProps> = ({ threads, users, loggedIn }) => {
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -87,19 +87,35 @@ const CommunityView: FC<CommunityProps> = ({ threads, users }) => {
                   Mulai percakapan baru, ajukan pertanyaan, atau berikan
                   dukungan.
                 </p>
-                <Link to="/create-thread">
-                  <motion.div
-                    whileHover={buttonHoverEffect}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Button
-                      size="lg"
-                      className="bg-teal-600 hover:bg-teal-500 text-white cursor-pointer rounded-full px-6 py-3 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                {loggedIn ? (
+                  <Link to="/create-thread">
+                    <motion.div
+                      whileHover={buttonHoverEffect}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      Mulai Diskusi Baru
-                    </Button>
-                  </motion.div>
-                </Link>
+                      <Button
+                        size="lg"
+                        className="bg-teal-600 hover:bg-teal-500 text-white cursor-pointer rounded-full px-6 py-3 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                      >
+                        Mulai Diskusi Baru
+                      </Button>
+                    </motion.div>
+                  </Link>
+                ) : (
+                  <Link to="/login">
+                    <motion.div
+                      whileHover={buttonHoverEffect}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        size="lg"
+                        className="bg-teal-600 hover:bg-teal-500 text-white cursor-pointer rounded-full px-6 py-3 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                      >
+                        Masuk Untuk Mulai Diskusi
+                      </Button>
+                    </motion.div>
+                  </Link>
+                )}
               </CardContent>
             </Card>
           </motion.div>

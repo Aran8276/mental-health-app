@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Fragment } from "react";
 import { AIChatbotProps } from "./AIChatbot.type";
 import {
   DropdownMenu,
@@ -48,6 +48,7 @@ const AIChatbotView: FC<AIChatbotProps> = ({
   inputValue,
   setInputValue,
   messages,
+  chatContainerRef,
 }) => {
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] bg-gradient-to-br from-teal-50 via-purple-50 to-blue-50 dark:from-gray-900 dark:via-black dark:to-purple-950/60 overflow-hidden">
@@ -94,7 +95,10 @@ const AIChatbotView: FC<AIChatbotProps> = ({
 
       <ScrollArea className="flex-1 h-[400px]">
         {" "}
-        <div className="flex flex-col py-6 px-4 md:px-6 lg:px-8 space-y-4 max-w-4xl mx-auto">
+        <div
+          ref={chatContainerRef}
+          className="flex flex-col py-6 px-4 md:px-6 lg:px-8 space-y-4 max-w-4xl mx-auto"
+        >
           <AnimatePresence initial={false}>
             {messages.map((message) => (
               <motion.div
@@ -129,9 +133,17 @@ const AIChatbotView: FC<AIChatbotProps> = ({
                       : `${botBubbleColor} rounded-bl-none`
                   )}
                 >
-                  <p className="text-sm leading-relaxed break-words">
-                    {message.text}
-                  </p>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                    {message.text
+                      .split(/(\*\*.*?\*\*)/)
+                      .map((part, index) =>
+                        part.startsWith("**") && part.endsWith("**") ? (
+                          <strong key={index}>{part.slice(2, -2)}</strong>
+                        ) : (
+                          <Fragment key={index}>{part}</Fragment>
+                        )
+                      )}
+                  </p>{" "}
                   <span
                     className={cn(
                       "text-xs opacity-70 mt-1 block",

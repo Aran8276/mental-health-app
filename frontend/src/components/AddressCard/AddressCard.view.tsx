@@ -1,7 +1,5 @@
-import { PenLine, MapPin } from "lucide-react";
-import { Link } from "react-router-dom";
+import { MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { FC } from "react";
 import { cn } from "@/lib/utils";
@@ -9,8 +7,6 @@ import { AddressCardProps } from "./AddressCard.type";
 import {
   cardVariants,
   accentColor,
-  buttonHoverTap,
-  editButtonColor,
   gridContainerVariants,
   itemVariants,
   labelColor,
@@ -43,27 +39,6 @@ const AddressCardView: FC<AddressCardProps> = ({ addressData }) => {
               Alamat Pengguna
             </CardTitle>
           </div>
-          <Link to="/profile/edit-address">
-            {" "}
-            {/* Update Link target */}
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonHoverTap}
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className={cn(
-                  "rounded-full text-xs px-4 py-1 h-auto",
-                  editButtonColor
-                )}
-              >
-                <PenLine className="w-3.5 h-3.5 mr-1.5" />
-                Edit
-              </Button>
-            </motion.div>
-          </Link>
         </CardHeader>
         <CardContent className="p-6">
           <motion.div
@@ -84,7 +59,6 @@ const AddressCardView: FC<AddressCardProps> = ({ addressData }) => {
                 <p className={`text-sm font-medium break-words ${valueColor}`}>
                   {item.value || "-"}
                 </p>{" "}
-                {/* Added fallback */}
               </motion.div>
             ))}
           </motion.div>

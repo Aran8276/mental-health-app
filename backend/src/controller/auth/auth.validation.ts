@@ -21,3 +21,7 @@ export const resetPasswordValidation = {
 export const validateResetPasswordVerification = {
     token: "required|string",
 };
+
+export const refreshTokenValidation = {
+    refreshToken: "required|string",
+};

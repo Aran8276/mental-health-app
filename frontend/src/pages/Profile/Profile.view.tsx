@@ -1,15 +1,13 @@
-// src/views/Profile/Profile.view.tsx
-
-import { PenLine, Camera, LogOut, Settings } from "lucide-react";
-import AddressCard from "@/components/AddressCard/AddressCard"; // Renamed for clarity
+import { /* PenLine, Camera, */ Settings } from "lucide-react";
+import AddressCard from "@/components/AddressCard/AddressCard";
 import PersonalInfoCard from "@/components/PersonalInfoCard";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"; // Use Shadcn Avatar
+// import {
+// DropdownMenu,
+// DropdownMenuContent,
+// DropdownMenuItem,
+// DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -25,10 +23,7 @@ import {
 import { FC } from "react";
 import { ProfileProps } from "./Profile.type";
 
-const ProfileView: FC<ProfileProps> = ({ user }) => {
-  // const primaryColor = "text-teal-600 dark:text-teal-400";
-  // const primaryBgLight = "bg-teal-100/70 dark:bg-teal-900/30";
-
+const ProfileView: FC<ProfileProps> = ({ user, isMine }) => {
   return (
     <motion.div
       variants={pageVariants}
@@ -48,7 +43,7 @@ const ProfileView: FC<ProfileProps> = ({ user }) => {
           <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 via-cyan-500/5 to-purple-500/10 animate-pulse"></div>
           {/* )} */}
 
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <motion.button
                 {...buttonHoverTap}
@@ -64,7 +59,7 @@ const ProfileView: FC<ProfileProps> = ({ user }) => {
                 Hapus Banner
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
 
         <div className="absolute -bottom-16 md:-bottom-12 left-4 md:left-10 flex items-end space-x-4">
@@ -75,7 +70,7 @@ const ProfileView: FC<ProfileProps> = ({ user }) => {
               </AvatarFallback>
             </Avatar>
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <motion.button
                   {...buttonHoverTap}
@@ -91,36 +86,29 @@ const ProfileView: FC<ProfileProps> = ({ user }) => {
                   Hapus Foto Profil
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </motion.div>
         </div>
-
-        <div className="absolute bottom-4 right-4 flex gap-2">
-          <motion.div {...buttonHoverTap}>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm shadow hover:bg-white dark:hover:bg-gray-700"
-            >
-              <Settings className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-            </Button>
-          </motion.div>
-
-          <motion.div {...buttonHoverTap}>
-            <Button
-              variant="outline"
-              size="icon"
-              className="rounded-full bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm shadow hover:bg-white dark:hover:bg-gray-700"
-            >
-              <LogOut className="w-5 h-5 text-red-500" />
-            </Button>
-          </motion.div>
-        </div>
+        {isMine && (
+          <div className="absolute bottom-4 right-4 flex gap-2">
+            <Link to="/account-settings">
+              <motion.div {...buttonHoverTap}>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="rounded-full bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm shadow hover:bg-white dark:hover:bg-gray-700"
+                >
+                  <Settings className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                </Button>
+              </motion.div>
+            </Link>
+          </div>
+        )}
       </motion.div>
 
       <motion.div
         variants={headerTextVariants}
-        className="pt-16 md:pt-12 pl-4 md:pl-10 pr-4" // Adjust padding top
+        className="pt-16 md:pt-12 pl-4 md:pl-10 pr-4"
       >
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
           {user?.name}
@@ -137,7 +125,7 @@ const ProfileView: FC<ProfileProps> = ({ user }) => {
         variants={sectionContainerStagger}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-3 gap-8" // Grid layout for cards on larger screens
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
         <div className="lg:col-span-2">
           {" "}
@@ -150,7 +138,7 @@ const ProfileView: FC<ProfileProps> = ({ user }) => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }} // Slightly later animation
+            transition={{ delay: 0.7 }}
             className="bg-gradient-to-br from-emerald-100 to-green-100 dark:from-emerald-900/50 dark:to-green-900/50 p-6 rounded-xl shadow-md border border-emerald-200 dark:border-emerald-800"
           >
             <h3 className="font-semibold text-lg mb-3 text-emerald-800 dark:text-emerald-200">

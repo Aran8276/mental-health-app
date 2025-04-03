@@ -33,6 +33,7 @@ const CommentCardView: FC<CommentCardProps> = ({
   replyOpen,
   setReplyOpen,
   replyInputRef,
+  loggedIn,
 }) => {
   const ownerName = data.owner?.name || "Pengguna Anonim";
   const ownerAvatar = "avatar";
@@ -90,15 +91,18 @@ const CommentCardView: FC<CommentCardProps> = ({
               </span>
             </button>
           )}
-          <button
-            onClick={() => setReplyOpen(!replyOpen)}
-            className="flex items-center space-x-1 text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 cursor-pointer group"
-            aria-controls={`reply-form-${data.id}`}
-            aria-expanded={replyOpen}
-          >
-            <CornerDownRight className="w-3.5 h-3.5" />
-            <span>Balas</span>
-          </button>
+
+          {loggedIn && (
+            <button
+              onClick={() => setReplyOpen(!replyOpen)}
+              className="flex items-center space-x-1 text-gray-500 dark:text-gray-400 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-200 cursor-pointer group"
+              aria-controls={`reply-form-${data.id}`}
+              aria-expanded={replyOpen}
+            >
+              <CornerDownRight className="w-3.5 h-3.5" />
+              <span>Balas</span>
+            </button>
+          )}
         </section>
         <AnimatePresence initial={false}>
           {replyOpen && (

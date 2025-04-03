@@ -9,6 +9,7 @@ import NotFound from "../NotFound/NotFound";
 import { GetUserByIDResponse } from "./Profile.type";
 
 export default function Profile() {
+  const [isMine, setIsMine] = useState(true);
   const [userFound, setUserFound] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const params = useParams();
@@ -52,6 +53,7 @@ export default function Profile() {
   useEffect(() => {
     if (id) {
       fetchUserById();
+      setIsMine(false);
       return;
     }
 
@@ -64,5 +66,5 @@ export default function Profile() {
     return <NotFound />;
   }
 
-  return <ProfileView user={user} />;
+  return <ProfileView isMine={isMine} user={user} />;
 }

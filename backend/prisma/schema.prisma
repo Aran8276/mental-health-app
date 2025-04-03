@@ -78,6 +78,7 @@ model User {
   MoodSubmission         MoodSubmission[]
   MindfulSessions        MindfulSessions[]
   ResetPasswordToken     ResetPasswordToken[]
+  hashedRefreshToken     String?
 }
 
 model MoodSubmission {
