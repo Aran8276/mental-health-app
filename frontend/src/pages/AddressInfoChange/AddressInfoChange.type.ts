@@ -2,10 +2,10 @@ import { UseFormReturn } from "react-hook-form";
 
 export interface AddressFormData {
   country: string;
-  provinceState?: string | undefined;
+  province?: string | undefined;
   city?: string | undefined;
   street: string;
-  postalCode: string;
+  postal: string;
 }
 
 export interface AddressInfoChangeProps {
@@ -20,4 +20,29 @@ export interface AddressInfoChangeProps {
   selectedProvince?: string;
   handleCountryChange: (countryCode: string) => void;
   handleProvinceChange: (provinceCodeOrName: string) => void;
+}
+
+export interface UpdateAddressResponse {
+  msg: string;
+  payload: Payload;
+}
+
+export interface Payload {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: Date;
+  username: string;
+  password: string;
+  phone_number: string;
+  bio: string;
+  gender: string;
+  country: string;
+  province: string;
+  city: string;
+  street: string;
+  postal: string;
+  role: string;
+  created_at: Date;
+  hashedRefreshToken: string;
 }

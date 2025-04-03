@@ -3,12 +3,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Country, State, City } from "country-state-city";
 import { ICountry, IState, ICity } from "country-state-city";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
+import { nanoid } from "nanoid";
 
 import AddressInfoChangeView from "./AddressInfoChange.view";
-import { AddressFormData } from "./AddressInfoChange.type";
+import {
+  AddressFormData,
+  UpdateAddressResponse,
+} from "./AddressInfoChange.type";
 import { addressSchema } from "./AddressInfoChange.data";
+import { client } from "@/config/axiosClient";
+import { GetUserResponse, UserWithData } from "../Profile/Profile.type";
 
 const AddressInfoChange = () => {
+  const [user, setUser] = useState<UserWithData | null>(null);
+  const [isFetchingUser, setIsFetchingUser] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,20 +31,61 @@ const AddressInfoChange = () => {
   >([]);
   const [cities, setCities] = useState<{ value: string; label: string }[]>([]);
 
+  const navigate = useNavigate();
+
   const form = useForm<AddressFormData>({
     resolver: zodResolver(addressSchema),
     defaultValues: {
       country: "",
-      provinceState: "",
+      province: "",
       city: "",
       street: "",
-      postalCode: "",
+      postal: "",
     },
     mode: "onChange",
   });
 
-  const selectedCountryCode = form.watch("country");
-  const selectedProvinceCodeOrName = form.watch("provinceState");
+  const { reset, watch, getValues, resetField, trigger } = form;
+
+  const selectedCountryCode = watch("country");
+  const selectedProvinceCodeOrName = watch("province");
+
+  const getUserAddress = (
+    user: UserWithData | null
+  ): Partial<AddressFormData> => {
+    if (!user) return {};
+    return {
+      country: user.country || "",
+      province: user.province || "",
+      city: user.city || "",
+      street: user.street || "",
+      postal: user.postal || "",
+    };
+  };
+
+  const fetchUser = useCallback(async () => {
+    setIsFetchingUser(true);
+    setError(null);
+    try {
+      const data: GetUserResponse = (await client().get("/user")).data;
+      setUser(data.payload);
+    } catch (err) {
+      setUser(null);
+      const errorMsg =
+        err instanceof AxiosError
+          ? err.response?.data?.msg || "Gagal memuat data pengguna."
+          : "Terjadi kesalahan saat memuat data.";
+      setError(errorMsg);
+      toast.error(errorMsg);
+      console.error("Fetch User Error:", err);
+    } finally {
+      setIsFetchingUser(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
 
   useEffect(() => {
     const countryData = Country.getAllCountries().map((country: ICountry) => ({
@@ -41,22 +93,20 @@ const AddressInfoChange = () => {
       label: country.name,
     }));
     setCountries(countryData);
-
-    const initialCountryCode = form.getValues("country");
-    const initialProvinceCodeOrName = form.getValues("provinceState");
-
-    if (initialCountryCode) {
-      handleCountryChange(initialCountryCode, false);
-      if (initialProvinceCodeOrName) {
-        setTimeout(() => {
-          handleProvinceChange(initialProvinceCodeOrName, false);
-        }, 0);
-      }
-    }
-  }, [form]);
+  }, []);
 
   const handleCountryChange = useCallback(
-    (countryCode: string, resetFields = true) => {
+    (countryCode: string, resetDependentFields = true) => {
+      if (!countryCode) {
+        setProvinces([]);
+        setCities([]);
+        if (resetDependentFields) {
+          resetField("province", { defaultValue: "" });
+          resetField("city", { defaultValue: "" });
+        }
+        return;
+      }
+
       const stateData = State.getStatesOfCountry(countryCode).map(
         (state: IState) => ({
           value:
@@ -69,32 +119,36 @@ const AddressInfoChange = () => {
       setProvinces(stateData);
       setCities([]);
 
-      if (resetFields) {
-        form.resetField("provinceState", { defaultValue: "" });
-        form.resetField("city", { defaultValue: "" });
+      if (resetDependentFields) {
+        resetField("province", { defaultValue: "" });
+        resetField("city", { defaultValue: "" });
 
-        form.trigger("provinceState");
-        form.trigger("city");
+        trigger("province");
+        trigger("city");
       }
     },
-    [form]
+    [resetField, trigger]
   );
 
   const handleProvinceChange = useCallback(
-    (provinceCodeOrName: string, resetCityField = true) => {
-      const currentCountryCode = form.getValues("country");
+    (provinceCodeOrName: string, resetDependentFields = true) => {
+      const currentCountryCode = getValues("country");
+
       if (!currentCountryCode || !provinceCodeOrName) {
         setCities([]);
-        if (resetCityField) form.resetField("city", { defaultValue: "" });
+        if (resetDependentFields) {
+          resetField("city", { defaultValue: "" });
+        }
         return;
       }
 
-      const selectedState = State.getStatesOfCountry(currentCountryCode).find(
+      const selectedState = State.getStatesOfCountry(currentCountryCode)?.find(
         (s) => s.isoCode === provinceCodeOrName || s.name === provinceCodeOrName
       );
 
       let cityData: { value: string; label: string }[] = [];
-      if (selectedState) {
+
+      if (selectedState?.isoCode) {
         cityData = City.getCitiesOfState(
           currentCountryCode,
           selectedState.isoCode
@@ -102,25 +156,83 @@ const AddressInfoChange = () => {
           value: city.name,
           label: city.name,
         }));
+      } else if (selectedState) {
+        console.warn(
+          `Province '${selectedState.name}' found but lacks an ISO code. Cannot fetch cities.`
+        );
+      } else {
+        console.warn(
+          `Could not find province matching '${provinceCodeOrName}' in country '${currentCountryCode}'.`
+        );
       }
 
       setCities(cityData);
 
-      if (resetCityField) {
-        form.resetField("city", { defaultValue: "" });
-        form.trigger("city");
+      if (resetDependentFields) {
+        resetField("city", { defaultValue: "" });
+
+        trigger("city");
       }
     },
-    [form]
+    [getValues, resetField, trigger]
   );
 
-  const onSubmit = (data: AddressFormData) => {
+  useEffect(() => {
+    if (user) {
+      const userAddress = getUserAddress(user);
+      console.log("User data available, resetting address form:", userAddress);
+
+      reset({
+        country: userAddress.country || "",
+        province: userAddress.province || "",
+        city: userAddress.city || "",
+        street: userAddress.street || "",
+        postal: userAddress.postal || "",
+      });
+
+      if (userAddress.country) {
+        handleCountryChange(userAddress.country, false);
+
+        if (userAddress.province) {
+          setTimeout(() => {
+            handleProvinceChange(userAddress.province!, false);
+          }, 50);
+        }
+      }
+    }
+  }, [user, reset, handleCountryChange, handleProvinceChange]);
+
+  const onSubmit = async (data: AddressFormData) => {
     setLoading(true);
     setError(null);
     console.log("Address Data to Submit:", data);
 
-    setTimeout(() => setLoading(false), 1500);
+    try {
+      const res: UpdateAddressResponse = (
+        await client().post("/user/address-info", data)
+      ).data;
+      toast.success(res.msg || "Alamat berhasil diperbarui.");
+      navigate("/account-settings", { state: nanoid() });
+    } catch (err) {
+      const errorMsg =
+        err instanceof AxiosError
+          ? err.response?.data?.msg || "Gagal memperbarui alamat."
+          : "Terjadi kesalahan saat memperbarui alamat.";
+      setError(errorMsg);
+      toast.error(errorMsg);
+      console.error("Update Address Error:", err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (isFetchingUser) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div>Memuat data alamat...</div>
+      </div>
+    );
+  }
 
   return (
     <AddressInfoChangeView

@@ -42,36 +42,18 @@ const errorVariant = {
   exit: { opacity: 0, y: -5, height: 0, transition: { duration: 0.2 } },
 };
 
-const strengthColors = [
-  "bg-red-500",
-  "bg-red-500",
-  "bg-orange-500",
-  "bg-yellow-500",
-  "bg-lime-500",
-  "bg-emerald-500",
-];
-
-const strengthText = [
-  "Sangat Lemah",
-  "Sangat Lemah",
-  "Lemah",
-  "Cukup",
-  "Kuat",
-  "Sangat Kuat",
-];
-
 const addressSchema = z
   .object({
     country: z.string().min(1, "Negara wajib dipilih"),
-    provinceState: z.string().optional(),
+    province: z.string().optional(),
     city: z.string().optional(),
     street: z.string().min(3, "Alamat jalan minimal 3 karakter"),
-    postalCode: z.string().min(3, "Kode pos minimal 3 karakter"),
+    postal: z.string().min(3, "Kode pos minimal 3 karakter"),
   })
   .refine(
     (data) => {
       const states = State.getStatesOfCountry(data.country);
-      return !(states.length > 0 && !data.provinceState);
+      return !(states.length > 0 && !data.province);
     },
     {
       message: "Provinsi/Wilayah wajib dipilih jika tersedia",
@@ -80,10 +62,10 @@ const addressSchema = z
   )
   .refine(
     (data) => {
-      if (!data.provinceState) return true;
+      if (!data.province) return true;
 
       const selectedState = State.getStatesOfCountry(data.country).find(
-        (s) => s.isoCode === data.provinceState || s.name === data.provinceState
+        (s) => s.isoCode === data.province || s.name === data.province
       );
       if (!selectedState) return true;
 
@@ -103,7 +85,5 @@ export {
   formItemVariants,
   buttonHoverTap,
   errorVariant,
-  strengthColors,
-  strengthText,
   addressSchema,
 };

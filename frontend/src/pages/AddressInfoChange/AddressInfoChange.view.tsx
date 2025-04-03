@@ -149,7 +149,7 @@ const AddressInfoChangeView: FC<AddressInfoChangeProps> = ({
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
-                    name="provinceState"
+                    name="province"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Provinsi / Wilayah</FormLabel>
@@ -266,7 +266,7 @@ const AddressInfoChangeView: FC<AddressInfoChangeProps> = ({
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
-                    name="postalCode"
+                    name="postal"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Kode Pos</FormLabel>
