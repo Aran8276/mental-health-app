@@ -1,30 +1,47 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import CommunityView from "./Community.view";
 import {
   FetchThreadResponse,
   GetAllUserResponse,
   OmittedUser,
   Thread,
+  Pagination,
 } from "./Community.type";
 import { client } from "@/config/axiosClient";
-import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useUser } from "@/components/Header/Header.context";
 
 export default function Community() {
   const { user } = useUser();
-  const [users, setUser] = useState<OmittedUser[]>([]);
+  const [users, setUsers] = useState<OmittedUser[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [paginationData, setPaginationData] = useState<Pagination | null>(null);
 
-  const fetchThreads = async () => {
+  const [searchParams] = useSearchParams();
+  const currentPage = useMemo(() => {
+    const pageParam = searchParams.get("page");
+    const page = parseInt(pageParam || "1", 10);
+    return isNaN(page) || page < 1 ? 1 : page;
+  }, [searchParams]);
+
+  const fetchThreads = async (page: number) => {
+    setThreads([]);
+    setPaginationData(null);
+
     try {
-      const data: FetchThreadResponse = (await client().get("/thread")).data;
+      const response = await client().get("/thread", {
+        params: { page: page },
+      });
+      const data: FetchThreadResponse = response.data;
+
       setThreads(data.payload.threads);
+      setPaginationData(data.payload.pagination);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error.message);
-        toast(error.message);
-      }
+      console.error("Error fetching threads:", error);
+      toast.error("Gagal memuat thread diskusi.");
+      setPaginationData(null);
+      setThreads([]);
     }
   };
 
@@ -32,20 +49,29 @@ export default function Community() {
     try {
       const data: GetAllUserResponse = (await client().get("/user/all-users"))
         .data;
-      setUser(data.payload.users);
+
+      setUsers(data.payload.users);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error.message);
-        toast(error.message);
-      }
+      console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
-    fetchThreads();
+    fetchThreads(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
     fetchUsers();
   }, []);
 
   document.title = "Forum Komunitas - Mental Health App";
-  return <CommunityView loggedIn={user} users={users} threads={threads} />;
+
+  return (
+    <CommunityView
+      loggedIn={user}
+      users={users}
+      threads={threads}
+      pagination={paginationData}
+    />
+  );
 }

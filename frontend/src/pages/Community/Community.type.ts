@@ -1,9 +1,11 @@
 import { User } from "@/components/Header/Header.type";
 
+
 export interface CommunityProps {
   threads: Thread[];
   users: OmittedUser[];
   loggedIn: User | null;
+  pagination: Pagination | null;
 }
 
 // thread

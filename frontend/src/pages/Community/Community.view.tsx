@@ -4,7 +4,7 @@ import ActiveUserCard from "@/components/ActiveUserCard/ActiveUserCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { MessageSquarePlus, Users, Info, Activity } from "lucide-react";
 import { CommunityProps } from "./Community.type";
 import {
@@ -13,8 +13,38 @@ import {
   cardHoverEffect,
   buttonHoverEffect,
 } from "./Community.data";
+import PaginationControls from "@/components/PaginationControls";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const CommunityView: FC<CommunityProps> = ({ threads, users, loggedIn }) => {
+interface ExtendedCommunityProps extends CommunityProps {
+  isLoading?: boolean;
+}
+
+const CommunityView: FC<ExtendedCommunityProps> = ({
+  threads,
+  users,
+  loggedIn,
+  pagination,
+  isLoading = false,
+}) => {
+  const ThreadSkeleton = () => (
+    <div className="flex flex-col space-y-3 p-4 border dark:border-gray-700 rounded-xl bg-white dark:bg-slate-800/50">
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[150px]" />
+          <Skeleton className="h-3 w-[100px]" />
+        </div>
+      </div>
+      <Skeleton className="h-5 w-3/4" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-5/6" />
+      <div className="flex justify-end pt-2">
+        <Skeleton className="h-6 w-[100px]" />
+      </div>
+    </div>
+  );
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -46,26 +76,49 @@ const CommunityView: FC<CommunityProps> = ({ threads, users, loggedIn }) => {
         animate="visible"
         className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full max-w-6xl mx-auto"
       >
-        <motion.div
-          variants={containerVariants}
-          className="flex flex-col col-span-1 md:col-span-2 space-y-6 md:space-y-8 order-2 md:order-1"
-        >
-          <h2 className="text-2xl font-semibold text-teal-800 dark:text-teal-400 mb-4">
+        <motion.div className="flex flex-col col-span-1 md:col-span-2 space-y-6 md:space-y-8 order-2 md:order-1">
+          <h2 className="text-2xl font-semibold text-teal-800 dark:text-teal-400 mb-8">
+            {" "}
             Diskusi Terbaru
           </h2>
-          {threads.length > 0 ? (
-            threads.map((item, index) => <ThreadCard key={index} data={item} />)
-          ) : (
-            <motion.div
-              variants={itemVariants}
-              className="text-center text-gray-500 py-10"
-            >
-              Belum ada diskusi. Jadilah yang pertama!
-            </motion.div>
-          )}
+
+          <div className="space-y-6 md:space-y-8 min-h-[400px]">
+            {" "}
+            {isLoading ? (
+              <>
+                <ThreadSkeleton />
+                <ThreadSkeleton />
+                <ThreadSkeleton />
+              </>
+            ) : threads.length > 0 ? (
+              <AnimatePresence mode="popLayout">
+                {threads.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ThreadCard data={item} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center text-gray-500 py-16 flex flex-col items-center gap-4"
+              >
+                <MessageSquarePlus className="w-12 h-12 text-gray-400" />
+                <span>Belum ada diskusi. Jadilah yang pertama!</span>
+              </motion.div>
+            )}
+          </div>
         </motion.div>
 
-        <aside className="flex flex-col space-y-8 order-1 md:order-2">
+        <aside className="flex flex-col space-y-8 order-1 md:order-2 lg:sticky lg:top-24 h-fit">
           {" "}
           <motion.div
             className="rounded-xl"
@@ -144,7 +197,6 @@ const CommunityView: FC<CommunityProps> = ({ threads, users, loggedIn }) => {
             className="rounded-xl"
             whileHover={{ ...cardHoverEffect, scale: 1.0 }}
           >
-            {" "}
             <Card className="shadow-lg rounded-xl bg-white dark:bg-slate-800 overflow-hidden pt-0">
               <CardHeader className="bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-slate-800 dark:to-gray-800 px-6 pt-8 border-b">
                 <CardTitle className="font-semibold text-xl text-teal-700 dark:text-teal-400 flex items-center gap-2">
@@ -158,9 +210,12 @@ const CommunityView: FC<CommunityProps> = ({ threads, users, loggedIn }) => {
                   transition={{ duration: 0.5 }}
                   className="flex flex-col space-y-3"
                 >
-                  {users.map((user) => (
-                    <>
-                      {user._count.thread_comments > 5 && (
+                  {users.filter((user) => user._count.thread_comments > 5)
+                    .length > 0 ? (
+                    users
+                      .filter((user) => user._count.thread_comments > 5)
+                      .slice(0, 8)
+                      .map((user) => (
                         <motion.div
                           key={user.id}
                           whileHover={{
@@ -176,17 +231,31 @@ const CommunityView: FC<CommunityProps> = ({ threads, users, loggedIn }) => {
                         >
                           <ActiveUserCard user={user} />
                         </motion.div>
-                      )}
-                    </>
-                  ))}
+                      ))
+                  ) : (
+                    <p className="text-sm text-center text-gray-500 py-4">
+                      Belum ada pengguna yang sangat aktif.
+                    </p>
+                  )}
                 </motion.div>
-                <p className="text-sm text-center pt-8">
-                  Pengguna teratas dengan 5+ respon akan tampil disini.
-                </p>
               </CardContent>
             </Card>
           </motion.div>
         </aside>
+      </motion.section>
+
+      <motion.section
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="self-start pl-8 pt-12"
+      >
+        {pagination && pagination.totalPages > 1 && !isLoading && (
+          <PaginationControls
+            currentPage={pagination.currentPage}
+            totalPages={pagination.totalPages}
+          />
+        )}
       </motion.section>
     </motion.section>
   );
