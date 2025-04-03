@@ -7,11 +7,11 @@ import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { PostThreadReplyResponse } from "./CommentCard.type";
 import { FetchThreadContext } from "@/pages/CommunityThread/CommunityThread.context";
+import { useUser } from "../Header/Header.context";
 
 export default function CommentCard({
   replies,
   data,
-  loggedIn,
 }: {
   replies?: ThreadCommentReply[];
   data: ThreadComment;
@@ -24,9 +24,17 @@ export default function CommentCard({
   const [replyOpen, setReplyOpen] = useState(false);
   const fetchThread = useContext(FetchThreadContext);
 
+  const { user } = useUser();
+  const currentUserId = user?.id;
+
   const submitReply = async () => {
     setLoading(true);
     setError("");
+    if (!replyInputRef.current?.value.trim()) {
+      setError("Balasan tidak boleh kosong.");
+      setLoading(false);
+      return;
+    }
     try {
       const replyData: PostThreadReplyResponse = (
         await client().post("/thread-comment-reply", {
@@ -36,7 +44,7 @@ export default function CommentCard({
       ).data;
 
       toast(replyData.msg);
-
+      replyInputRef.current.value = "";
       fetchThread();
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -44,9 +52,24 @@ export default function CommentCard({
         return;
       }
       console.log(error);
+      setError("Terjadi kesalahan tidak terduga saat mengirim balasan.");
     } finally {
       setLoading(false);
       setReplyOpen(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: number | string) => {
+    toast(`Simulasi: Menghapus komentar ID: ${commentId}`);
+
+    try {
+      await client().delete(`/thread-comment/${commentId}`);
+      toast.success("Komentar berhasil dihapus.");
+      fetchThread();
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      toast.error("Gagal menghapus komentar.");
+      setLoading(false);
     }
   };
 
@@ -57,7 +80,7 @@ export default function CommentCard({
         setCommentsOpen(true);
       }
     }
-  }, [replyOpen]);
+  }, [replyOpen, commentsOpen]);
 
   useEffect(() => {
     if (!commentsOpen) {
@@ -77,7 +100,9 @@ export default function CommentCard({
       replies={replies}
       replyOpen={replyOpen}
       setReplyOpen={setReplyOpen}
-      loggedIn={loggedIn}
+      loggedIn={!!currentUserId}
+      handleDelete={handleDeleteComment}
+      currentUserId={currentUserId}
     />
   );
 }
