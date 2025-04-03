@@ -1,30 +1,48 @@
 import { z } from "zod";
-import { passwordSchema } from "./PersonalInfoChange.data";
-import { Dispatch, SetStateAction } from "react";
+import { personalInfoSchema } from "./PersonalInfoChange.data";
 import { NavigateFunction } from "react-router-dom";
 import { UseFormReturn } from "react-hook-form";
 
 export interface PersonalInfoChangeProps {
-  showCurrentPassword: boolean;
-  setShowCurrentPassword: Dispatch<SetStateAction<boolean>>;
-  showNewPassword: boolean;
-  setShowNewPassword: Dispatch<SetStateAction<boolean>>;
-  showConfirmPassword: boolean;
-  setShowConfirmPassword: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
   error: string | null;
-  passwordStrength: number;
-  onSubmit: (data: PasswordFormData) => void;
+  onSubmit: (data: PersonalInfoFormData) => void;
   navigate: NavigateFunction;
   form: UseFormReturn<
     {
-      currentPassword: string;
-      newPassword: string;
-      confirmPassword: string;
+      name: string;
+      email: string;
+      phone_number?: string;
+      gender?: string;
+      bio?: string;
     },
     undefined
   >;
-  newPasswordValue: string;
 }
 
-export type PasswordFormData = z.infer<typeof passwordSchema>;
+export interface UpdatePersonalInfoResponse {
+  msg: string;
+  payload: Payload;
+}
+
+export interface Payload {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: Date;
+  username: string;
+  password: string;
+  phone_number: string;
+  bio: string;
+  gender: string;
+  country: null;
+  province: null;
+  city: null;
+  street: null;
+  postal: null;
+  role: string;
+  created_at: Date;
+  hashedRefreshToken: string;
+}
+
+export type PersonalInfoFormData = z.infer<typeof personalInfoSchema>;

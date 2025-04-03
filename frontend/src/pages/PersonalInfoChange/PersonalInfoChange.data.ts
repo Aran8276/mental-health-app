@@ -41,36 +41,13 @@ const errorVariant = {
   exit: { opacity: 0, y: -5, height: 0, transition: { duration: 0.2 } },
 };
 
-const strengthColors = [
-  "bg-red-500",
-  "bg-red-500",
-  "bg-orange-500",
-  "bg-yellow-500",
-  "bg-lime-500",
-  "bg-emerald-500",
-];
-
-const strengthText = [
-  "Sangat Lemah",
-  "Sangat Lemah",
-  "Lemah",
-  "Cukup",
-  "Kuat",
-  "Sangat Kuat",
-];
-
-const passwordSchema = z
-  .object({
-    currentPassword: z.string().min(1, "Kata sandi lama wajib diisi"),
-    newPassword: z.string().min(8, "Kata sandi baru minimal 8 karakter"),
-    confirmPassword: z
-      .string()
-      .min(1, "Konfirmasi kata sandi baru wajib diisi"),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Konfirmasi kata sandi tidak cocok",
-    path: ["confirmPassword"],
-  });
+const personalInfoSchema = z.object({
+  name: z.string().min(1, "Nama wajib diisi."),
+  email: z.string().min(1, "Email wajib diisi."),
+  phone_number: z.string().optional(),
+  gender: z.string().optional(),
+  bio: z.string().optional(),
+});
 
 export {
   pageVariants,
@@ -79,7 +56,5 @@ export {
   formItemVariants,
   buttonHoverTap,
   errorVariant,
-  strengthColors,
-  strengthText,
-  passwordSchema,
+  personalInfoSchema,
 };

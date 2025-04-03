@@ -1,32 +1,33 @@
-import { User, CheckUserResponse } from "@/components/Header/Header.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import AccountSettingsView from "./AccountSettings.view";
 import NotFound from "../NotFound/NotFound";
+import { GetUserResponse, UserWithData } from "../Profile/Profile.type";
 
 export default function AccountSettings() {
   const [userFound, setUserFound] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserWithData | null>(null);
 
   const fetchUser = async () => {
     try {
-      const data: CheckUserResponse = (await client().get("/auth/check")).data;
-      setUser(data.user);
+      const data: GetUserResponse = (await client().get("/user")).data;
+      setUser(data.payload);
     } catch (error) {
+      setUser(null);
       if (error instanceof AxiosError) {
-        if (error.status == 401 || error.status == 403) {
-          setUser(null);
-          setUserFound(false);
-          return;
-        }
-        console.log(error.message);
-        toast(error.message);
+        const errorMsg =
+          error.response?.data?.msg || "Gagal memuat data pengguna.";
+        toast.error(errorMsg);
+        console.error(
+          "Fetch User Error:",
+          error.response?.data || error.message
+        );
+        setUserFound(false);
       }
     }
   };
-
   useEffect(() => {
     fetchUser();
   }, []);

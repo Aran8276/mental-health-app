@@ -16,13 +16,13 @@ const PersonalInfoCardView: FC<PersonalInfoCardProps> = ({ userData }) => {
   const infoItems = [
     { label: "Nama Lengkap", value: userData?.name },
     { label: "Email", value: userData?.email },
-    { label: "Nomor Handphone", value: "-" },
+    { label: "Nomor Handphone", value: userData?.phone_number },
     {
       label: "Bio Singkat",
-      value: "...",
+      value: userData?.bio,
       colSpan: "sm:col-span-2",
     },
-    { label: "Gender", value: "-" },
+    { label: "Gender", value: userData?.gender },
   ];
 
   return (

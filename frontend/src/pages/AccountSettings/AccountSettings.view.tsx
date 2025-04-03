@@ -39,7 +39,15 @@ const AccountSettingsView: FC<AccountSettingsProps> = ({ user }) => {
     { label: "Nama Lengkap", value: user?.name },
     { label: "Email", value: user?.email },
     { label: "Nomor Handphone", value: user?.phone_number || "-" },
-    { label: "Gender", value: user?.gender || "-" },
+    {
+      label: "Gender",
+      value:
+        user?.gender === "MALE"
+          ? "Laki Laki"
+          : user?.gender === "FEMALE"
+          ? "Perempuan"
+          : "Lainnya",
+    },
     {
       label: "Bio Singkat",
       value: user?.bio || "...",
@@ -48,13 +56,17 @@ const AccountSettingsView: FC<AccountSettingsProps> = ({ user }) => {
   ];
 
   const addressInfoItems = [
-    { label: "Jalan", value: user?.street, colSpan: "sm:col-span-2" },
+    { label: "Negara", value: user?.country || "-" },
     {
-      label: "Kota/Provinsi",
-      value: `${user?.province}`,
+      label: "Provinsi",
+      value: user?.province || "-",
     },
-    { label: "Kode Pos", value: user?.postal },
-    { label: "Negara", value: user?.country },
+    {
+      label: "Kota",
+      value: user?.city || "-",
+    },
+    { label: "Jalan", value: user?.street || "-", colSpan: "sm:col-span-2" },
+    { label: "Kode Pos", value: user?.postal || "-" },
   ];
 
   return (

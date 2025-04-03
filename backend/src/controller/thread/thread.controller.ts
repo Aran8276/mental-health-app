@@ -7,6 +7,7 @@ import {
     validateRequestBody,
     handleControllerError,
     parseNumericId,
+    commonUserOmit,
 } from "@/utils/crud.utils";
 import { Prisma } from "@prisma/client";
 
@@ -36,15 +37,21 @@ const findThreadAndVerifyOwnership = async (
 };
 
 const commonThreadInclude = Prisma.validator<Prisma.ThreadInclude>()({
-    owner: true,
+    owner: {
+        omit: commonUserOmit,
+    },
     thread_comments: {
         orderBy: { created_at: "asc" },
         include: {
-            owner: true,
+            owner: {
+                omit: commonUserOmit,
+            },
             thread_comment_replies: {
                 orderBy: { created_at: "asc" },
                 include: {
-                    owner: true,
+                    owner: {
+                        omit: commonUserOmit,
+                    },
                 },
             },
         },

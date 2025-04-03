@@ -10,7 +10,7 @@ import authRouter from "@/routes/auth.routes";
 import cors from "cors";
 import * as env from "dotenv";
 
-// config 
+// config
 env.config();
 
 const corsOptions = {

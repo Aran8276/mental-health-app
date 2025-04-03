@@ -3,6 +3,7 @@ import { ReplySectionProps } from "./ReplySection.type";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import { Link } from "react-router-dom";
 import { Clock } from "lucide-react";
+import { humanize } from "@/utils/humanize";
 
 const ReplySectionView: FC<ReplySectionProps> = ({ data }) => {
   return (
@@ -20,7 +21,7 @@ const ReplySectionView: FC<ReplySectionProps> = ({ data }) => {
           </Link>
           <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
             <Clock className="w-3 h-3 mr-1" />
-            {"date goes here"}
+            {data.created_at && humanize(data.created_at)}
           </span>
         </div>
         <p className="text-sm">{data.body}</p>

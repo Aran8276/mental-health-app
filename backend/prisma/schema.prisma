@@ -29,6 +29,7 @@ enum UserRole {
 enum UserGender {
   MALE
   FEMALE
+  OTHER
 }
 
 enum UserMood {
@@ -61,10 +62,11 @@ model User {
   gender       UserGender?
 
   // data sampingan alamat
-  street   String?
-  province String?
-  postal   String?
   country  String?
+  province String?
+  city     String?
+  street   String?
+  postal   String?
 
   // data relasi
   role                   UserRole             @default(USER)

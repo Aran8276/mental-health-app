@@ -1,5 +1,5 @@
-import { User } from "../Header/Header.type";
+import { UserWithData } from "@/pages/Profile/Profile.type";
 
 export interface PersonalInfoCardProps {
-  userData: User | null;
+  userData: UserWithData | null;
 }

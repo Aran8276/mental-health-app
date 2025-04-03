@@ -1,6 +1,5 @@
-import { User } from "@/components/Header/Header.type";
+import { UserWithData } from "../Profile/Profile.type";
 
 export interface AccountSettingsProps {
-  user: User | null;
+  user: UserWithData | null;
 }
-

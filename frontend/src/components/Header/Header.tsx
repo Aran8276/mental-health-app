@@ -2,16 +2,17 @@ import { publicRoutes } from "@/viewports/Navigator/Navigator.data";
 import HeaderView from "./Header.view";
 import { profileDropdownItems } from "./Header.data";
 import { useEffect, useState } from "react";
-import { CheckUserResponse, RefreshTokenResponse, User } from "./Header.type";
+import { CheckUserResponse, RefreshTokenResponse } from "./Header.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "./Header.context";
 
 export default function Header() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [mobileOpen, mobileSetOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useUser();
 
   const tryRefresh = async () => {
     try {

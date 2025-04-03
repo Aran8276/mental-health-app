@@ -9,16 +9,17 @@ import {
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { useUser } from "@/components/Header/Header.context";
 
 export default function Community() {
-  const loggedIn = false;
+  const { user } = useUser();
   const [users, setUser] = useState<OmittedUser[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
 
   const fetchThreads = async () => {
     try {
       const data: FetchThreadResponse = (await client().get("/thread")).data;
-      setThreads(data.payload);
+      setThreads(data.payload.threads);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.message);
@@ -29,8 +30,9 @@ export default function Community() {
 
   const fetchUsers = async () => {
     try {
-      const data: GetAllUserResponse = (await client().get("/user")).data;
-      setUser(data.payload);
+      const data: GetAllUserResponse = (await client().get("/user/all-users"))
+        .data;
+      setUser(data.payload.users);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.message);
@@ -45,5 +47,5 @@ export default function Community() {
   }, []);
 
   document.title = "Forum Komunitas - Mental Health App";
-  return <CommunityView loggedIn={loggedIn} users={users} threads={threads} />;
+  return <CommunityView loggedIn={user} users={users} threads={threads} />;
 }

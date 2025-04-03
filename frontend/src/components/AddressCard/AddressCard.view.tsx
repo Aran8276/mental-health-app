@@ -13,15 +13,15 @@ import {
   valueColor,
 } from "./AddressCard.data";
 
-const AddressCardView: FC<AddressCardProps> = ({ addressData }) => {
+const AddressCardView: FC<AddressCardProps> = ({ user }) => {
   const addressItems = [
-    { label: "Jalan", value: addressData.street, colSpan: "sm:col-span-2" },
+    { label: "Jalan", value: user?.street, colSpan: "sm:col-span-2" },
     {
       label: "Kota/Provinsi",
-      value: `${addressData.city}, ${addressData.state}`,
+      value: `${user?.city || "-"}, ${user?.province || "-"}`,
     },
-    { label: "Kode Pos", value: addressData.zipCode },
-    { label: "Negara", value: addressData.country, colSpan: "sm:col-span-2" },
+    { label: "Kode Pos", value: user?.postal },
+    { label: "Negara", value: user?.country, colSpan: "sm:col-span-2" },
   ];
 
   return (

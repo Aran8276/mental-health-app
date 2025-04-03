@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import {
   FetchAllThreadsResponse,
   FetchThreadDetailResponse,
-  Payload,
   PostThreadCommentResponse,
   Thread,
   ThreadComment,
@@ -13,13 +12,14 @@ import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { FetchThreadContext } from "./CommunityThread.context";
+import { useUser } from "@/components/Header/Header.context";
 
 export default function CommunityThread() {
-  const loggedIn = false;
+  const { user } = useUser();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [thread, setThread] = useState<Thread | null>(null);
-  const [threadsList, setThreadsList] = useState<Payload[]>([]);
+  const [threadsList, setThreadsList] = useState<Thread[]>([]);
   const [createCommentOpen, setCreateCommentOpen] = useState(false);
   const textarea = useRef<HTMLTextAreaElement | null>(null);
   const safeThread = thread || ({} as Partial<Thread>);
@@ -45,7 +45,7 @@ export default function CommunityThread() {
     try {
       const data: FetchAllThreadsResponse = (await client().get(`/thread`))
         .data;
-      setThreadsList(data.payload);
+      setThreadsList(data.payload.threads);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.message);
@@ -120,7 +120,7 @@ export default function CommunityThread() {
         safeThread={safeThread}
         comments={comments}
         safeThreadsList={safeThreadsList}
-        loggedIn={loggedIn}
+        loggedIn={user}
       />
     </FetchThreadContext.Provider>
   );

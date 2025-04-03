@@ -84,4 +84,10 @@ const handleControllerError = (
     }
 };
 
+export const commonUserOmit = Prisma.validator<Prisma.UserOmit>()({
+    email_verified_at: true,
+    password: true,
+    hashedRefreshToken: true,
+});
+
 export { parseNumericId, validateRequestBody, handleControllerError };

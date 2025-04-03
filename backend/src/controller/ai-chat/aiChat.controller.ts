@@ -45,6 +45,7 @@ const aiChatController = {
             conversationId,
             userId,
         );
+
         if (!ownedConversation) {
             return;
         }

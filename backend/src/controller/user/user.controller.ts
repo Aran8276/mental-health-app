@@ -1,126 +1,196 @@
-// import { make } from "simple-body-validator";
 import { msgTemplate } from "@/config/msgTemplate";
 import { prisma } from "@/config/prismaClient";
 import { Request, Response } from "express";
-// import { userValidation } from "./user.validation";
-// import { RequestWithUser } from "@/middleware/authMiddleware.type";
+import { addressValidation, personalInfoValidation } from "./user.validation";
+import { RequestWithUser } from "@/middleware/authMiddleware.type";
+import {
+    validateRequestBody,
+    handleControllerError,
+    parseNumericId,
+    commonUserOmit,
+} from "@/utils/crud.utils";
+import { Prisma } from "@prisma/client";
 
-// interface User {
-//     id: number;
-//     name: string;
-//     email: string;
-//     username: string;
-//     password: string;
-//     role: string;
-//     iat: number;
-// }
+const commonUserInclude = Prisma.validator<Prisma.UserInclude>()({
+    threads: true,
+    thread_comments: true,
+});
 
-const userUseCase = {
+const userController = {
+    /**
+     * @description Update the user personal information
+     * @route POST /api/user/personal-info
+     * @access Private (Requires authenticated user to update their profile info)
+     */
+    updatePersonalInfo: async (req: RequestWithUser, res: Response) => {
+        const userId = req.user!.id;
+
+        const dataToValidate = {
+            ...req.body,
+        };
+
+        if (!validateRequestBody(req, res, personalInfoValidation)) {
+            return;
+        }
+
+        try {
+            const personalInfo = await prisma.user.update({
+                data: {
+                    name: dataToValidate.name,
+                    email: dataToValidate.email,
+                    phone_number: dataToValidate.phone_number,
+                    gender: dataToValidate.gender,
+                    bio: dataToValidate.bio,
+                },
+
+                where: {
+                    id: userId,
+                },
+            });
+
+            res.json(
+                msgTemplate("Info pribadi berhasil diupdate.", {
+                    ...personalInfo,
+                }),
+            );
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengedit info pribadi.");
+        }
+    },
+
+    /**
+     * @description Update the user address information
+     * @route POST /api/user/address-info
+     * @access Private (Requires authenticated user to update their profile info)
+     */
+    updateAddressInfo: async (req: RequestWithUser, res: Response) => {
+        const userId = req.user!.id;
+
+        const dataToValidate = {
+            ...req.body,
+        };
+
+        if (!validateRequestBody(req, res, addressValidation)) {
+            return;
+        }
+
+        try {
+            const addressInfo = await prisma.user.update({
+                data: {
+                    country: dataToValidate.country,
+                    province: dataToValidate.province,
+                    city: dataToValidate.city,
+                    street: dataToValidate.street,
+                    postal: dataToValidate.postal,
+                },
+
+                where: {
+                    id: userId,
+                },
+            });
+
+            res.json(
+                msgTemplate("Info lokasi berhasil diupdate.", addressInfo),
+            );
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengedit info lokasi.");
+        }
+    },
+
+    /**
+     * @description Get information of the user given by the id.
+     * @route GET /api/user/:id
+     * @access Public (anyone can access it)
+     */
     readUser: async (req: Request, res: Response) => {
-        const user = await prisma.user.findMany({
-            omit: {
-                email_verified_at: true,
-                password: true,
-                role: true,
-            },
-            include: {
-                _count: {
-                    select: {
-                        thread_comments: true,
+        const page = parseInt(req.query.page as string, 10) || 1;
+        const limit = parseInt(req.query.limit as string, 10) || 5;
+        const skip = (page - 1) * limit;
+
+        try {
+            const users = await prisma.user.findMany({
+                skip: skip,
+                take: limit,
+                orderBy: {
+                    thread_comments: {
+                        _count: "desc",
                     },
                 },
-            },
-        });
+                include: {
+                    _count: true,
+                },
+                omit: commonUserOmit,
+            });
 
-        res.json(msgTemplate("Data berhasil diambil", user));
+            const totalUsers = await prisma.thread.count();
+
+            res.json(
+                msgTemplate("User berhasil diambil.", {
+                    users: users,
+                    pagination: {
+                        currentPage: page,
+                        totalPages: Math.ceil(totalUsers / limit),
+                        totalUsers: totalUsers,
+                        limit,
+                    },
+                }),
+            );
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengambil threads.");
+        }
     },
 
+    /**
+     * @description Get information of the user given by the id.
+     * @route GET /api/user/:id
+     * @access Public (anyone can access it)
+     */
     readUserById: async (req: Request, res: Response) => {
-        if (isNaN(parseInt(req.params.id))) {
-            res.status(404).json(msgTemplate("Data tidak ditemukan"));
-            return;
+        const userId = parseNumericId(req, res);
+        if (userId === null) return;
+
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id: userId },
+                include: commonUserInclude,
+            });
+
+            if (!user) {
+                res.status(404).json(msgTemplate("User tidak ditemukan."));
+                return;
+            }
+
+            res.json(msgTemplate("User berhasil diambil.", user));
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengambil User.");
         }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id: parseInt(req.params.id),
-            },
-            omit: {
-                email_verified_at: true,
-                password: true,
-                role: true,
-            },
-        });
-
-        if (!user) {
-            res.status(404).json(msgTemplate("Data tidak ditemukan"));
-            return;
-        }
-
-        res.json(msgTemplate("Data berhasil diambil", user));
     },
 
-    // updateUser: async (req: RequestWithUser, res: Response) => {
-    //     const data = req.body;
-    //     const validator = make(data, userValidation);
-    //     const user = req.user as User;
+    /**
+     * @description Get information of the current user that's logged in
+     * @route GET /api/user/
+     * @access Private (Requires authenticated user to see their profile inforamtion)
+     */
+    readCurrentUser: async (req: RequestWithUser, res: Response) => {
+        const userId = req.user!.id;
 
-    //     if (!validator.validate()) {
-    //         res.status(422).json(
-    //             msgTemplate(
-    //                 "Semua input harus diisi",
-    //                 validator.errors().all(),
-    //             ),
-    //         );
-    //         return;
-    //     }
+        try {
+            const user = await prisma.user.findUnique({
+                where: { id: userId },
+                include: commonUserInclude,
+                omit: commonUserOmit,
+            });
 
-    //     const isOwnedAndFound = await prisma.user.findFirst({
-    //         where: { id: parseInt(req.params.id), owner_id: user.id },
-    //     });
+            if (!user) {
+                res.status(404).json(msgTemplate("User tidak ditemukan."));
+                return;
+            }
 
-    //     if (!isOwnedAndFound) {
-    //         res.status(404).json(msgTemplate("Data tidak ditemukan"));
-    //         return;
-    //     }
-
-    //     const { id, ...updateData } = data;
-    //     void id;
-    //     const user = await prisma.user.update({
-    //         where: {
-    //             id: parseInt(req.params.id),
-    //         },
-    //         data: updateData,
-    //     });
-
-    //     res.json(msgTemplate("Data berhasil diupdate", user));
-    // },
-
-    // deleteUser: async (req: RequestWithUser, res: Response) => {
-    //     const user = req.user as User;
-
-    //     const userExists = await prisma.user.findFirst({
-    //         where: { id: parseInt(req.params.id), owner_id: user.id },
-    //     });
-
-    //     if (!userExists) {
-    //         res.status(404).json(msgTemplate("Data tidak ditemukan"));
-    //         return;
-    //     }
-
-    //     const user = await prisma.user.delete({
-    //         where: {
-    //             id: parseInt(req.params.id),
-    //         },
-    //     });
-
-    //     if (!user) {
-    //         res.status(404).json(msgTemplate("Data tidak ditemukan"));
-    //         return;
-    //     }
-
-    //     res.json(msgTemplate("Data berhasil dihapus", user));
-    // },
+            res.json(msgTemplate("User berhasil diambil.", user));
+        } catch (error) {
+            handleControllerError(res, error, "Gagal mengambil User.");
+        }
+    },
 };
 
-export default userUseCase;
+export default userController;

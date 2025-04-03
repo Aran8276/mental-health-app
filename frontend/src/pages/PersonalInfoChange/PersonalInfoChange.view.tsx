@@ -1,14 +1,14 @@
 import { FC } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"; // Added for Bio
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Added for Gender
+} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -28,14 +28,13 @@ import LoadableButton from "@/components/LoadableButton/LoadableButton";
 
 import {
   ArrowLeft,
-  UserCog, // Changed icon for personal info
+  UserCog,
   Save,
   ShieldAlert,
-  User, // Icon for Full Name
-  Mail, // Icon for Email
-  Phone, // Icon for Phone Number
-  Info, // Icon for Bio
-  Users, // Icon for Gender (using Users as placeholder)
+  User,
+  Mail,
+  Phone,
+  Users,
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,13 +44,10 @@ import {
   cardFadeUp,
   formContainerStagger,
   formItemVariants,
-  // Removed strengthColors, strengthText as they are password specific
   errorVariant,
   buttonHoverTap,
-  // Assuming these variants are general enough or defined elsewhere appropriately
-  // If not, create PersonalInfoChange.data.ts or adapt these
-} from "./PersonalInfoChange.data"; // Adjusted import path assumption
-import { PersonalInfoChangeProps } from "./PersonalInfoChange.type"; // Adjusted import path
+} from "./PersonalInfoChange.data";
+import { PersonalInfoChangeProps } from "./PersonalInfoChange.type";
 
 const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
   loading,
@@ -66,13 +62,13 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="flex flex-col items-center justify-center px-4 py-12 min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950" // Adjusted gradient slightly
+      className="flex flex-col items-center justify-center px-4 py-12 min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-indigo-950"
     >
       <div className="w-full max-w-lg mb-6">
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate(-1)} // Assuming navigate(-1) goes back
+          onClick={() => navigate(-1)}
           className="text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
@@ -87,7 +83,7 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/30" // Adjusted color
+              className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-900/30"
             >
               <UserCog className="h-7 w-7 text-indigo-600 dark:text-indigo-400" />
             </motion.div>
@@ -107,11 +103,10 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-5"
               >
-                {/* Nama Lengkap Field */}
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
-                    name="fullName"
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nama Lengkap</FormLabel>
@@ -121,9 +116,8 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                             <Input
                               type="text"
                               placeholder="Masukkan nama lengkap Anda"
-                              required
                               {...field}
-                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 h-11 pl-10" // Added pl-10 for icon
+                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 h-11 pl-10"
                             />
                           </FormControl>
                         </div>
@@ -133,7 +127,6 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                   />
                 </motion.div>
 
-                {/* Email Field */}
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
@@ -147,11 +140,8 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                             <Input
                               type="email"
                               placeholder="Masukkan alamat email Anda"
-                              required
                               {...field}
-                              // Consider adding readOnly if email change is complex
-                              // readOnly
-                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 h-11 pl-10" // Added pl-10 for icon
+                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 h-11 pl-10"
                             />
                           </FormControl>
                         </div>
@@ -161,11 +151,10 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                   />
                 </motion.div>
 
-                {/* Nomor Handphone Field */}
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
-                    name="phoneNumber"
+                    name="phone_number"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Nomor Handphone</FormLabel>
@@ -176,7 +165,7 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                               type="tel"
                               placeholder="Contoh: 081234567890"
                               {...field}
-                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 h-11 pl-10" // Added pl-10 for icon
+                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 h-11 pl-10"
                             />
                           </FormControl>
                         </div>
@@ -186,7 +175,6 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                   />
                 </motion.div>
 
-                {/* Gender Field */}
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
@@ -196,11 +184,9 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                         <FormLabel>Jenis Kelamin</FormLabel>
                         <div className="relative">
                           <Users className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 z-10" />{" "}
-                          {/* Icon for Select */}
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            required
+                            value={field.value || ""}
                           >
                             <FormControl>
                               <SelectTrigger className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus:ring-indigo-400 dark:focus:ring-indigo-500 h-11 pl-10">
@@ -208,14 +194,9 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Laki-laki">
-                                Laki-laki
-                              </SelectItem>
-                              <SelectItem value="Perempuan">
-                                Perempuan
-                              </SelectItem>
-                              <SelectItem value="Lainnya">Lainnya</SelectItem>
-                              {/* Add more options if needed */}
+                              <SelectItem value="MALE">Laki-laki</SelectItem>
+                              <SelectItem value="FEMALE">Perempuan</SelectItem>
+                              <SelectItem value="OTHER">Lainnya</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -225,7 +206,6 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                   />
                 </motion.div>
 
-                {/* Bio Singkat Field */}
                 <motion.div variants={formItemVariants}>
                   <FormField
                     control={form.control}
@@ -234,14 +214,11 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                       <FormItem>
                         <FormLabel>Bio Singkat</FormLabel>
                         <div className="relative">
-                          {/* Optional: Add icon inside textarea if desired, more complex positioning */}
-                          {/* <Info className="absolute left-3 top-3 h-4 w-4 text-gray-400" /> */}
                           <FormControl>
                             <Textarea
                               placeholder="Ceritakan sedikit tentang diri Anda... (opsional, maks 150 karakter)"
                               {...field}
-                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 min-h-[80px]" // Adjusted min-height
-                              // rows={3} // Or set rows
+                              className="bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600 focus-visible:ring-indigo-400 dark:focus-visible:ring-indigo-500 min-h-[80px]"
                             />
                           </FormControl>
                         </div>
@@ -251,7 +228,6 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                   />
                 </motion.div>
 
-                {/* Error Display */}
                 <AnimatePresence>
                   {error && (
                     <motion.p
@@ -266,22 +242,21 @@ const PersonalInfoChangeView: FC<PersonalInfoChangeProps> = ({
                   )}
                 </AnimatePresence>
 
-                {/* Submit Button */}
                 <motion.div variants={formItemVariants} className="pt-2">
                   <motion.button
-                    type="submit" // Add type="submit" here for better form handling
+                    type="submit"
                     whileHover={!loading ? buttonHoverTap.hover : {}}
                     whileTap={!loading ? buttonHoverTap.tap : {}}
                     disabled={loading}
-                    className="w-full" // Make the motion button take full width
+                    className="w-full"
                   >
                     <LoadableButton
                       isLoading={loading}
-                      type="submit" // Keep type="submit" on LoadableButton as well
+                      type="submit"
                       className={cn(
-                        "w-full h-11 text-base font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-70" // Adjusted color
+                        "w-full h-11 text-base font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-70"
                       )}
-                      disabled={loading} // Ensure LoadableButton also gets disabled state
+                      disabled={loading}
                     >
                       <Save className="mr-2 h-5 w-5" /> Simpan Perubahan
                     </LoadableButton>

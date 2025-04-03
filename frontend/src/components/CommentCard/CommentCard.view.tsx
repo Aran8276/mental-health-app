@@ -21,6 +21,7 @@ import {
   replyItemVariants,
 } from "./CommentCard.data";
 import { Link } from "react-router-dom";
+import { humanize } from "@/utils/humanize";
 
 const CommentCardView: FC<CommentCardProps> = ({
   error,
@@ -38,7 +39,7 @@ const CommentCardView: FC<CommentCardProps> = ({
   const ownerName = data.owner?.name || "Pengguna Anonim";
   const ownerAvatar = "avatar";
   const commentBody = data.body || "";
-  const createdAt = "created at";
+  const createdAt = data.created_at || "";
 
   return (
     <motion.div
@@ -65,7 +66,7 @@ const CommentCardView: FC<CommentCardProps> = ({
             {createdAt && (
               <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
                 <Clock className="w-3 h-3 mr-1" />
-                {"date goes here"}
+                {humanize(createdAt)}
               </span>
             )}
           </div>

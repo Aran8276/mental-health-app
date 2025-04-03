@@ -18,7 +18,6 @@ import {
   avatarVariants,
   headerTextVariants,
   sectionContainerStagger,
-  addressData,
 } from "./Profile.data";
 import { FC } from "react";
 import { ProfileProps } from "./Profile.type";
@@ -117,7 +116,7 @@ const ProfileView: FC<ProfileProps> = ({ user, isMine }) => {
           @{user?.username}
         </p>
         <p className="text-base text-gray-700 dark:text-gray-300 mt-3 max-w-xl">
-          {"Belum ada bio."}
+          {user?.bio || "Belum ada bio."}
         </p>
       </motion.div>
 
@@ -133,7 +132,7 @@ const ProfileView: FC<ProfileProps> = ({ user, isMine }) => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <AddressCard addressData={addressData} />
+          <AddressCard user={user} />
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

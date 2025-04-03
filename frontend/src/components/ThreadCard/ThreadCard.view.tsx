@@ -12,6 +12,7 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 import { motion } from "framer-motion";
 import { ThreadCardProps } from "./ThreadCard.type";
 import { cardVariants } from "./ThreadCard.data";
+import { humanize } from "@/utils/humanize";
 
 const ThreadCardView: FC<ThreadCardProps> = ({ isFull, data }) => {
   const WrapperComponent = isFull ? motion.div : motion(Link);
@@ -22,7 +23,7 @@ const ThreadCardView: FC<ThreadCardProps> = ({ isFull, data }) => {
   const threadTitle = data.title || "Tanpa Judul";
   const threadBody = data.body || "";
   const commentCount = data.thread_comments?.length || 0;
-  const createdAt = "createdAt";
+  const createdAt = data.created_at || "";
 
   const cardContent = (
     <Card className="py-0 bg-white dark:bg-slate-800 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out rounded-xl overflow-hidden border border-teal-100 dark:border-teal-900 ">
@@ -35,7 +36,7 @@ const ThreadCardView: FC<ThreadCardProps> = ({ isFull, data }) => {
           {createdAt && (
             <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center mt-0.5">
               <Clock className="w-3 h-3 mr-1" />
-              {"created at here"}
+              {humanize(createdAt)}
             </span>
           )}
         </div>
