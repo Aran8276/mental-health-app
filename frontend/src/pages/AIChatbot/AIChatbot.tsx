@@ -1,145 +1,188 @@
-// src/views/AIChatbot/AIChatbot.tsx
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AIChatbotView from "./AIChatbot.view";
-import { GeminiChatResponse, Message, Conversation } from "./AIChatbot.type"; // Make sure type imports are correct
+import {
+  GeminiChatResponse,
+  Conversation,
+  Chat,
+  GetConversationsResponse,
+  GetChatsByConversationResponse,
+  GeminiContentType,
+  NewConvoResponse,
+} from "./AIChatbot.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 
-// Dummy initial chat history for different conversations
-const dummyChatHistories: Record<string | number, Message[]> = {
-  chat1: [
-    {
-      id: 1,
-      text: "Halo! Selamat datang di percakapan pertama Anda.",
-      sender: "bot",
-      timestamp: "10:00",
-    },
-  ],
-  chat2: [
-    {
-      id: 101,
-      text: "Mari kita bahas tentang manajemen stres.",
-      sender: "bot",
-      timestamp: "10:05",
-    },
-    {
-      id: 102,
-      text: "Tentu, saya merasa agak kewalahan akhir-akhir ini.",
-      sender: "user",
-      timestamp: "10:06",
-    },
-  ],
-  new_chat: [
-    {
-      id: 1,
-      text: "Halo! Saya di sini untuk membantu. Apa yang ada di pikiranmu hari ini?",
-      sender: "bot",
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    },
-  ],
-};
-
-// Initial Conversations List
-const initialConversations: Conversation[] = [
-  { id: "chat1", title: "Diskusi Awal" },
-  { id: "chat2", title: "Manajemen Stres" },
-];
-
 export default function AIChatbot() {
-  // Ref removed from here, View handles its internal scroll refs
   const [selectedModel, setSelectedModel] = useState("Llama 3.1");
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const isSettingUpNewChat = useRef(false);
 
-  // --- New State for Conversations ---
-  const [conversations, setConversations] =
-    useState<Conversation[]>(initialConversations);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | number | null>(
-    initialConversations[0]?.id || "new_chat"
-  ); // Default to first chat or new
-  const [chatHistory, setChatHistory] =
-    useState<Record<string | number, Message[]>>(dummyChatHistories); // Store history per chat ID
-  const [messages, setMessages] = useState<Message[]>([]); // Current displayed messages
+    null
+  );
+  const [messages, setMessages] = useState<Chat[]>([]);
 
   const [inputValue, setInputValue] = useState("");
   const [isBotTyping, setIsBotTyping] = useState(false);
 
-  // --- Load messages for the active chat ---
   useEffect(() => {
-    if (activeChatId !== null) {
-      // Load history or default message for the selected chat
-      setMessages(chatHistory[activeChatId] || dummyChatHistories["new_chat"]);
-    } else {
-      setMessages(dummyChatHistories["new_chat"]); // Default if no chat is active (e.g., after deleting all)
+    fetchConvos();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      viewportRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, 0);
+  }, [messages]);
+
+  useEffect(() => {
+    if (conversations.length > 0 && activeChatId === null) {
+      setActiveChatId(conversations[0].id);
     }
-    // Reset input when chat changes
+  }, [conversations, activeChatId]);
+
+  useEffect(() => {
+    if (isSettingUpNewChat.current) {
+      setTimeout(() => {
+        isSettingUpNewChat.current = false;
+      }, 0);
+      setInputValue("");
+      return;
+    }
+
+    if (activeChatId && typeof activeChatId === "number") {
+      fetchChatByConvo(activeChatId);
+    }
+
     setInputValue("");
-  }, [activeChatId, chatHistory]);
+  }, [activeChatId]);
+
+  const fetchConvos = async () => {
+    try {
+      const res: GetConversationsResponse = (
+        await client().get("/ai-Conversation")
+      ).data;
+      setConversations(res.payload.conversations);
+    } catch (error) {
+      console.error("Failed to fetch conversations:", error);
+      if (error instanceof AxiosError) {
+        toast.error(error.message || "Gagal memuat daftar percakapan.");
+      } else {
+        toast.error("Gagal memuat daftar percakapan.");
+      }
+    }
+  };
+
+  const fetchChatByConvo = async (id: string | number) => {
+    if (typeof id !== "number") {
+      console.warn("fetchChatByConvo called with non-numeric ID:", id);
+      return;
+    }
+    console.log(`Fetching messages for convo ID: ${id}`);
+    try {
+      const res: GetChatsByConversationResponse = (
+        await client().get(`/ai-chat/conversation/${id}`)
+      ).data;
+      setMessages(res.payload.chats);
+    } catch (error) {
+      console.error(`Failed to fetch chats for convo ID ${id}:`, error);
+      setMessages([]);
+      if (error instanceof AxiosError) {
+        toast.error(
+          error.message || `Gagal memuat pesan untuk percakapan ${id}.`
+        );
+      } else {
+        toast.error(`Gagal memuat pesan untuk percakapan ${id}.`);
+      }
+    }
+  };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || activeChatId === null) return; // Check for active chat
+    const trimmedInput = inputValue.trim();
 
-    const newUserMessage: Message = {
-      id: Date.now().toString(), // Use string timestamp as ID
-      text: inputValue,
-      sender: "user",
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+    if (!trimmedInput || typeof activeChatId !== "number") {
+      if (!trimmedInput) return;
+
+      toast.error(
+        "Tidak dapat mengirim pesan: Percakapan tidak valid atau belum dipilih."
+      );
+      console.error(
+        "handleSendMessage called with invalid activeChatId:",
+        activeChatId
+      );
+      return;
+    }
+
+    const currentChatId = activeChatId;
+
+    const newUserMessage: Chat = {
+      id: Date.now(),
+      body: trimmedInput,
+      role: "USER",
+      created_at: new Date(),
+      ai_conversation_id: currentChatId,
     };
 
-    // --- Update local state first ---
     const updatedMessages = [...messages, newUserMessage];
-    setMessages(updatedMessages); // Update displayed messages immediately
-    setChatHistory((prev) => ({
-      // Update the history for the current chat
-      ...prev,
-      [activeChatId]: updatedMessages,
-    }));
-    // --- Optionally update conversation title/last message ---
-    // Find convo and update its preview here if needed
-    // ...
-
+    setMessages(updatedMessages);
     setInputValue("");
     setIsBotTyping(true);
 
-    // --- API Call ---
     try {
+      await client().post(`/ai-chat/conversation/${currentChatId}`, {
+        role: "USER",
+        body: trimmedInput,
+      });
+
+      const formattedMsg: GeminiContentType[] = updatedMessages.map((msg) => ({
+        role: msg.role === "AI" ? "model" : "user",
+        parts: [{ text: msg.body }],
+      }));
+
       const res: GeminiChatResponse = (
-        await client().post("/gemini-ai/chat", { body: inputValue })
+        await client().post("/gemini-ai/chat", {
+          conversation_id: currentChatId,
+          content: formattedMsg,
+        })
       ).data;
 
-      const botResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: `${res.payload.response}`, // Consider markdown formatting here if API provides it
-        sender: "bot",
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
+      const aiResponseBody = res.payload?.response;
 
-      const finalMessages = [...updatedMessages, botResponse];
-      setMessages(finalMessages); // Update displayed messages with bot response
-      setChatHistory((prev) => ({
-        // Update history again with bot response
-        ...prev,
-        [activeChatId]: finalMessages,
-      }));
+      if (
+        !aiResponseBody ||
+        typeof aiResponseBody !== "string" ||
+        aiResponseBody.trim() === ""
+      ) {
+        console.warn("AI returned an empty or invalid response body.");
+        toast.error("AI tidak memberikan respon yang valid.");
+      } else {
+        await client().post(`/ai-chat/conversation/${currentChatId}`, {
+          role: "AI",
+          body: aiResponseBody,
+        });
+
+        const botResponse: Chat = {
+          id: Date.now() + 1,
+          body: aiResponseBody,
+          role: "AI",
+          created_at: new Date(),
+          ai_conversation_id: currentChatId,
+        };
+
+        setMessages((prevMessages) => [...prevMessages, botResponse]);
+      }
     } catch (error) {
+      toast.error("Gagal mengirim atau menerima respon AI.");
       if (error instanceof AxiosError) {
+        console.error("API Error:", error.response?.data || error.message);
         toast.error(
           error?.response?.data?.msg || error.message || "Gagal mengirim pesan"
         );
-        console.error("API Error:", error);
-        // Optionally remove the user's message if API call fails critically
       } else {
-        toast.error("Terjadi kesalahan tidak terduga.");
         console.error("Unknown Error:", error);
+        toast.error("Terjadi kesalahan tidak terduga.");
       }
     } finally {
       setIsBotTyping(false);
@@ -148,42 +191,69 @@ export default function AIChatbot() {
 
   const handleSuggestionClick = (suggestion: string) => {
     setInputValue(suggestion);
-    // Consider auto-sending:
-    // handleSendMessage();
   };
 
-  // --- Conversation Management ---
   const handleSelectChat = (id: string | number) => {
     if (id !== activeChatId) {
+      if (isSettingUpNewChat.current) {
+        isSettingUpNewChat.current = false;
+      }
       setActiveChatId(id);
-      setIsBotTyping(false); // Stop typing indicator if switching
-      // Messages will update via the useEffect hook
+      setIsBotTyping(false);
     }
   };
 
-  const handleNewChat = () => {
-    const newChatId = `new_chat_${Date.now()}`; // Create a unique ID
-    const newConversation: Conversation = {
-      id: newChatId,
-      title: `Diskusi Baru ${
-        conversations.filter((c) => c.title.startsWith("Diskusi Baru")).length +
-        1
-      }`,
-    };
+  const handleNewChat = async () => {
+    isSettingUpNewChat.current = true;
 
-    setConversations((prev) => [newConversation, ...prev]); // Add to top
-    setChatHistory((prev) => ({
-      ...prev,
-      [newChatId]: dummyChatHistories["new_chat"], // Start with default welcome message
-    }));
-    setActiveChatId(newChatId); // Switch to the new chat
+    try {
+      console.log("Creating new conversation...");
+
+      const res: NewConvoResponse = (
+        await client().post("/ai-Conversation", {
+          title: "Diskusi Baru",
+        })
+      ).data;
+
+      const newConversation: Conversation = res.payload;
+      if (!newConversation || typeof newConversation.id !== "number") {
+        throw new Error(
+          "Invalid response received when creating conversation."
+        );
+      }
+
+      console.log(`New conversation created with ID: ${newConversation.id}`);
+
+      setConversations((prev) => [newConversation, ...prev]);
+
+      setMessages([
+        {
+          id: Date.now(),
+          body: "Halo! Saya di sini untuk membantu. Apa yang ada di pikiranmu hari ini?",
+          role: "AI",
+          created_at: new Date(),
+          ai_conversation_id: newConversation.id,
+        },
+      ]);
+
+      setActiveChatId(newConversation.id);
+
+      console.log(
+        `Active chat ID set to: ${newConversation.id}. Initial message set.`
+      );
+    } catch (error) {
+      console.error("Failed to create new conversation:", error);
+      toast.error("Gagal memulai percakapan baru.");
+
+      isSettingUpNewChat.current = false;
+      if (error instanceof AxiosError) {
+        toast.error(error?.response?.data?.msg || error.message);
+      }
+    }
   };
-
-  // No need for scroll useEffect here, View component handles it with its own ref
 
   return (
     <AIChatbotView
-      // Pass all required props down
       setSelectedModel={setSelectedModel}
       handleSendMessage={handleSendMessage}
       handleSuggestionClick={handleSuggestionClick}
@@ -191,11 +261,12 @@ export default function AIChatbot() {
       isBotTyping={isBotTyping}
       inputValue={inputValue}
       setInputValue={setInputValue}
-      messages={messages} // Pass the currently active messages
+      messages={messages}
       conversations={conversations}
       activeChatId={activeChatId}
       handleSelectChat={handleSelectChat}
       handleNewChat={handleNewChat}
+      viewportRef={viewportRef}
     />
   );
 }

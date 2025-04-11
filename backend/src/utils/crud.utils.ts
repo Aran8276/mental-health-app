@@ -1,5 +1,3 @@
-// --- Helper Functions ---
-
 import { msgTemplate } from "@/config/msgTemplate";
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
@@ -16,8 +14,9 @@ const parseNumericId = (req: Request, res: Response): number | null => {
             msgTemplate("Invalid ID provided. ID must be a number."),
         );
         return null;
+    } else {
+        return id;
     }
-    return id;
 };
 
 /**
@@ -34,7 +33,7 @@ const validateRequestBody = (
     if (!validator.validate()) {
         res.status(422).json(
             msgTemplate(
-                "Validation failed. Please check your input.", // More generic message
+                "Validation failed. Please check your input.",
                 validator.errors().all(),
             ),
         );
@@ -52,11 +51,9 @@ const handleControllerError = (
     error: unknown,
     defaultMessage = "An unexpected error occurred",
 ) => {
-    console.error("Controller Error:", error); // Log the actual error for debugging
+    console.error("Controller Error:", error);
 
-    // Basic check for Prisma known errors, can be expanded
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        // Example: Unique constraint violation
         if (error.code === "P2002") {
             res.status(409).json(
                 msgTemplate(
@@ -66,19 +63,16 @@ const handleControllerError = (
             );
             return;
         }
-        // Add more Prisma error codes as needed
     }
 
     if (error instanceof Error) {
         res.status(400).json(
-            // Keep 400 as per original, but 500 might be better for truly unexpected errors
             msgTemplate(defaultMessage, {
-                error: error.message.replace(/[\r\n]+/g, " "), // Clean up message
+                error: error.message.replace(/[\r\n]+/g, " "),
             }),
         );
     } else {
         res.status(500).json(
-            // Use 500 for unknown errors
             msgTemplate(defaultMessage, { error: "Unknown error structure" }),
         );
     }

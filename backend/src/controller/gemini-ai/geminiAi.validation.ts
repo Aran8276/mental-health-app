@@ -1,3 +1,4 @@
 export const geminiAiValidation = {
-    body: "required|string",
+    conversation_id: "required|numeric",
+    content: "required|array",
 };

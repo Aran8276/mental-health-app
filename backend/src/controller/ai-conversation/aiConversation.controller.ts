@@ -41,8 +41,9 @@ export const findAiConversationAndVerifyOwnership = async (
                 "Percakapan AI tidak ditemukan atau anda tidak memiliki hak akses.",
             ),
         );
-        return null;
+        return;
     }
+
     return conversation;
 };
 
@@ -111,6 +112,7 @@ const aiConversationController = {
                     },
                 }),
             );
+            return;
         } catch (error) {
             handleControllerError(
                 res,
@@ -126,6 +128,7 @@ const aiConversationController = {
      */
     readAiConversationById: async (req: RequestWithUser, res: Response) => {
         const conversationId = parseNumericId(req, res);
+        console.log(conversationId);
         if (conversationId === null) return;
 
         const userId = req.user!.id;

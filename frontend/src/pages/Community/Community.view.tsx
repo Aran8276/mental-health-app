@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 interface ExtendedCommunityProps extends CommunityProps {
   isLoading?: boolean;
+  fetchThreads: (page: number) => Promise<void>;
 }
 
 const CommunityView: FC<ExtendedCommunityProps> = ({
@@ -26,6 +27,7 @@ const CommunityView: FC<ExtendedCommunityProps> = ({
   loggedIn,
   pagination,
   isLoading = false,
+  fetchThreads,
 }) => {
   const ThreadSkeleton = () => (
     <div className="flex flex-col space-y-3 p-4 border dark:border-gray-700 rounded-xl bg-white dark:bg-slate-800/50">
@@ -101,7 +103,7 @@ const CommunityView: FC<ExtendedCommunityProps> = ({
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ThreadCard data={item} />
+                    <ThreadCard fetchThreads={fetchThreads} data={item} />
                   </motion.div>
                 ))}
               </AnimatePresence>

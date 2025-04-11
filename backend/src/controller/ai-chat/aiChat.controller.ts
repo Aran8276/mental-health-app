@@ -86,12 +86,8 @@ const aiChatController = {
      */
     readAiChatsByConversation: async (req: RequestWithUser, res: Response) => {
         const conversationId = parseNumericId(req, res);
+
         if (conversationId === null) {
-            res.status(400).json(
-                msgTemplate(
-                    "ID Percakapan dibutuhkan di rute parameter (e.g., /ai-conversations/:id/chats).",
-                ),
-            );
             return;
         }
 
@@ -106,10 +102,6 @@ const aiChatController = {
             return;
         }
 
-        const page = parseInt(req.query.page as string, 10) || 1;
-        const limit = parseInt(req.query.limit as string, 10) || 50;
-        const skip = (page - 1) * limit;
-
         try {
             const chats = await prisma.aiChat.findMany({
                 where: {
@@ -118,8 +110,6 @@ const aiChatController = {
                 orderBy: {
                     created_at: "asc",
                 },
-                skip: skip,
-                take: limit,
 
                 select: {
                     id: true,
@@ -130,19 +120,9 @@ const aiChatController = {
                 },
             });
 
-            const totalChats = await prisma.aiChat.count({
-                where: { ai_conversation_id: conversationId },
-            });
-
             res.json(
                 msgTemplate("Pesan AIs berhasil diambil.", {
                     chats: chats,
-                    pagination: {
-                        currentPage: page,
-                        totalPages: Math.ceil(totalChats / limit),
-                        totalChats,
-                        limit,
-                    },
                 }),
             );
         } catch (error) {

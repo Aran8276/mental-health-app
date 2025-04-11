@@ -170,7 +170,7 @@ const CommunityFormView: FC<CommunityFormProps> = ({
                                   id="title"
                                   placeholder="cth: Merasa cemas saat bertemu orang baru"
                                   required
-                                  className="bg-cyan-50/70 dark:bg-slate-700/50 border-gray-200 dark:border-slate-600 focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all duration-200 ease-in-out shadow-sm"
+                                  className="bg-white dark:bg-slate-700/50 border-gray-200 dark:border-slate-600 focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all duration-200 ease-in-out shadow-sm"
                                   {...field}
                                 />
                               </motion.div>
@@ -200,7 +200,7 @@ const CommunityFormView: FC<CommunityFormProps> = ({
                                 <Textarea
                                   id="body"
                                   placeholder="Tuliskan apa yang ada di pikiranmu di sini. Ingat, kamu tidak sendirian..."
-                                  className="min-h-[220px] resize-y bg-cyan-50/70 dark:bg-slate-700/50 border-gray-200 dark:border-slate-600 focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all duration-200 ease-in-out shadow-sm"
+                                  className="min-h-[220px] resize-y bg-white dark:bg-slate-700/50 border-gray-200 dark:border-slate-600 focus:ring-2 focus:ring-teal-400 focus:border-transparent transition-all duration-200 ease-in-out shadow-sm"
                                   required
                                   {...field}
                                 />

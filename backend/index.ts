@@ -1,5 +1,6 @@
 import { server } from "./src/config/expressClient";
 import threadRouter from "@/routes/thread.routes";
+import todosRouter from "@/routes/todos.routes";
 import geminiAiRouter from "@/routes/gemini-ai.routes";
 import userRouter from "@/routes/user.routes";
 import threadCommentRouter from "@/routes/thread-comment.routes";
@@ -26,6 +27,7 @@ server.use(cors(corsOptions));
 server.use("/user", userRouter);
 server.use("/gemini-ai", geminiAiRouter);
 server.use("/thread", threadRouter);
+server.use("/todos", todosRouter);
 server.use("/thread-comment", threadCommentRouter);
 server.use("/thread-comment-reply", threadCommentReplyRouter);
 server.use("/ai-conversation", aiConversationRouter);

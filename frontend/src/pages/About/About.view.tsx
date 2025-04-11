@@ -8,7 +8,7 @@ import {
   Mail,
   MapPin,
   Phone,
-  Users,
+  // Users,
   CalendarCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -19,7 +19,7 @@ import {
   gridContainerVariants,
   cardHover,
   iconHover,
-  teamMemberHover,
+  // teamMemberHover,
   fadeLeft,
   timelineItemHover,
   timelineDotHover,
@@ -188,7 +188,7 @@ const AboutView: FC = () => {
         </div>
       </motion.section>
 
-      <motion.section
+      {/* <motion.section
         variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
@@ -282,7 +282,7 @@ const AboutView: FC = () => {
             ))}
           </motion.div>
         </div>
-      </motion.section>
+      </motion.section> */}
 
       <motion.section
         initial="hidden"
@@ -312,7 +312,7 @@ const AboutView: FC = () => {
                   {
                     year: "2020",
                     title: "Pendirian",
-                    desc: "Didirikan oleh Sarah Chen setelah perjuangan pribadinya.",
+                    desc: "Didirikan oleh Aran2876 setelah perjuangan pribadinya.",
                   },
                   {
                     year: "2021",

@@ -2,7 +2,7 @@ import { FC } from "react";
 import ApplicationLogo from "../ApplicationLogo/ApplicationLogo";
 import { HeaderProps } from "./Header.type";
 import { Link } from "react-router-dom";
-import { Bell } from "lucide-react";
+// import { Bell } from "lucide-react";
 import { ModeToggle } from "../ui/mode-toggle";
 import { Button } from "../ui/button";
 import {
@@ -35,7 +35,7 @@ const HeaderView: FC<HeaderProps> = ({
             </div>
             <div
               className={`${
-                mobileOpen ? "block" : "hidden" 
+                mobileOpen ? "block" : "hidden"
               } absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white dark:bg-gray-800 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center`}
             >
               <div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
@@ -50,7 +50,7 @@ const HeaderView: FC<HeaderProps> = ({
                 ))}
               </div>
               <div className="flex items-center mt-4 lg:mt-0">
-                {user && (
+                {/* {user && (
                   <Button
                     variant={"ghost"}
                     className="bg-inherit"
@@ -59,7 +59,7 @@ const HeaderView: FC<HeaderProps> = ({
                     <Bell className="w-6 h-6" />
                   </Button>
                 )}
-
+ */}
                 <ModeToggle />
 
                 {user ? (

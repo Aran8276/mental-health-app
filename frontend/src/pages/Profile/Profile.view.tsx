@@ -134,7 +134,7 @@ const ProfileView: FC<ProfileProps> = ({ user, isMine }) => {
         <div className="flex flex-col gap-8">
           <AddressCard user={user} />
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
@@ -154,7 +154,7 @@ const ProfileView: FC<ProfileProps> = ({ user, isMine }) => {
                 Lihat Jurnal Lengkap →
               </Link>
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </motion.section>
     </motion.div>

@@ -1,5 +1,4 @@
 import { FC } from "react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
@@ -30,7 +28,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
 import {
   Smile,
   Frown,
@@ -45,7 +42,6 @@ import {
   Sunrise,
   Sunset,
 } from "lucide-react";
-
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
@@ -53,28 +49,31 @@ import {
   itemFadeUp,
   containerStagger,
   moodButtonVariant,
-  goalItemVariant,
-  mindfulnessSessions,
+  todosItemVariant,
   sessionCardVariant,
   progressVariant,
 } from "./Dashboard.data";
 import { DashboardProps } from "./Dashboard.type";
+import { Progress } from "@radix-ui/react-progress";
 
 const DashboardView: FC<DashboardProps> = ({
   greeting,
   greetingIcon,
-  showAddGoalDialog,
-  goalProgress,
+  showAddTodosDialog,
+  todosProgress,
   handleMoodSelect,
-  handleGoalToggle,
-  handleAddGoal,
-  handleDeleteGoal,
-  setShowAddGoalDialog,
-  newGoalText,
-  setNewGoalText,
-  completedGoals,
-  goals,
+  handleTodosToggle,
+  handleAddTodos,
+  handleDeleteTodos,
+  setShowAddTodosDialog,
+  newTodosText,
+  setNewTodosText,
+  completedTodos,
+  todos,
   user,
+  mindfulnessSessions,
+  isSessionActive,
+  startMindfulnessSession,
 }) => {
   return (
     <motion.div
@@ -91,18 +90,18 @@ const DashboardView: FC<DashboardProps> = ({
             transition={{ type: "spring", delay: 0.3 }}
           >
             <>
-              {greetingIcon == "sun" ? (
+              {greetingIcon === "sun" ? (
                 <Sun className="w-7 h-7 text-amber-500" />
-              ) : greetingIcon == "sunrise" ? (
+              ) : greetingIcon === "sunrise" ? (
                 <Sunrise className="w-7 h-7 text-amber-500" />
-              ) : greetingIcon == "sunset" ? (
+              ) : greetingIcon === "sunset" ? (
                 <Sunset className="w-7 h-7 text-amber-500" />
               ) : (
                 <Sun className="w-7 h-7 text-amber-500" />
               )}
             </>
           </motion.div>
-          {greeting}, {user?.name}!
+          {greeting}, {user?.name || "Guest"}!{" "}
         </h1>
         <p className="text-base text-gray-600 dark:text-gray-400 mt-1">
           Semoga harimu penuh ketenangan dan kebahagiaan.
@@ -188,8 +187,8 @@ const DashboardView: FC<DashboardProps> = ({
             </CardContent>
 
             <CardFooter>
-              <p className="text-xs text-gray-500">
-                Mood terakhir dicatat: Kemarin - Biasa
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Catat moodmu untuk melihat tren.
               </p>
             </CardFooter>
           </Card>
@@ -208,14 +207,15 @@ const DashboardView: FC<DashboardProps> = ({
                 </CardTitle>
 
                 <Dialog
-                  open={showAddGoalDialog}
-                  onOpenChange={setShowAddGoalDialog}
+                  open={showAddTodosDialog}
+                  onOpenChange={setShowAddTodosDialog}
                 >
                   <DialogTrigger asChild>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 rounded-full text-teal-600 hover:bg-teal-100/50 dark:text-teal-400 dark:hover:bg-teal-900/30"
+                      aria-label="Tambah Tujuan Baru"
                     >
                       <PlusCircle className="w-5 h-5" />
                     </Button>
@@ -229,18 +229,21 @@ const DashboardView: FC<DashboardProps> = ({
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="goal-text" className="text-right">
+                        <Label htmlFor="todos-text" className="text-right">
                           Tujuan
                         </Label>
                         <Input
-                          id="goal-text"
-                          value={newGoalText}
-                          onChange={(e) => setNewGoalText(e.target.value)}
+                          id="todos-text"
+                          value={newTodosText}
+                          onChange={(e) => setNewTodosText(e.target.value)}
                           className="col-span-3"
                           placeholder="e.g., Berjalan kaki 10 menit"
-                          onKeyDown={(e) =>
-                            e.key === "Enter" && handleAddGoal()
-                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              handleAddTodos();
+                            }
+                          }}
                         />
                       </div>
                     </div>
@@ -249,9 +252,9 @@ const DashboardView: FC<DashboardProps> = ({
                         <Button variant="outline">Batal</Button>
                       </DialogClose>
                       <Button
-                        type="submit"
-                        onClick={handleAddGoal}
-                        className="bg-teal-600 hover:bg-teal-700"
+                        type="button"
+                        onClick={handleAddTodos}
+                        className="bg-teal-600 hover:bg-teal-700 text-white"
                       >
                         Simpan
                       </Button>
@@ -264,81 +267,83 @@ const DashboardView: FC<DashboardProps> = ({
                 <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400">
                   <span>Progress</span>
                   <span>
-                    {completedGoals}/{goals.length} Selesai
+                    {completedTodos}/{todos.length} Selesai
                   </span>
                 </div>
-                <Progress
-                  value={goalProgress}
-                  aria-label={`${goalProgress}% tujuan tercapai`}
-                  className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-teal-400 [&>div]:to-cyan-400"
-                />
 
-                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+                  {" "}
                   <motion.div
                     className="bg-gradient-to-r from-teal-400 to-cyan-400 h-2 rounded-full"
-                    variants={progressVariant(goalProgress)}
+                    variants={progressVariant(todosProgress)}
                     initial="hidden"
                     animate="visible"
                   />
                 </div>
+                <Progress
+                  value={todosProgress}
+                  aria-label={`${todosProgress}% tujuan tercapai`}
+                  className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-teal-400 [&>div]:to-cyan-400"
+                />
               </div>
             </CardHeader>
             <CardContent className="flex-1 pt-0 pb-4 px-4 overflow-hidden">
-              {" "}
               <ScrollArea className="h-[200px] px-2 -mx-2">
-                {" "}
                 <motion.ul className="space-y-2" layout>
-                  {" "}
                   <AnimatePresence initial={false}>
-                    {" "}
-                    {goals.map((goal) => (
+                    {todos.map((todoItem) => (
                       <motion.li
-                        key={goal.id}
-                        variants={goalItemVariant}
+                        key={todoItem.id}
+                        variants={todosItemVariant}
                         layout
                         initial="hidden"
                         animate="visible"
                         exit="exit"
                         whileHover="hover"
                         className="flex items-center justify-between p-2 rounded-md cursor-default group"
+                        style={{ backgroundColor: "transparent" }}
                       >
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-3 flex-1 min-w-0">
+                          {" "}
                           <Checkbox
-                            id={`goal-${goal.id}`}
-                            checked={goal.completed}
-                            onCheckedChange={() => handleGoalToggle(goal.id)}
-                            aria-label={goal.text}
-                            className="border-gray-400 data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
+                            id={`todo-${todoItem.id}`}
+                            checked={todoItem.is_completed}
+                            onCheckedChange={() =>
+                              handleTodosToggle(todoItem?.id ?? 0)
+                            }
+                            aria-label={todoItem.title}
+                            className="border-gray-400 data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600 shrink-0"
                           />
                           <label
-                            htmlFor={`goal-${goal.id}`}
+                            htmlFor={`todo-${todoItem.id}`}
                             className={cn(
-                              "text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-                              goal.completed
+                              "text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 truncate",
+                              todoItem.is_completed
                                 ? "line-through text-gray-400 dark:text-gray-500"
                                 : "text-gray-800 dark:text-gray-100"
                             )}
+                            title={todoItem.title}
                           >
-                            {goal.text}
+                            {todoItem.title}
                           </label>
                         </div>
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => handleDeleteGoal(goal.id)}
-                          className="h-7 w-7 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-100/50 dark:hover:bg-red-800/30 opacity-0 group-hover:opacity-100 transition-opacity"
-                          aria-label="Hapus tujuan"
+                          onClick={() => handleDeleteTodos(todoItem?.id ?? 0)}
+                          className="h-7 w-7 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-100/50 dark:hover:bg-red-800/30 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ml-2"
+                          aria-label={`Hapus tujuan ${todoItem.title}`}
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </motion.li>
                     ))}
                   </AnimatePresence>
-                  {goals.length === 0 && (
+                  {todos.length === 0 && (
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-sm text-center text-gray-500 py-6 italic"
+                      className="text-sm text-center text-gray-500 dark:text-gray-400 py-6 italic"
                     >
                       Belum ada tujuan harian. Tambahkan satu!
                     </motion.p>
@@ -371,12 +376,15 @@ const DashboardView: FC<DashboardProps> = ({
                     variants={sessionCardVariant}
                     initial="hidden"
                     animate="visible"
-                    whileHover="hover"
+                    whileHover={!isSessionActive ? "hover" : undefined}
                     transition={{ delay: 0.3 + session.id * 0.08 }}
                     className={cn(
-                      "rounded-lg p-4 flex flex-col items-start justify-between space-y-3 cursor-pointer relative overflow-hidden min-h-[130px]",
+                      "rounded-lg p-4 flex flex-col items-start justify-between space-y-3 relative overflow-hidden min-h-[130px]",
                       "bg-gradient-to-br dark:bg-gradient-to-br",
-                      session.color
+                      session.color,
+                      isSessionActive
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
                     )}
                   >
                     <div>
@@ -391,7 +399,13 @@ const DashboardView: FC<DashboardProps> = ({
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="h-6 px-2 text-xs bg-white/50 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-black/40 text-gray-700 dark:text-gray-200"
+                      className={cn(
+                        "h-7 px-2.5 text-xs bg-white/60 dark:bg-black/30 hover:bg-white/90 dark:hover:bg-black/50 text-gray-700 dark:text-gray-200",
+                        isSessionActive && "pointer-events-none"
+                      )}
+                      onClick={() => startMindfulnessSession(session)}
+                      disabled={isSessionActive}
+                      aria-label={`Mulai sesi ${session.title} (${session.duration})`}
                     >
                       Mulai
                     </Button>

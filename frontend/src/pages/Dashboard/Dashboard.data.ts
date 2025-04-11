@@ -1,13 +1,7 @@
 import { Sparkles, Sunrise, Headset, Bed } from "lucide-react";
-import { Goal, MindfulnessSession } from "./Dashboard.type";
+import { MindfulnessSession } from "./Dashboard.type";
 
 const userData = { name: "Alex" };
-const initialGoals: Goal[] = [
-  { id: 1, text: "Jalan pagi 15 menit", completed: true },
-  { id: 2, text: "Meditasi singkat sebelum kerja", completed: false },
-  { id: 3, text: "Minum 8 gelas air", completed: false },
-  { id: 4, text: "Tulis 3 hal yang disyukuri", completed: false },
-];
 const mindfulnessSessions: MindfulnessSession[] = [
   {
     id: 1,
@@ -67,7 +61,7 @@ const moodButtonVariant = {
   tap: { scale: 0.9 },
 };
 
-const goalItemVariant = {
+const todosItemVariant = {
   hidden: { opacity: 0, x: -15 },
   visible: { opacity: 1, x: 0 },
   exit: { opacity: 0, x: 30, transition: { duration: 0.2 } },
@@ -101,13 +95,12 @@ const progressVariant = (progress: number) => ({
 
 export {
   userData,
-  initialGoals,
   mindfulnessSessions,
   pageVariants,
   containerStagger,
   itemFadeUp,
   moodButtonVariant,
-  goalItemVariant,
+  todosItemVariant,
   sessionCardVariant,
   progressVariant,
 };

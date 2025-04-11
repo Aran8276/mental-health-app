@@ -1,7 +1,7 @@
 import { publicRoutes } from "@/viewports/Navigator/Navigator.data";
 import HeaderView from "./Header.view";
 import { profileDropdownItems } from "./Header.data";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CheckUserResponse, RefreshTokenResponse } from "./Header.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
@@ -31,42 +31,46 @@ export default function Header() {
     }
   };
 
-  const fetchUser = async (overrideToken?: string) => {
-    try {
-      if (overrideToken) {
-        const data: CheckUserResponse = (
-          await client().get("/auth/check", {
-            headers: {
-              Authorization: `Bearer ${overrideToken}`,
-            },
-          })
-        ).data;
+  const fetchUser = useCallback(
+    async (overrideToken?: string) => {
+      try {
+        if (overrideToken) {
+          const data: CheckUserResponse = (
+            await client().get("/auth/check", {
+              headers: {
+                Authorization: `Bearer ${overrideToken}`,
+              },
+            })
+          ).data;
+          setUser(data.payload);
+          return;
+        }
+
+        const data: CheckUserResponse = (await client().get("/auth/check"))
+          .data;
         setUser(data.payload);
-        return;
-      }
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.status == 401 || error.status == 403) {
+            const refreshToken = await tryRefresh();
+            if (!refreshToken) {
+              setUser(null);
+              window.localStorage.removeItem("mental-jwt-token");
+              return;
+            }
 
-      const data: CheckUserResponse = (await client().get("/auth/check")).data;
-      setUser(data.payload);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        if (error.status == 401 || error.status == 403) {
-          const refreshToken = await tryRefresh();
-          if (!refreshToken) {
-            setUser(null);
-            window.localStorage.removeItem("mental-jwt-token");
-            return;
+            window.localStorage.setItem(
+              "mental-jwt-token",
+              refreshToken.accessToken
+            );
+
+            fetchUser(refreshToken.accessToken);
           }
-
-          window.localStorage.setItem(
-            "mental-jwt-token",
-            refreshToken.accessToken
-          );
-
-          fetchUser(refreshToken.accessToken);
         }
       }
-    }
-  };
+    },
+    [setUser]
+  );
 
   const handleLogout = async () => {
     try {
@@ -80,7 +84,7 @@ export default function Header() {
 
   useEffect(() => {
     fetchUser();
-  }, [state]);
+  }, [state, fetchUser]);
 
   return (
     <HeaderView

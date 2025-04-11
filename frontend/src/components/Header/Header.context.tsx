@@ -19,6 +19,7 @@ export const UserProvider: FC<UserProviderProps> = ({
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useUser = (): UserUseState => {
   const context = useContext(UserContext);
 

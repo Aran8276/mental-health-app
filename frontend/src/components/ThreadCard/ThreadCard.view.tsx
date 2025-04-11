@@ -18,7 +18,6 @@ import { FC } from "react";
 import UserAvatar from "../UserAvatar/UserAvatar";
 import { motion } from "framer-motion";
 import { ThreadCardProps } from "./ThreadCard.type";
-import { cardVariants } from "./ThreadCard.data";
 import { humanize } from "@/utils/humanize";
 import { cn } from "@/lib/utils";
 
@@ -30,9 +29,7 @@ const ThreadCardView: FC<ThreadCardProps> = ({
 }) => {
   const WrapperComponent = isFull ? motion.div : motion(Link);
   const linkProps = isFull ? {} : { to: `/community/${data.id}` };
-
   const authorName = data.owner?.name || "Pengguna Anonim";
-
   const authorAvatar = data.owner?.avatar;
   const threadTitle = data.title || "Tanpa Judul";
   const threadBody = data.body || "";
@@ -42,7 +39,7 @@ const ThreadCardView: FC<ThreadCardProps> = ({
   const isOwner =
     !!currentUserId && !!data.owner && currentUserId === data.owner.id;
 
-  const cardContent = (
+  return (
     <Card className="py-0 bg-white dark:bg-slate-800 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out rounded-xl overflow-hidden border border-teal-100 dark:border-teal-900 group relative">
       {" "}
       {handleDelete && isOwner && !isFull && (
@@ -113,53 +110,40 @@ const ThreadCardView: FC<ThreadCardProps> = ({
           )}
         </div>
       </CardHeader>
-      <CardContent className={`${isFull ? "px-6 py-5" : "px-6 py-4"}`}>
-        {" "}
-        <CardTitle
-          className={cn(
-            "text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 leading-tight",
-            isFull ? "mb-4" : "mb-2",
-            !isFull
-              ? "hover:text-teal-700 dark:hover:text-teal-300 transition-colors duration-150"
-              : ""
-          )}
-        >
-          {threadTitle}
-        </CardTitle>
-        <div
-          className={cn(
-            "text-gray-600 dark:text-gray-300 text-sm leading-relaxed prose dark:prose-invert max-w-none",
-            !isFull ? "line-clamp-3" : ""
-          )}
-          dangerouslySetInnerHTML={{ __html: threadBody }}
-        />
-      </CardContent>
-      {!isFull && (
-        <CardFooter className="py-3 bg-gray-50 dark:bg-slate-800/50 px-6 border-t border-teal-100 dark:border-teal-800">
-          <div className="flex items-center space-x-4 text-xs text-teal-600 dark:text-teal-400">
-            <div className="flex items-center space-x-1 hover:text-teal-800 dark:hover:text-teal-200 transition-colors">
-              <MessageSquare className="w-4 h-4" />
-              <span>{commentCount} Komentar</span>
+      <WrapperComponent {...linkProps}>
+        <CardContent className={`${isFull ? "px-6 py-5" : "px-6 py-4"}`}>
+          {" "}
+          <CardTitle
+            className={cn(
+              "text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 leading-tight",
+              isFull ? "mb-4" : "mb-2",
+              !isFull
+                ? "hover:text-teal-700 dark:hover:text-teal-300 transition-colors duration-150"
+                : ""
+            )}
+          >
+            {threadTitle}
+          </CardTitle>
+          <div
+            className={cn(
+              "text-gray-600 dark:text-gray-300 text-sm leading-relaxed prose dark:prose-invert max-w-none",
+              !isFull ? "line-clamp-3" : ""
+            )}
+            dangerouslySetInnerHTML={{ __html: threadBody }}
+          />
+        </CardContent>
+        {!isFull && (
+          <CardFooter className="py-3 bg-gray-50 dark:bg-slate-800/50 px-6 border-t border-teal-100 dark:border-teal-800">
+            <div className="flex items-center space-x-4 text-xs text-teal-600 dark:text-teal-400">
+              <div className="flex items-center space-x-1 hover:text-teal-800 dark:hover:text-teal-200 transition-colors">
+                <MessageSquare className="w-4 h-4" />
+                <span>{commentCount} Komentar</span>
+              </div>
             </div>
-          </div>
-        </CardFooter>
-      )}
+          </CardFooter>
+        )}
+      </WrapperComponent>
     </Card>
-  );
-
-  return (
-    <WrapperComponent
-      {...linkProps}
-      className={`w-full rounded-xl ${isFull ? "cursor-default" : ""}`}
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      whileHover={!isFull ? "hover" : undefined}
-      whileTap={!isFull ? "tap" : undefined}
-      layout
-    >
-      {cardContent}
-    </WrapperComponent>
   );
 };
 

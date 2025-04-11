@@ -17,7 +17,6 @@ export default function Community() {
   const [users, setUsers] = useState<OmittedUser[]>([]);
   const [threads, setThreads] = useState<Thread[]>([]);
   const [paginationData, setPaginationData] = useState<Pagination | null>(null);
-
   const [searchParams] = useSearchParams();
   const currentPage = useMemo(() => {
     const pageParam = searchParams.get("page");
@@ -68,6 +67,7 @@ export default function Community() {
 
   return (
     <CommunityView
+      fetchThreads={fetchThreads}
       loggedIn={user}
       users={users}
       threads={threads}

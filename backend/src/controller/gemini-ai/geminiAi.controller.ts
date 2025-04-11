@@ -1,38 +1,30 @@
-import { make } from "simple-body-validator";
 import { msgTemplate } from "@/config/msgTemplate";
 // import { prisma } from "@/config/prismaClient";
 import { Request, Response } from "express";
 import { geminiAiValidation } from "./geminiAi.validation";
-import * as env from "dotenv";
-import { GoogleGenAI } from "@google/genai";
-
-env.config();
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+import { genAI } from "@/config/geminiAi";
+import { ContentListUnion, PartUnion } from "@google/genai";
+import { validateRequestBody } from "@/utils/crud.utils";
 
 const geminiAiUseCase = {
     sendChat: async (req: Request, res: Response) => {
-        const data = req.body;
-        const validator = make(data, geminiAiValidation);
-
-        if (!validator.validate()) {
-            res.status(422).json(
-                msgTemplate(
-                    "Semua input harus diisi",
-                    validator.errors().all(),
-                ),
-            );
+        if (!validateRequestBody(req, res, geminiAiValidation)) {
             return;
         }
 
-        const response = await ai.models.generateContent({
+        const data = req.body;
+
+        const content: ContentListUnion = [];
+
+        data.content.map((item: PartUnion) => content.push(item));
+
+        const response = await genAI.models.generateContent({
             model: "gemini-2.0-flash-001",
-            contents: data.body,
+            contents: [...content],
         });
 
         res.json(
-            msgTemplate("Data berhasil diambil", {
+            msgTemplate("Percakapan berhasil diambil", {
                 response: response.text,
             }),
         );

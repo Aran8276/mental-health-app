@@ -1,5 +1,5 @@
-import { FC, Fragment, useRef, useState } from "react";
-import { AIChatbotProps, Conversation } from "./AIChatbot.type";
+import { FC, Fragment, useState } from "react";
+import { AIChatbotProps } from "./AIChatbot.type";
 
 import {
   DropdownMenu,
@@ -24,193 +24,24 @@ import {
   Smile,
   Bed,
   Menu,
-  X,
-  Plus,
-  MessageSquare,
-  MoreHorizontal,
 } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
   pageLoadVariant,
-  sidebarVariant,
-  mobileOverlayVariant,
   suggestionsContainerVariant,
   suggestionChipVariant,
   botMessageSpecific,
   userMessageSpecific,
   typingIndicatorVariant,
   sendButtonHoverTap,
-  listStagger,
-  listItemFade,
   userBubbleColor,
   botBubbleColor,
   suggestionChipColor,
   sendButtonGradient,
-  sidebarBg,
-  sidebarHoverBg,
-  sidebarActiveBg,
-  sidebarTextColor,
-  sidebarActiveTextColor,
-  newChatButtonColor,
 } from "./AIChatbot.data";
-
-interface ChatItemProps {
-  convo: Conversation;
-  isActive: boolean;
-  onSelect: (id: string | number) => void;
-}
-const ChatItem: FC<ChatItemProps> = ({ convo, isActive, onSelect }) => (
-  <motion.li variants={listItemFade} whileHover="hover" whileTap="tap">
-    <button
-      onClick={() => onSelect(convo.id)}
-      className={cn(
-        "w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors duration-150 ease-in-out",
-        sidebarTextColor,
-        sidebarHoverBg,
-        isActive
-          ? `${sidebarActiveBg} ${sidebarActiveTextColor} font-medium`
-          : ""
-      )}
-      aria-current={isActive ? "page" : undefined}
-    >
-      <MessageSquare
-        className={cn(
-          "w-4 h-4 flex-shrink-0",
-          isActive ? sidebarActiveTextColor : "text-gray-500 dark:text-gray-400"
-        )}
-      />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{convo.title}</p>
-        <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-          {convo.lastMessage || "Belum ada pesan"}
-        </p>
-      </div>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn(
-              "h-7 w-7 ml-auto flex-shrink-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity",
-              isActive ? sidebarActiveTextColor : sidebarTextColor
-            )}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent> ... Actions ... </DropdownMenuContent>
-      </DropdownMenu>
-    </button>
-  </motion.li>
-);
-
-interface ChatSidebarProps {
-  conversations: Conversation[];
-  activeChatId: string | number | null;
-  onSelectChat: (id: string | number) => void;
-  onNewChat: () => void;
-  isOpen: boolean;
-  onClose?: () => void;
-}
-const ChatSidebar: FC<ChatSidebarProps> = ({
-  conversations,
-  activeChatId,
-  onSelectChat,
-  onNewChat,
-  isOpen,
-  onClose,
-}) => {
-  return (
-    <>
-      <AnimatePresence>
-        {isOpen && onClose && (
-          <motion.div
-            key="sidebar-overlay"
-            variants={mobileOverlayVariant}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={onClose}
-            className="fixed inset-0 bg-black/40 z-40 md:hidden"
-          />
-        )}
-      </AnimatePresence>
-
-      <motion.aside
-        key="sidebar"
-        variants={sidebarVariant}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
-        className={cn(
-          "fixed inset-y-0 left-0 z-20 md:relative md:translate-x-0",
-          "w-72 border-r border-gray-200 dark:border-gray-700/50 flex flex-col shadow-lg md:shadow-none",
-          sidebarBg,
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-        aria-label="Daftar Percakapan"
-      >
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700/50 flex items-center justify-between flex-shrink-0">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-            Percakapan
-          </h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden h-8 w-8 rounded-full"
-            onClick={onClose}
-          >
-            <X className="w-5 h-5" />
-          </Button>
-        </div>
-
-        <div className="p-3 flex-shrink-0">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={onNewChat}
-            className={cn(
-              "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors",
-              newChatButtonColor
-            )}
-          >
-            <Plus className="w-4 h-4" /> Percakapan Baru
-          </motion.button>
-        </div>
-
-        <ScrollArea className="flex-1 overflow-y-auto px-3 py-2">
-          <motion.ul
-            className="space-y-1"
-            variants={listStagger}
-            initial="hidden"
-            animate="visible"
-          >
-            {conversations.map((convo) => (
-              <ChatItem
-                key={convo.id}
-                convo={convo}
-                isActive={activeChatId === convo.id}
-                onSelect={onSelectChat}
-              />
-            ))}
-            {conversations.length === 0 && (
-              <motion.p
-                variants={listItemFade}
-                className="text-center text-sm text-gray-500 py-4 italic"
-              >
-                Mulai percakapan baru!
-              </motion.p>
-            )}
-          </motion.ul>
-        </ScrollArea>
-      </motion.aside>
-    </>
-  );
-};
+import ChatSidebar from "@/components/ChatSidebar";
 
 const AIChatbotView: FC<AIChatbotProps> = ({
   setSelectedModel,
@@ -225,8 +56,8 @@ const AIChatbotView: FC<AIChatbotProps> = ({
   activeChatId,
   handleSelectChat,
   handleNewChat,
+  viewportRef,
 }) => {
-  const viewportRef = useRef<HTMLDivElement>(null);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
   return (
@@ -297,16 +128,18 @@ const AIChatbotView: FC<AIChatbotProps> = ({
           <div className="md:hidden w-9"></div>{" "}
         </motion.header>
 
-        <ScrollArea className="flex-1 h-[1px]" ref={viewportRef}>
-          {" "}
-          <div className="flex flex-col py-6 px-4 md:px-6 lg:px-8 space-y-4 max-w-4xl mx-auto min-h-full">
+        <ScrollArea className="flex-1 h-[1px]">
+          <div
+            ref={viewportRef}
+            className="flex flex-col py-24 px-4 md:px-6 lg:px-8 space-y-4 max-w-4xl mx-auto min-h-full"
+          >
             <AnimatePresence initial={false}>
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
                   layout
                   variants={
-                    message.sender === "user"
+                    message.role === "USER"
                       ? userMessageSpecific
                       : botMessageSpecific
                   }
@@ -315,10 +148,10 @@ const AIChatbotView: FC<AIChatbotProps> = ({
                   exit="exit"
                   className={cn(
                     "flex items-end gap-2",
-                    message.sender === "user" ? "justify-end" : "justify-start"
+                    message.role === "USER" ? "justify-end" : "justify-start"
                   )}
                 >
-                  {message.sender === "bot" && (
+                  {message.role === "AI" && (
                     <Avatar className="h-8 w-8 border-2 border-purple-200 dark:border-purple-700 shadow-sm flex-shrink-0">
                       <AvatarFallback className="bg-gradient-to-br from-purple-400 to-pink-400">
                         <Bot className="w-4 h-4 text-white" />
@@ -328,14 +161,14 @@ const AIChatbotView: FC<AIChatbotProps> = ({
                   <div
                     className={cn(
                       "max-w-[75%] rounded-xl px-4 py-2.5 shadow-md",
-                      message.sender === "user"
+                      message.role === "USER"
                         ? `${userBubbleColor} rounded-br-none`
                         : `${botBubbleColor} rounded-bl-none`
                     )}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                      {typeof message.text === "string"
-                        ? message.text
+                      {typeof message.body === "string"
+                        ? message.body
                             .split(/(\*\*.*?\*\*)/g)
                             .map((part, index) =>
                               part.startsWith("**") && part.endsWith("**") ? (
@@ -344,20 +177,20 @@ const AIChatbotView: FC<AIChatbotProps> = ({
                                 <Fragment key={index}>{part}</Fragment>
                               )
                             )
-                        : message.text}{" "}
+                        : message.body}{" "}
                     </p>
                     <span
                       className={cn(
                         "text-xs opacity-70 mt-1 block",
-                        message.sender === "user"
+                        message.role === "USER"
                           ? "text-right text-teal-100 dark:text-teal-300"
                           : "text-left text-gray-500 dark:text-gray-400"
                       )}
                     >
-                      {message.timestamp}
+                      {message.created_at.toLocaleString()}
                     </span>
                   </div>
-                  {message.sender === "user" && (
+                  {message.role === "USER" && (
                     <Avatar className="h-8 w-8 border-2 border-teal-200 dark:border-teal-700 shadow-sm flex-shrink-0">
                       <AvatarFallback className="bg-gradient-to-br from-teal-400 to-blue-400">
                         <User className="w-4 h-4 text-white" />
@@ -403,7 +236,7 @@ const AIChatbotView: FC<AIChatbotProps> = ({
           </div>
         </ScrollArea>
 
-        <motion.footer
+        <motion.section
           variants={pageLoadVariant}
           initial="hidden"
           animate="visible"
@@ -471,7 +304,7 @@ const AIChatbotView: FC<AIChatbotProps> = ({
               </motion.div>
             </form>
           </div>
-        </motion.footer>
+        </motion.section>
       </div>{" "}
     </div>
   );
