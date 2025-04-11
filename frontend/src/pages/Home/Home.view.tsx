@@ -5,223 +5,323 @@ import {
   Sparkles,
   ArrowRight,
   BotMessageSquare,
+  Users,
+  Bell,
+  MessageSquareText,
+  ClipboardPenLine,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  sectionVariants,
+  heroTextContainerVariants,
+  fadeUp,
+  pulseVariant,
+  buttonHoverTap,
+  avatarContainerVariant,
+  avatarVariant,
+  fadeRight,
+  floatAnimation,
+  featuresGridVariants,
+  featureCardVariant,
+  vibrantAccent,
+  vibrantAccentBgLight,
+  vibrantHighlight,
+  vibrantHighlightBgLight,
+  vibrantPrimary,
+  vibrantPrimaryBg,
+  vibrantPrimaryBgLight,
+} from "./Home.data";
 
 const HomeView = () => {
   return (
-    <>
-      <section className="w-full py-12">
-        <div className="container px-4 md:px-6">
-          <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_500px]">
-            <div className="flex flex-col justify-center space-y-4">
-              <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm">
-                <Sparkles className="mr-1 h-4 w-4 text-primary" />
-                <span>
-                  Perjalananmu menuju kesehatan mental yang lebih baik dimulai
-                  di sini
-                </span>
-              </div>
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Ambil kendali atas kesehatan mental Anda
-                </h1>
-                <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                  Mental Health App membantu Anda melacak suasana hati, berlatih
-                  mindfulness, dan mengembangkan kebiasaan mental yang sehat
-                  dengan bimbingan dan dukungan yang dipersonalisasi.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button
-                  size="lg"
-                  asChild
-                  className="px-8 bg-indigo-500 hover:bg-indigo-400 text-white"
-                >
-                  <Link to="/register" className="inline-flex items-center">
-                    Daftar Sekarang
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild>
-                  <Link to="/community">Lihat Komunitas</Link>
-                </Button>
-              </div>
-              <div className="flex items-center space-x-4 text-sm">
-                <div className="flex -space-x-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-medium">JD</span>
-                  </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-medium">ST</span>
-                  </div>
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                    <span className="text-xs font-medium">RK</span>
-                  </div>
-                </div>
-                <div className="text-muted-foreground">
-                  Bergabunglah dengan lebih dari{" "}
-                  <span className="font-medium text-foreground">10,000+</span>{" "}
-                  pengguna yang sedang memperbaiki kesehatan mental mereka.
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center row-start-1 md:row-start-auto justify-center">
-              <div className="relative w-auto h-auto md:h-[450px] md:w-[350px] rounded-2xl bg-gradient-to-b from-primary/20 to-primary/10 p-1 shadow-xl">
-                <div className="absolute inset-0 rounded-2xl bg-background/90 backdrop-blur-sm" />
-                <div className="relative h-full w-full overflow-hidden rounded-xl bg-background">
-                  <img
-                    src="/hero.jpg"
-                    alt="App screenshot"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section
-        id="features"
-        className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-900 rounded-xl"
+    <motion.div className="overflow-x-hidden">
+      <motion.section
+        variants={sectionVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex justify-center w-full py-16 md:py-20 lg:py-28 bg-gradient-to-br from-teal-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/30"
       >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <div className="flex flex-col justify-center items-center space-y-2">
-              <div className="inline-flex items-center rounded-lg bg-primary/10 px-3 py-1 text-sm text-primary">
-                <Brain className="mr-1 h-4 w-4" />
-                <span>Fitur Utama</span>
-              </div>
-              <h2 className="text-center text-3xl font-bold tracking-tighter md:text-4xl">
-                Semua yang kamu butuhkan untuk kesejahteraan mental
-              </h2>
-              <p className="text-center max-w-[700px] text-muted-foreground md:text-xl">
-                Alat dan sumber daya komprehensif kami dirancang untuk mendukung
-                perjalanan kesehatan mentalmu yang unik.
-              </p>
-            </div>
-          </div>
-          <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-            <div className="dark:border-[1px] dark:bg-background md:order-2 relative focus:outline-hidden p-6 flex flex-col justify-center items-center md:min-h-57.5 text-center rounded-xl before:absolute before:inset-0 before:z-10 before:border before:border-gray-200 before:rounded-xl before:transition hover:before:border-2 hover:before:border-blue-600 focus:before:border-2 focus:before:border-blue-600 hover:before:shadow-lg dark:before:border-neutral-800 dark:hover:before:border-blue-500 dark:focus:before:border-blue-500 dark:rounded-xl space-y-2">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Heart className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">Pelacakan Suasana Hati</h3>
-              <p className="text-center text-muted-foreground">
-                Lacak suasana hati dan emosi harianmu untuk mengidentifikasi
-                pola dan pemicu.
-              </p>
-            </div>
-            <div className="dark:border-[1px] dark:bg-background md:order-2 relative focus:outline-hidden p-6 flex flex-col justify-center items-center md:min-h-57.5 text-center rounded-xl before:absolute before:inset-0 before:z-10 before:border before:border-gray-200 before:rounded-xl before:transition hover:before:border-2 hover:before:border-blue-600 focus:before:border-2 focus:before:border-blue-600 hover:before:shadow-lg dark:before:border-neutral-800 dark:hover:before:border-blue-500 dark:focus:before:border-blue-500 dark:rounded-xl space-y-2">
-              <div className="rounded-full bg-primary/10 p-3">
-                <Sparkles className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">Meditasi Terpandu</h3>
-              <p className="text-center text-muted-foreground">
-                Akses perpustakaan meditasi terpandu untuk stres, kecemasan,
-                tidur, dan banyak lagi.
-              </p>
-            </div>
-            <div className="dark:border-[1px] dark:bg-background md:order-2 relative focus:outline-hidden p-6 flex flex-col justify-center items-center md:min-h-57.5 text-center rounded-xl before:absolute before:inset-0 before:z-10 before:border before:border-gray-200 before:rounded-xl before:transition hover:before:border-2 hover:before:border-blue-600 focus:before:border-2 focus:before:border-blue-600 hover:before:shadow-lg dark:before:border-neutral-800 dark:hover:before:border-blue-500 dark:focus:before:border-blue-500 dark:rounded-xl space-y-2">
-              <div className="rounded-full bg-primary/10 p-3">
-                <BotMessageSquare className="h-6 w-6 text-primary" />
-              </div>
-              <h3 className="text-xl font-bold">AI Chatbot</h3>
-              <p className="text-center text-muted-foreground">
-                Dapatkan panduan interaktif untuk mengelola stres, memahami
-                emosi, dan mengatasi tantangan mental sehari-hari.
-              </p>
-            </div>
-            <div className="dark:border-[1px] dark:bg-background md:order-2 relative focus:outline-hidden p-6 flex flex-col justify-center items-center md:min-h-57.5 text-center rounded-xl before:absolute before:inset-0 before:z-10 before:border before:border-gray-200 before:rounded-xl before:transition hover:before:border-2 hover:before:border-blue-600 focus:before:border-2 focus:before:border-blue-600 hover:before:shadow-lg dark:before:border-neutral-800 dark:hover:before:border-blue-500 dark:focus:before:border-blue-500 dark:rounded-xl space-y-2">
-              <div className="rounded-full bg-primary/10 p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-6 w-6 text-primary"
-                >
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold">Pengingat & Tujuan</h3>
-              <p className="text-center text-muted-foreground">
-                Tetapkan pengingat yang dipersonalisasi dan lacak kemajuan
-                menuju tujuan kesehatan mentalmu.
-              </p>
-            </div>
-            <div className="dark:border-[1px] dark:bg-background md:order-2 relative focus:outline-hidden p-6 flex flex-col justify-center items-center md:min-h-57.5 text-center rounded-xl before:absolute before:inset-0 before:z-10 before:border before:border-gray-200 before:rounded-xl before:transition hover:before:border-2 hover:before:border-blue-600 focus:before:border-2 focus:before:border-blue-600 hover:before:shadow-lg dark:before:border-neutral-800 dark:hover:before:border-blue-500 dark:focus:before:border-blue-500 dark:rounded-xl space-y-2">
-              <div className="rounded-full bg-primary/10 p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-6 w-6 text-primary"
-                >
-                  <path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z" />
-                  <path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold">Dukungan Komunitas</h3>
-              <p className="text-center text-muted-foreground">
-                Terhubung dengan orang lain yang berada dalam perjalanan serupa
-                di komunitas dukungan kami yang dimoderasi.
-              </p>
-            </div>
-            <div className="dark:border-[1px] dark:bg-background md:order-2 relative focus:outline-hidden p-6 flex flex-col justify-center items-center md:min-h-57.5 text-center rounded-xl before:absolute before:inset-0 before:z-10 before:border before:border-gray-200 before:rounded-xl before:transition hover:before:border-2 hover:before:border-blue-600 focus:before:border-2 focus:before:border-blue-600 hover:before:shadow-lg dark:before:border-neutral-800 dark:hover:before:border-blue-500 dark:focus:before:border-blue-500 dark:rounded-xl space-y-2">
-              <div className="rounded-full bg-primary/10 p-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-6 w-6 text-primary"
-                >
-                  <path d="M20 7h-3a2 2 0 0 1-2-2V2" />
-                  <path d="M16 2H8a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                  <path d="M12 13V7" />
-                  <path d="M9 10h6" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-bold">Jurnal Prompt</h3>
-              <p className="text-center text-muted-foreground">
-                Prompts yang penuh makna untuk membimbing refleksi dan
-                pemrosesan emosionalmu.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <Button
-              size="lg"
-              asChild
-              className="px-8 bg-indigo-500 hover:bg-indigo-400 text-white"
+          <div className="grid gap-10 lg:grid-cols-[1fr_450px] lg:gap-16 xl:grid-cols-[1fr_550px]">
+            <motion.div
+              variants={heroTextContainerVariants}
+              className="flex flex-col justify-center space-y-6"
             >
-              <Link to="/register">
-                Daftar Sekarang
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+              <motion.div
+                variants={fadeUp}
+                className={`inline-flex items-center self-start rounded-full ${vibrantHighlightBgLight} px-4 py-1.5 text-sm ${vibrantHighlight} font-medium shadow-sm`}
+              >
+                <motion.div animate={pulseVariant.animate}>
+                  <Sparkles className={`mr-2 h-4 w-4 ${vibrantHighlight}`} />
+                </motion.div>
+                <span>Perjalananmu dimulai di sini</span>
+              </motion.div>
+
+              <div className="space-y-4">
+                <motion.h1
+                  variants={fadeUp}
+                  className="text-4xl font-extrabold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-teal-600 via-purple-600 to-teal-700 dark:from-teal-400 dark:via-purple-400 dark:to-teal-500"
+                >
+                  Ambil kendali kesehatan mental Anda
+                </motion.h1>
+                <motion.p
+                  variants={fadeUp}
+                  className="max-w-[650px] text-gray-600 dark:text-gray-300 md:text-xl lg:text-lg xl:text-xl leading-relaxed"
+                >
+                  Aplikasi kami membantu Anda melacak suasana hati, berlatih
+                  mindfulness, dan membangun kebiasaan sehat dengan dukungan
+                  yang dipersonalisasi.
+                </motion.p>
+              </div>
+
+              <motion.div
+                variants={fadeUp}
+                className="flex flex-col gap-4 min-[400px]:flex-row"
+              >
+                <motion.div
+                  whileHover={buttonHoverTap.hover}
+                  whileTap={buttonHoverTap.tap}
+                >
+                  <Button
+                    size="lg"
+                    asChild
+                    className={`group px-8 py-3 ${vibrantPrimaryBg} text-white font-semibold rounded-lg shadow-lg transition-all duration-300 ease-in-out`}
+                  >
+                    <Link
+                      to="/register"
+                      className="inline-flex items-center text-base"
+                    >
+                      Daftar Sekarang
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+                    </Link>
+                  </Button>
+                </motion.div>
+                <motion.div
+                  whileHover={buttonHoverTap.hover}
+                  whileTap={buttonHoverTap.tap}
+                >
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    asChild
+                    className="group transition-colors duration-300 ease-in-out hover:bg-purple-100/60 dark:hover:bg-purple-900/40 hover:border-purple-300 dark:hover:border-purple-600 hover:text-purple-700 dark:hover:text-purple-300 border-gray-300 dark:border-gray-700 rounded-lg px-6 py-3"
+                  >
+                    <Link
+                      to="/community"
+                      className="inline-flex items-center text-base font-medium"
+                    >
+                      Jelajahi Komunitas
+                      <Users
+                        className={`ml-2 h-5 w-5 ${vibrantAccent} transition-transform duration-300 group-hover:scale-110`}
+                      />
+                    </Link>
+                  </Button>
+                </motion.div>
+              </motion.div>
+
+              <motion.div
+                variants={fadeUp}
+                className="flex items-center space-x-4 pt-4"
+              >
+                <motion.div
+                  variants={avatarContainerVariant}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex -space-x-3"
+                >
+                  {[
+                    "from-pink-400 to-purple-500",
+                    "from-cyan-400 to-blue-500",
+                    "from-green-400 to-teal-500",
+                    "from-yellow-400 to-orange-500",
+                  ].map((gradient, index) => (
+                    <motion.div
+                      key={index}
+                      variants={avatarVariant}
+                      whileHover="hover"
+                      className={`relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${gradient} text-white ring-2 ring-background dark:ring-gray-800 shadow-md cursor-pointer`}
+                      title={`User ${index + 1}`}
+                    >
+                      <span className="text-xs font-bold">
+                        {["JD", "ST", "RK", "AL"][index]}
+                      </span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  Bergabunglah dengan{" "}
+                  <span className={`font-semibold ${vibrantPrimary}`}>
+                    10,000+
+                  </span>{" "}
+                  pengguna lainnya.
+                </div>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              variants={fadeRight}
+              initial="hidden"
+              animate="visible"
+              className="flex items-center row-start-1 lg:row-start-auto justify-center"
+            >
+              <motion.div
+                animate={floatAnimation}
+                className="relative w-full max-w-[380px] md:max-w-none md:h-[500px] md:w-[400px] rounded-3xl p-1.5 bg-gradient-to-br from-teal-300 via-purple-300 to-teal-400 dark:from-teal-600 dark:via-purple-600 dark:to-teal-700 shadow-2xl shadow-purple-500/20 dark:shadow-purple-400/20"
+              >
+                <div className="relative h-full w-full overflow-hidden rounded-2xl bg-background/80 dark:bg-gray-900/80 backdrop-blur-lg">
+                  <img
+                    src="/hero.jpg"
+                    alt="Mental Health App Interface"
+                    width={400}
+                    height={500}
+                    className="object-cover w-full h-full transform transition-transform duration-500 hover:scale-105"
+                    loading="eager"
+                  />
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
         </div>
-      </section>
-    </>
+      </motion.section>
+
+      <motion.section
+        id="features"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        className="flex justify-center w-full py-16 md:py-24 lg:py-32 bg-slate-50 dark:bg-slate-950 -mt-10 z-10 relative"
+      >
+        <div className="container px-4 md:px-6">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12 md:mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6 }}
+              className="flex flex-col justify-center items-center space-y-3"
+            >
+              <div
+                className={`inline-flex items-center rounded-lg ${vibrantAccentBgLight} px-4 py-1 text-sm font-medium ${vibrantAccent}`}
+              >
+                <Brain className="mr-1.5 h-5 w-5 flex-shrink-0" />
+                <span>Fitur Unggulan</span>
+              </div>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-900 dark:text-white">
+                Semua untuk Kesejahteraan Mental Anda
+              </h2>
+              <p className="max-w-[800px] text-gray-600 dark:text-gray-300 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                Alat komprehensif kami dirancang untuk mendukung perjalanan unik
+                Anda menuju kesehatan mental yang lebih baik.
+              </p>
+            </motion.div>
+          </div>
+
+          <motion.div
+            variants={featuresGridVariants}
+            className="mx-auto grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 py-6 md:py-8"
+          >
+            {[
+              {
+                icon: Heart,
+                title: "Pelacakan Suasana Hati",
+                text: "Lacak suasana hati harian untuk identifikasi pola & pemicu.",
+                color: vibrantPrimary,
+                lightBg: vibrantPrimaryBgLight,
+              },
+              {
+                icon: Sparkles,
+                title: "Meditasi Terpandu",
+                text: "Akses perpustakaan meditasi untuk stres, kecemasan, tidur, dll.",
+                color: vibrantAccent,
+                lightBg: vibrantAccentBgLight,
+              },
+              {
+                icon: BotMessageSquare,
+                title: "AI Sahabat Bicara",
+                text: "Panduan interaktif untuk kelola stres & pahami emosi.",
+                color: vibrantHighlight,
+                lightBg: vibrantHighlightBgLight,
+              },
+              {
+                icon: Bell,
+                title: "Pengingat & Tujuan",
+                text: "Tetapkan pengingat pribadi & lacak progres tujuan Anda.",
+                color: vibrantPrimary,
+                lightBg: vibrantPrimaryBgLight,
+              },
+              {
+                icon: MessageSquareText,
+                title: "Dukungan Komunitas",
+                text: "Terhubung dengan orang lain dalam perjalanan serupa.",
+                color: vibrantAccent,
+                lightBg: vibrantAccentBgLight,
+              },
+              {
+                icon: ClipboardPenLine,
+                title: "Jurnal Terpadu",
+                text: "Prompts bermakna untuk refleksi & pemrosesan emosi.",
+                color: vibrantHighlight,
+                lightBg: vibrantHighlightBgLight,
+              },
+            ].map((feature) => (
+              <motion.div
+                key={feature.title}
+                variants={featureCardVariant}
+                whileHover="hover"
+                className="group relative flex flex-col items-center space-y-4 rounded-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-800/40 p-6 text-center shadow-sm transition-shadow duration-300 ease-in-out"
+              >
+                <div
+                  className={`absolute mb-0 inset-0 rounded-xl ${feature.lightBg} opacity-0 transition-opacity duration-300 group-hover:opacity-30 -z-10`}
+                ></div>
+
+                <div
+                  className={`rounded-full p-4 ${feature.lightBg} transition-transform duration-300 group-hover:scale-110`}
+                >
+                  <feature.icon
+                    className={`h-8 w-8 ${feature.color} transition-transform duration-300 group-hover:rotate-[-6deg]`}
+                  />
+                </div>
+                <h3 className="text-xl font-semibold pt-1 text-gray-900 dark:text-white">
+                  {feature.title}
+                </h3>
+                <p className="text-center text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                  {feature.text}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="flex justify-center mt-12 md:mt-16"
+          >
+            <motion.div
+              whileHover={buttonHoverTap.hover}
+              whileTap={buttonHoverTap.tap}
+            >
+              <Button
+                size="lg"
+                asChild
+                className={`group px-10 py-3 ${vibrantPrimaryBg} text-white font-semibold rounded-lg shadow-lg transition-opacity duration-300 ease-in-out`}
+              >
+                <Link
+                  to="/register"
+                  className="inline-flex items-center text-base"
+                >
+                  Mulai Perjalanan Anda
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1.5" />
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.section>
+    </motion.div>
   );
 };
 

@@ -52,12 +52,60 @@ export const privateRoutes: RouteItem[] = [
     element: createElement(lazy(async () => await import("@/pages/Register"))),
   },
   {
+    label: "Profil",
+    path: "/profile",
+    element: createElement(lazy(async () => await import("@/pages/Profile"))),
+  },
+  {
+    label: "Profil By Id",
+    path: "/profile/:id",
+    element: createElement(lazy(async () => await import("@/pages/Profile"))),
+  },
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    element: createElement(lazy(async () => await import("@/pages/Dashboard"))),
+  },
+  {
+    label: "Setelan Akun",
+    path: "/account-settings",
+    element: createElement(
+      lazy(async () => await import("@/pages/AccountSettings"))
+    ),
+  },
+  {
+    label: "Ubah Kata Sandi",
+    path: "/account-settings/change-password",
+    element: createElement(
+      lazy(async () => await import("@/pages/PasswordChange"))
+    ),
+  },
+  {
+    label: "Ubah Data Pribadi",
+    path: "/account-settings/change-personal-info",
+    element: createElement(
+      lazy(async () => await import("@/pages/PersonalInfoChange"))
+    ),
+  },
+  {
+    label: "Ubah Data Alamat",
+    path: "/account-settings/change-address-info",
+    element: createElement(
+      lazy(async () => await import("@/pages/AddressInfoChange"))
+    ),
+  },
+  {
     label: "Verifikasi",
     path: "/email-verify",
     element: createElement(
       lazy(async () => await import("@/pages/EmailVerification"))
     ),
   },
+  {
+    label: "Lupa Password",
+    path: "/forgot-password",
+    element: createElement(
+      lazy(async () => await import("@/pages/ForgotPassword"))
+    ),
+  },
 ];
-
-// TODO: middleware protected routes disini (protectedRoutes)

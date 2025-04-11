@@ -1,3 +1,1 @@
-export interface AboutProps {
-  text: string;
-}
+// sementara tdk dipakai

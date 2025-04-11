@@ -4,22 +4,27 @@ import { useParams } from "react-router-dom";
 import {
   FetchAllThreadsResponse,
   FetchThreadDetailResponse,
-  Payload,
   PostThreadCommentResponse,
   Thread,
+  ThreadComment,
 } from "./CommunityThread.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { FetchThreadContext } from "./CommunityThread.context";
+import { useUser } from "@/components/Header/Header.context";
 
 export default function CommunityThread() {
+  const { user } = useUser();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [thread, setThread] = useState<Thread | null>(null);
-  const [threadsList, setThreadsList] = useState<Payload[]>([]);
+  const [threadsList, setThreadsList] = useState<Thread[]>([]);
   const [createCommentOpen, setCreateCommentOpen] = useState(false);
   const textarea = useRef<HTMLTextAreaElement | null>(null);
+  const safeThread = thread || ({} as Partial<Thread>);
+  const comments = safeThread.thread_comments || ([] as ThreadComment[]);
+  const safeThreadsList = threadsList || ([] as Thread[]);
   const params = useParams();
 
   const fetchThread = useCallback(async () => {
@@ -40,7 +45,7 @@ export default function CommunityThread() {
     try {
       const data: FetchAllThreadsResponse = (await client().get(`/thread`))
         .data;
-      setThreadsList(data.payload);
+      setThreadsList(data.payload.threads);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error.message);
@@ -87,7 +92,9 @@ export default function CommunityThread() {
     fetchAllThreads();
   }, []);
 
-  document.title = "Forum Komunitas - Mental Health App";
+  document.title = `${
+    thread ? thread.title : "Forum Komunitas"
+  } - Mental Health App`;
 
   const setTextareaStatus = (value: boolean) => {
     setCreateCommentOpen(value);
@@ -110,6 +117,10 @@ export default function CommunityThread() {
         textareaRef={textarea}
         createCommentOpen={createCommentOpen}
         setTextareaStatus={setTextareaStatus}
+        safeThread={safeThread}
+        comments={comments}
+        safeThreadsList={safeThreadsList}
+        loggedIn={user}
       />
     </FetchThreadContext.Provider>
   );

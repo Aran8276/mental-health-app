@@ -1,39 +1,81 @@
 import { publicRoutes } from "@/viewports/Navigator/Navigator.data";
 import HeaderView from "./Header.view";
 import { profileDropdownItems } from "./Header.data";
-import { useEffect, useState } from "react";
-import { CheckUserResponse, User } from "./Header.type";
+import { useCallback, useEffect, useState } from "react";
+import { CheckUserResponse, RefreshTokenResponse } from "./Header.type";
 import { client } from "@/config/axiosClient";
 import { AxiosError } from "axios";
-import { toast } from "sonner";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "./Header.context";
 
 export default function Header() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [mobileOpen, mobileSetOpen] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const { user, setUser } = useUser();
 
-  const fetchUser = async () => {
+  const tryRefresh = async () => {
     try {
-      const data: CheckUserResponse = (await client().get("/auth/check")).data;
-      setUser(data.user);
+      const data: RefreshTokenResponse = (
+        await client().post("/auth/refresh", {
+          refreshToken: localStorage.getItem("mental-jwt-refresh-token"),
+        })
+      ).data;
+      return data.payload;
     } catch (error) {
       if (error instanceof AxiosError) {
-        if (error.status == 401 || error.status == 403) {
-          setUser(null);
-          return;
+        if (error.status == 401 || error.status == 403 || error.status == 400) {
+          return false;
         }
-        console.log(error.message);
-        toast(error.message);
       }
     }
   };
 
+  const fetchUser = useCallback(
+    async (overrideToken?: string) => {
+      try {
+        if (overrideToken) {
+          const data: CheckUserResponse = (
+            await client().get("/auth/check", {
+              headers: {
+                Authorization: `Bearer ${overrideToken}`,
+              },
+            })
+          ).data;
+          setUser(data.payload);
+          return;
+        }
+
+        const data: CheckUserResponse = (await client().get("/auth/check"))
+          .data;
+        setUser(data.payload);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.status == 401 || error.status == 403) {
+            const refreshToken = await tryRefresh();
+            if (!refreshToken) {
+              setUser(null);
+              window.localStorage.removeItem("mental-jwt-token");
+              return;
+            }
+
+            window.localStorage.setItem(
+              "mental-jwt-token",
+              refreshToken.accessToken
+            );
+
+            fetchUser(refreshToken.accessToken);
+          }
+        }
+      }
+    },
+    [setUser]
+  );
+
   const handleLogout = async () => {
     try {
       localStorage.removeItem("mental-jwt-token");
-      await fetchUser();
+      localStorage.removeItem("mental-jwt-refresh-token");
       navigate("/login");
     } catch (error) {
       console.log(error);
@@ -41,9 +83,8 @@ export default function Header() {
   };
 
   useEffect(() => {
-    console.log(state);
     fetchUser();
-  }, [state]);
+  }, [state, fetchUser]);
 
   return (
     <HeaderView

@@ -1,10 +1,23 @@
-import { User } from "lucide-react";
+import { FC } from "react";
+import { UserAvatarProps } from "./UserAvatar.type";
 
-const UserAvatarView = () => {
+const UserAvatarView: FC<UserAvatarProps> = ({
+  // src,
+  name,
+  size = "md",
+  sizeClasses,
+}) => {
   return (
-    <div className="w-8 h-8 overflow-hidden border-2 border-gray-400 rounded-full">
-      <User className="p-[6px] w-full h-full" />
-    </div>
+    <img
+      src={
+        // src ||
+        `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          name
+        )}&background=random`
+      }
+      alt={name}
+      className={`${sizeClasses[size]} rounded-full object-cover border-2 border-white dark:border-gray-700 shadow-sm`}
+    />
   );
 };
 

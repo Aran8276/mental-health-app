@@ -1,5 +1,9 @@
+import { FC } from "react";
+import { ActiveUserCardProps } from "./ActiveUserCard.type";
 import ActiveUserCardView from "./ActiveUserCard.view";
 
-export default function ActiveUserCard() {
-  return <ActiveUserCardView />;
-}
+const ActiveUserCard: FC<ActiveUserCardProps> = ({ user }) => {
+  return <ActiveUserCardView user={user} />;
+};
+
+export default ActiveUserCard;

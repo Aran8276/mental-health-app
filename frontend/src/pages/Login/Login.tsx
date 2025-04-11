@@ -32,10 +32,15 @@ export default function Login() {
           .data;
 
         localStorage.setItem("mental-jwt-token", data.payload.accessToken);
+        localStorage.setItem(
+          "mental-jwt-refresh-token",
+          data.payload.refreshToken
+        );
+
         toast(
           <div className="flex flex-col space-y-3">
             <p>Login Berhasil</p>
-            <p>Selamat datang kembali {data.payload.name} 👋</p>
+            <p>Selamat datang kembali {data.payload.user.name} 👋</p>
           </div>
         );
         navigate("/", {

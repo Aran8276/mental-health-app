@@ -2,7 +2,7 @@ import { FC } from "react";
 import ApplicationLogo from "../ApplicationLogo/ApplicationLogo";
 import { HeaderProps } from "./Header.type";
 import { Link } from "react-router-dom";
-import { Bell } from "lucide-react";
+// import { Bell } from "lucide-react";
 import { ModeToggle } from "../ui/mode-toggle";
 import { Button } from "../ui/button";
 import {
@@ -50,7 +50,7 @@ const HeaderView: FC<HeaderProps> = ({
                 ))}
               </div>
               <div className="flex items-center mt-4 lg:mt-0">
-                {user && (
+                {/* {user && (
                   <Button
                     variant={"ghost"}
                     className="bg-inherit"
@@ -59,7 +59,7 @@ const HeaderView: FC<HeaderProps> = ({
                     <Bell className="w-6 h-6" />
                   </Button>
                 )}
-
+ */}
                 <ModeToggle />
 
                 {user ? (
@@ -70,7 +70,7 @@ const HeaderView: FC<HeaderProps> = ({
                         className="flex items-center cursor-pointer focus:outline-none"
                         aria-label="toggle profile dropdown"
                       >
-                        <UserAvatar />
+                        <UserAvatar name={user.name} size="md" />
                         <h3 className="mx-2 text-gray-700 dark:text-gray-200 lg:hidden">
                           User name
                         </h3>
@@ -98,7 +98,9 @@ const HeaderView: FC<HeaderProps> = ({
                   </DropdownMenu>
                 ) : (
                   <Link to="/login">
-                    <Button className="cursor-pointer">Masuk</Button>
+                    <Button className="cursor-pointer bg-blue-500 px-6 hover:bg-blue-400">
+                      Masuk
+                    </Button>
                   </Link>
                 )}
               </div>

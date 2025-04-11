@@ -11,5 +11,17 @@ export const registerValidation = {
 };
 
 export const verificationValidation = {
-    token: "required|string"
-}
+    token: "required|string",
+};
+
+export const resetPasswordValidation = {
+    email: "required|string",
+};
+
+export const validateResetPasswordVerification = {
+    token: "required|string",
+};
+
+export const refreshTokenValidation = {
+    refreshToken: "required|string",
+};
