@@ -1,14 +1,17 @@
-import { msgTemplate } from "@/config/msgTemplate";
-import { prisma } from "@/config/prismaClient";
+import { msgTemplate } from "@/config/msgTemplate.js";
+import { prisma } from "@/config/prismaClient.js";
 import { Request, Response } from "express";
-import { addressValidation, personalInfoValidation } from "./user.validation";
+import {
+    addressValidation,
+    personalInfoValidation,
+} from "./user.validation.js";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
 import {
     validateRequestBody,
     handleControllerError,
     parseNumericId,
     commonUserOmit,
-} from "@/utils/crud.utils";
+} from "@/utils/crud.utils.js";
 import { Prisma } from "@prisma/client";
 
 const commonUserInclude = Prisma.validator<Prisma.UserInclude>()({

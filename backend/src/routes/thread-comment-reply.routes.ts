@@ -1,5 +1,5 @@
-import threadCommentReplyUseCase from "@/controller/thread-comment-reply/threadCommentReply.controller";
-import authenticateToken from "@/middleware/authMiddleware";
+import threadCommentReplyUseCase from "@/controller/thread-comment-reply/threadCommentReply.controller.js";
+import authenticateToken from "@/middleware/authMiddleware.js";
 import { Router } from "express";
 
 const router = Router();

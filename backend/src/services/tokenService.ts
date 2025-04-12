@@ -1,7 +1,7 @@
-import * as jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import { default as jwt } from "jsonwebtoken";
+import { default as bcrypt } from "bcryptjs";
 import * as env from "dotenv";
-import { prisma } from "@/config/prismaClient"; // Adjust path if needed
+import { prisma } from "@/config/prismaClient.js";
 import ms from "ms";
 
 env.config();
@@ -12,16 +12,15 @@ const ACCESS_TOKEN_EXPIRY = (process.env.JWT_ACCESS_TOKEN_EXPIRY ||
     "15m") as ms.StringValue;
 const REFRESH_TOKEN_EXPIRY = (process.env.JWT_REFRESH_TOKEN_EXPIRY ||
     "7d") as ms.StringValue;
-const SALT_ROUNDS = 10; // Same as used for password hashing
+const SALT_ROUNDS = 10;
 
 if (!ACCESS_TOKEN_SECRET || !REFRESH_TOKEN_SECRET) {
     console.error("FATAL ERROR: JWT Secret keys are not defined in .env file.");
-    process.exit(1); // Exit if secrets aren't set
+    process.exit(1);
 }
 
 export interface TokenPayload {
-    id: number; // Changed from userId to id to match your user model
-    // Add other non-sensitive data if needed (e.g., roles)
+    id: number;
 }
 
 export const generateAccessToken = (payload: TokenPayload): string => {
@@ -31,7 +30,6 @@ export const generateAccessToken = (payload: TokenPayload): string => {
 };
 
 export const generateRefreshToken = (payload: TokenPayload): string => {
-    // Generate the actual token
     const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, {
         expiresIn: REFRESH_TOKEN_EXPIRY,
     });
@@ -42,7 +40,7 @@ export const verifyAccessToken = (token: string): TokenPayload | null => {
     try {
         return jwt.verify(token, ACCESS_TOKEN_SECRET) as TokenPayload;
     } catch (error: unknown) {
-        console.error("Invalid access token:", error); // Log specific error if needed
+        console.error("Invalid access token:", error);
         return null;
     }
 };
@@ -93,7 +91,7 @@ export const validateStoredRefreshToken = async (
             console.warn(
                 `No stored refresh token found for user ${userId} during validation.`,
             );
-            return false; // No stored token or user doesn't exist
+            return false;
         }
 
         return await bcrypt.compare(

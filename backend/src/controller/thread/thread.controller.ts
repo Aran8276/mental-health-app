@@ -1,14 +1,14 @@
-import { msgTemplate } from "@/config/msgTemplate";
-import { prisma } from "@/config/prismaClient";
+import { msgTemplate } from "@/config/msgTemplate.js";
+import { prisma } from "@/config/prismaClient.js";
 import { Request, Response } from "express";
-import { threadValidation } from "./thread.validation";
+import { threadValidation } from "./thread.validation.js";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
 import {
     validateRequestBody,
     handleControllerError,
     parseNumericId,
     commonUserOmit,
-} from "@/utils/crud.utils";
+} from "@/utils/crud.utils.js";
 import { Prisma } from "@prisma/client";
 
 /**

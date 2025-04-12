@@ -31,7 +31,7 @@ const ChatItemView: FC<ChatItemProps> = ({ convo, isActive, onSelect }) => {
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{convo.title}</p>
         <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
-          {convo.lastMessage || "Belum ada pesan"}
+          {convo.title || "Belum ada pesan"}
         </p>
       </div>
 

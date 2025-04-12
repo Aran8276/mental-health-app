@@ -8,14 +8,14 @@ import {
     validateResetPasswordVerification,
     verificationValidation,
     refreshTokenValidation,
-} from "./auth.validation";
-import { msgTemplate } from "@/config/msgTemplate";
-import { prisma } from "@/config/prismaClient";
-import * as bcrypt from "bcrypt";
+} from "./auth.validation.js";
+import { msgTemplate } from "@/config/msgTemplate.js";
+import { prisma } from "@/config/prismaClient.js";
+import * as bcrypt from "bcryptjs";
 import { nanoid } from "nanoid";
-import { transporter } from "@/config/nodemailerClient";
+import { transporter } from "@/config/nodemailerClient.js";
 import { Prisma } from "@prisma/client";
-import { getEmail } from "@/config/emailTemplate";
+import { getEmail } from "@/config/emailTemplate.js";
 import {
     generateAccessToken,
     generateRefreshToken,
@@ -24,8 +24,8 @@ import {
     validateStoredRefreshToken,
     removeRefreshToken,
     TokenPayload,
-} from "@/services/tokenService";
-import * as jwt from "jsonwebtoken";
+} from "@/services/tokenService.js";
+import { default as jwt } from "jsonwebtoken";
 
 const authUseCase = {
     login: async (req: Request, res: Response) => {
@@ -100,9 +100,7 @@ const authUseCase = {
 
             const stored = await storeRefreshToken(user.id, refreshToken);
             if (!stored) {
-                console.error(
-                    `Gagal menyimpan token untuk id user ${user.id}`,
-                );
+                console.error(`Gagal menyimpan token untuk id user ${user.id}`);
                 res.status(500).json(
                     msgTemplate("Terjadi kesalahan internal saat login."),
                 );

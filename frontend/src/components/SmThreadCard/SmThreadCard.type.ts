@@ -1,5 +1,5 @@
-import { Payload } from "@/pages/CommunityThread/CommunityThread.type";
+import { Thread } from "@/pages/CommunityThread/CommunityThread.type";
 
 export interface SmThreadProps {
-  data: Payload;
+  data: Thread;
 }

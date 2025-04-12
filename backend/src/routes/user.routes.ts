@@ -1,5 +1,5 @@
-import userUseCase from "@/controller/user/user.controller";
-import authenticateToken from "@/middleware/authMiddleware";
+import userUseCase from "@/controller/user/user.controller.js";
+import authenticateToken from "@/middleware/authMiddleware.js";
 import { Router } from "express";
 
 const router = Router();

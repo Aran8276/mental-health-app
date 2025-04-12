@@ -1,13 +1,13 @@
-import { msgTemplate } from "@/config/msgTemplate";
-import { prisma } from "@/config/prismaClient";
+import { msgTemplate } from "@/config/msgTemplate.js";
+import { prisma } from "@/config/prismaClient.js";
 import { Response } from "express";
-import { todoValidation, updateTodoValidation } from "./todo.validation";
+import { todoValidation, updateTodoValidation } from "./todo.validation.js";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
 import {
     validateRequestBody,
     handleControllerError,
     parseNumericId,
-} from "@/utils/crud.utils";
+} from "@/utils/crud.utils.js";
 
 /**
  * Checks if a todo exists and is owned by the specified user.

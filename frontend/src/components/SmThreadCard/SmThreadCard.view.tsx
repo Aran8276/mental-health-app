@@ -9,7 +9,7 @@ import { cardVariants } from "./SmThreadCard.data";
 const SmThreadCardView: FC<SmThreadProps> = ({ data }) => {
   const threadId = data.id;
   const title = data.title || "Tanpa Judul";
-  const authorName = data.owner?.name || "Pengguna Anonim";
+  const authorName = data.owner.name || "Pengguna Anonim";
   const authorAvatar = "avatar";
   const commentCount = data.thread_comments?.length || 0;
 

@@ -1,5 +1,5 @@
-import aiConversationUseCase from "@/controller/ai-conversation/aiConversation.controller";
-import authenticateToken from "@/middleware/authMiddleware";
+import aiConversationUseCase from "@/controller/ai-conversation/aiConversation.controller.js";
+import authenticateToken from "@/middleware/authMiddleware.js";
 import { Router } from "express";
 
 const router = Router();

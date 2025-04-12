@@ -1,4 +1,4 @@
-import geminiAiUseCase from "@/controller/gemini-ai/geminiAi.controller";
+import geminiAiUseCase from "@/controller/gemini-ai/geminiAi.controller.js";
 import { Router } from "express";
 
 const router = Router();
