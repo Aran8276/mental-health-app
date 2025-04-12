@@ -1,10 +1,10 @@
-import { msgTemplate } from "@/config/msgTemplate";
-// import { prisma } from "@/config/prismaClient";
+import { msgTemplate } from "@/config/msgTemplate.js";
+// import { prisma } from "@/config/prismaClient.js";
 import { Request, Response } from "express";
-import { geminiAiValidation } from "./geminiAi.validation";
-import { genAI } from "@/config/geminiAi";
+import { geminiAiValidation } from "./geminiAi.validation.js";
+import { genAI } from "@/config/geminiAi.js";
 import { ContentListUnion, PartUnion } from "@google/genai";
-import { validateRequestBody } from "@/utils/crud.utils";
+import { validateRequestBody } from "@/utils/crud.utils.js";
 
 const geminiAiUseCase = {
     sendChat: async (req: Request, res: Response) => {

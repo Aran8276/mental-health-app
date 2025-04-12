@@ -1,5 +1,5 @@
-import todosUseCase from "@/controller/todo/todo.controller";
-import authenticateToken from "@/middleware/authMiddleware";
+import todosUseCase from "@/controller/todo/todo.controller.js";
+import authenticateToken from "@/middleware/authMiddleware.js";
 import { Router } from "express";
 
 const router = Router();

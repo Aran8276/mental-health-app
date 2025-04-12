@@ -1,15 +1,15 @@
-import { msgTemplate } from "@/config/msgTemplate";
-import { prisma } from "@/config/prismaClient";
+import { msgTemplate } from "@/config/msgTemplate.js";
+import { prisma } from "@/config/prismaClient.js";
 import { Response } from "express";
-import { aiChatValidation } from "./aiChat.validation";
+import { aiChatValidation } from "./aiChat.validation.js";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
 import {
     validateRequestBody,
     handleControllerError,
     parseNumericId,
-} from "@/utils/crud.utils";
+} from "@/utils/crud.utils.js";
 import { AiChatRole } from "@prisma/client";
-import { findAiConversationAndVerifyOwnership } from "../ai-conversation/aiConversation.controller";
+import { findAiConversationAndVerifyOwnership } from "../ai-conversation/aiConversation.controller.js";
 
 const aiChatController = {
     /**

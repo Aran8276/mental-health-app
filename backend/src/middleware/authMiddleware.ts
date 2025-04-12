@@ -1,6 +1,6 @@
 // src/middleware/authMiddleware.ts
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken, TokenPayload } from "@/services/tokenService"; // Adjust path
+import { verifyAccessToken, TokenPayload } from "@/services/tokenService.js"; // Adjust path
 
 export interface RequestWithUser extends Request {
     user?: TokenPayload;

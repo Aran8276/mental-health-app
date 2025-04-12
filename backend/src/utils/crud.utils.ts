@@ -1,4 +1,4 @@
-import { msgTemplate } from "@/config/msgTemplate";
+import { msgTemplate } from "@/config/msgTemplate.js";
 import { Prisma } from "@prisma/client";
 import { Request, Response } from "express";
 import { InitialRules, make } from "simple-body-validator";

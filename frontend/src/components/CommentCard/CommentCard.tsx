@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { PostThreadReplyResponse } from "./CommentCard.type";
 import { FetchThreadContext } from "@/pages/CommunityThread/CommunityThread.context";
 import { useUser } from "../Header/Header.context";
+import { User } from "../Header/Header.type";
 
 export default function CommentCard({
   replies,
@@ -15,7 +16,7 @@ export default function CommentCard({
 }: {
   replies?: ThreadCommentReply[];
   data: ThreadComment;
-  loggedIn: boolean;
+  loggedIn: User | null;
 }) {
   const replyInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState("");

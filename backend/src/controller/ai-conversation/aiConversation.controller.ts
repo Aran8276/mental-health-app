@@ -1,16 +1,16 @@
-import { msgTemplate } from "@/config/msgTemplate";
-import { prisma } from "@/config/prismaClient";
+import { msgTemplate } from "@/config/msgTemplate.js";
+import { prisma } from "@/config/prismaClient.js";
 import { Response } from "express";
 import {
     aiConversationUpdateValidation,
     aiConversationValidation,
-} from "./aiConversation.validation";
+} from "./aiConversation.validation.js";
 import { RequestWithUser } from "@/middleware/authMiddleware.type";
 import {
     validateRequestBody,
     handleControllerError,
     parseNumericId,
-} from "@/utils/crud.utils";
+} from "@/utils/crud.utils.js";
 import { Prisma } from "@prisma/client";
 
 const commonAiConversationInclude =

@@ -1,5 +1,5 @@
-import aiChatUseCase from "@/controller/ai-chat/aiChat.controller";
-import authenticateToken from "@/middleware/authMiddleware";
+import aiChatUseCase from "@/controller/ai-chat/aiChat.controller.js";
+import authenticateToken from "@/middleware/authMiddleware.js";
 import { Router } from "express";
 
 const router = Router();

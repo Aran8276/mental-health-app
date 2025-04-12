@@ -1,5 +1,5 @@
-import threadUseCase from "@/controller/thread/thread.controller";
-import authenticateToken from "@/middleware/authMiddleware";
+import threadUseCase from "@/controller/thread/thread.controller.js";
+import authenticateToken from "@/middleware/authMiddleware.js";
 import { Router } from "express";
 
 const router = Router();

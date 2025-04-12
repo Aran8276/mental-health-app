@@ -15,7 +15,7 @@ export default function ThreadCard({
 }: {
   isFull?: boolean;
   data: Thread;
-  fetchThreads: (page: number) => Promise<void>;
+  fetchThreads?: (page: number) => Promise<void>;
 }) {
   const { user } = useUser();
   const currentUserId = user?.id;
@@ -29,7 +29,9 @@ export default function ThreadCard({
   const handleDeleteThread = async (threadId: string | number) => {
     try {
       await client().delete(`/thread/${threadId}`);
-      fetchThreads(currentPage);
+      if (fetchThreads) {
+        fetchThreads(currentPage);
+      }
       toast.success("Thread berhasil dihapus.");
     } catch (error) {
       console.error("Error deleting thread:", error);
