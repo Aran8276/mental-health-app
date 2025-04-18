@@ -263,6 +263,6 @@ Pengembangan aplikasi ini mengikuti alur berikut:
 8.  **Pembersihan Kode & Build:** Melakukan _error checking_, _linting_, dan pengujian build aplikasi. 🧹🏗️
 9.  **Deployment:** Menyiapkan dan menjalankan aplikasi di server menggunakan Docker dan Cloudflare Tunnel. 🚀☁️
 
-Made by Aran8276 / SMK Negeri 6 Malang (lihat kontributor lain di repo ini).
+Made by Aran8276 / SMK Negeri 6 Malang (lihat [kontributor lain di repo ini](https://github.com/Aran8276/mental-health-app/graphs/contributors)).
 
 ---
